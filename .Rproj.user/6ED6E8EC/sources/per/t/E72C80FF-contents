@@ -1,0 +1,15 @@
+---
+title: "EPI built libraries"
+---
+
+[realtalk](https://economic.github.io/realtalk/)
+
+-   realtalk makes it easy to use common US price indexes in R.
+
+[epidatatools](https://economic.github.io/epidatatools/)
+
+-   epidatatools contains functions we find useful at [EPI](https://epi.org/) that don't have exact analogues elsewhere in the R package ecosystem.
+
+[epiextractr](https://github.com/economic/epiextractr)
+
+-   epiextractr makes it easy to use the [EPI microdata extracts](https://microdata.epi.org/) in R.

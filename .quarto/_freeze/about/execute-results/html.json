@@ -1,0 +1,16 @@
+{
+  "hash": "b586b4a529f9b10805c4645ac33d7aa3",
+  "result": {
+    "markdown": "---\ntitle: \"About\"\n---\n\n\nWelcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice. Let's code in solidarity!\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load necessary libraries\nlibrary(ggplot2)\n\n# Generate heart-shaped data\nt <- seq(0, 2*pi, by=0.01)\nx <- 16*sin(t)^3\ny <- 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t)\n\n# Create a scatterplot with a transparent background, visible axes, and custom labels\nggplot(data.frame(x, y), aes(x, y)) +\n  geom_point(color=\"red\", size=2) +\n  coord_fixed(ratio = 1) +\n  labs(x = \"Peace\", y = \"Love\") +\n  theme(\n    plot.background = element_rect(fill = \"transparent\", colour = NA),\n    panel.background = element_rect(fill = \"transparent\", colour = NA),\n    panel.grid.major = element_blank(),\n    panel.grid.minor = element_blank(),\n    panel.border = element_blank(),\n    axis.line = element_line(colour = \"black\")\n  )\n```\n\n::: {.cell-output-display}\n![](about_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "about_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

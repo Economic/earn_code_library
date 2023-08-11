@@ -1,0 +1,34 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "EARN Code Library (draft)"
+  
+  sidebar: 
+    style: 'docked'
+    search: true
+    contents:
+    - section: "Home"
+      contents: 
+      - about.qmd
+    - section: "EPI Libraries for R"
+      contents:
+      - epi-libraries.qmd
+      
+    - section: "Code Samples"
+      contents:
+      - text: "Coming soon"
+      
+    - section: "EARNCon Resources"
+      contents:
+      - text: "Coming soon"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+

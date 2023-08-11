@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice. Let’s code in solidarity!\n\n# Load necessary libraries\nlibrary(ggplot2)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2*pi, by=0.01)\nx &lt;- 16*sin(t)^3\ny &lt;- 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t)\n\n# Create a scatterplot with a transparent background, visible axes, and custom labels\nggplot(data.frame(x, y), aes(x, y)) +\n  geom_point(color=\"red\", size=2) +\n  coord_fixed(ratio = 1) +\n  labs(x = \"Peace\", y = \"Love\") +\n  theme(\n    plot.background = element_rect(fill = \"transparent\", colour = NA),\n    panel.background = element_rect(fill = \"transparent\", colour = NA),\n    panel.grid.major = element_blank(),\n    panel.grid.minor = element_blank(),\n    panel.border = element_blank(),\n    axis.line = element_line(colour = \"black\")\n  )"
+  },
+  {
+    "objectID": "epi-libraries.html",
+    "href": "epi-libraries.html",
+    "title": "EPI built libraries",
+    "section": "",
+    "text": "realtalk\n\nrealtalk makes it easy to use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nepiextractr makes it easy to use the EPI microdata extracts in R."
+  }
+]
