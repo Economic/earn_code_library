@@ -18,6 +18,8 @@ website:
       
     - section: "Code Samples"
       contents:
+        - section: "R examples"
+        - inflation_adjusting.qmd
       - text: "Coming soon"
       
     - section: "EARNCon Resources"

@@ -1,0 +1,18 @@
+Inflation adjusting using [realtalk](https://economic.github.io/realtalk/)
+
+```{r Libraries}
+
+library(tidyverse)
+library(epiextractr)
+library(realtalk)
+
+```
+
+Load EPI extracts of CPS ORG data using [epiextractr](https://github.com/economic/epiextractr)
+
+```{r Load CPS ORG}
+
+org <- load_org(2017:2022)
+
+
+```
