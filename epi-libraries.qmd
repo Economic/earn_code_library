@@ -10,6 +10,6 @@ title: "EPI built libraries"
 
 -   epidatatools contains functions we find useful at [EPI](https://epi.org/) that don't have exact analogues elsewhere in the R package ecosystem.
 
-[epiextractr](https://github.com/economic/epiextractr)
+[epiextractr](https://economic.github.io/epiextractr)
 
 -   epiextractr makes it easy to use the [EPI microdata extracts](https://microdata.epi.org/) in R.
