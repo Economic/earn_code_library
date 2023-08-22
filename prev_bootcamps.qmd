@@ -1,3 +1,3 @@
-https://economic.github.io/data_bootcamp/
+[EPI Bootcamp Website](https://economic.github.io/data_bootcamp/)
 
 2022 Data analysis in R [Video](https://www.youtube.com/watch?v=PG7T0AoxIY0&list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&index=7)

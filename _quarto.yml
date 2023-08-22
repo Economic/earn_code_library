@@ -3,21 +3,23 @@ project:
   output-dir: docs
 
 website:
-  title: "EARN Code Library (draft)"
+  title: "EARN Code Library"
   
   sidebar: 
     style: 'docked'
     search: true
     contents:
+    
     - section: "Home"
       contents: 
       - about.qmd
+      
     - section: "EPI Libraries for R"
       contents:
       - epi-libraries.qmd
       
-    - section: "Code Samples"
-      contents:
+    # - section: "Code Samples"
+    #   contents:
     - section: "R examples"
       contents:
       - inflation_adjusting.qmd
@@ -27,9 +29,7 @@ website:
     
     - section: "EARNCon Resources"
       contents:
-    - section: "Previous EARNCon Bootcamps"
-      contents:
-      - prev_bootcamps.qmd
+       - prev_bootcamps.qmd
     
 format:
   html:

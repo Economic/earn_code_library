@@ -19,5 +19,12 @@
     "title": "EPI built libraries",
     "section": "",
     "text": "realtalk\n\nrealtalk makes it easy to use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nepiextractr makes it easy to use the EPI microdata extracts in R."
+  },
+  {
+    "objectID": "prev_bootcamps.html",
+    "href": "prev_bootcamps.html",
+    "title": "EARN Code Library (draft)",
+    "section": "",
+    "text": "EPI Bootcamp Website\n2022 Data analysis in R Video"
   }
 ]
