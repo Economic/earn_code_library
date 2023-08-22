@@ -15,11 +15,9 @@ title: 'Inflation adjusting with Realtalk'
 
 Load necessary libraries
 
-```{r Load libraries}
-
+```{r Load libraries, echo=FALSE}
 library(tidyverse)
 library(realtalk)
-
 ```
 
 The RealTalk package includes several datasets of common US price indices. EPI often uses the CPI-U-RS series to inflation adjust wages
