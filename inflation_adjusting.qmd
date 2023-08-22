@@ -1,0 +1,84 @@
+### Inflation adjusting using [realtalk](https://economic.github.io/realtalk/)
+
+-   Install required libraries
+
+```{r installation of required libraries}
+# Many EPI built packages, including RealTalk require users to install devtools
+
+# install.packages("devtools")
+# devtools::install_github("Economic/realtalk")
+```
+
+Load necessary libraries
+
+```{r Load libraries}
+
+library(tidyverse)
+library(realtalk)
+
+```
+
+The RealTalk package includes several datasets of common US price indices. EPI often uses the CPI-U-RS series to inflation adjust wages
+
+```{r List price indices}
+
+#list available cpi series
+realtalk::available_price_indexes
+
+#this creates a dataframe with the annual CPI-U-RS index from 1937-2022
+cpi_data <- realtalk::cpi_u_rs_annual
+
+#Set base year to 2022
+cpi2022 <- cpi_data$cpi_u_rs[cpi_data$year==2022]
+```
+
+```{r Create fake wage data}
+
+set.seed(123) # for reproducibility
+
+years <- 1978:2021
+start_wage <- 5 # Arbitrary starting wage in 1978, in dollars
+
+# Generate fake wage data with an average increase of 2.5% per year with some random noise
+fake_wages <- cumprod(rep(1.025, length(years)) + rnorm(length(years), mean = 0, sd = 0.02)) * start_wage
+
+# Create a tibble
+wage_data <- tibble(
+  year = years,
+  avg_hrly_wage = round(fake_wages, 2) 
+)
+
+wage_data
+```
+
+Before jumping into the full code. Let's refresh on how to calculate inflation using the Consumer Price Index.
+
+Inflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:
+
+$$
+\frac{\text{Given year}}{\text{Base year}} * 100
+$$
+
+For example, let's calculate how much the CPI-U-RS index has increased from 1978 to 2022.
+
+$$
+\frac{\text{CPI}_{2022}}{\text{CPI}_{1978}} = \frac{431.5}{104} \approx 4.149038 \text{ or } 414.9\%
+$$
+
+And voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.
+
+Below, I merge the CPI-U-RS index to our fictitious wage-data, and then inflation adjust our wages using this same procedure.
+
+```{r Clean and prepare data for inflation adjustment}
+
+#Load example data of US personal expenditures on various household goods.
+clean_data <- wage_data %>% 
+ 
+  #Merge CPI data to dataframe by year.
+  left_join(cpi_data, by='year') %>% 
+  
+  #This mutate command multiplies adjust personal expenditures
+  mutate(real_wage = avg_hrly_wage*(cpi2022/cpi_u_rs))
+  
+clean_data
+```

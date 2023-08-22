@@ -18,12 +18,19 @@ website:
       
     - section: "Code Samples"
       contents:
-      - text: "Coming soon"
-      
+    - section: "R examples"
+      contents:
+      - inflation_adjusting.qmd
+    - section: "Stata examples"
+      contents:
+      - text: "coming soon"
+    
     - section: "EARNCon Resources"
       contents:
-      - text: "Coming soon"
-
+    - section: "Previous EARNCon Bootcamps"
+      contents:
+      - prev_bootcamps.qmd
+    
 format:
   html:
     theme: cosmo
