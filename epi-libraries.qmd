@@ -13,3 +13,21 @@ title: "EPI built libraries"
 [epiextractr](https://economic.github.io/epiextractr)
 
 -   epiextractr makes it easy to use the [EPI microdata extracts](https://microdata.epi.org/) in R.
+
+**Note!** EPI's R packages require users to install [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html)
+
+```{r results=FALSE}
+
+# install.packages('devtools')
+
+```
+
+Once you've installed devtools, you can install all three EPI packages using the following commands
+
+```{r EPI library installation}
+
+# devtools::install_github("Economic/realtalk")
+# devtools::install_github("economic/epidatatools")
+# devtools::install_github("economic/epiextractr")
+
+```

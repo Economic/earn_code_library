@@ -6,16 +6,14 @@ title: 'Inflation adjusting with Realtalk'
 
 -   Install required libraries
 
-```{r installation of required libraries}
-# Many EPI built packages, including RealTalk require users to install devtools
-
+```{r installation of required libraries, results=FALSE}
 # install.packages("devtools")
 # devtools::install_github("Economic/realtalk")
 ```
 
 Load necessary libraries
 
-```{r Load libraries, echo=FALSE}
+```{r Load libraries, message=FALSE}
 library(tidyverse)
 library(realtalk)
 ```
