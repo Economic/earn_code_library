@@ -2,20 +2,17 @@
 title: 'Inflation adjusting with Realtalk'
 ---
 
-### Inflation adjusting using [realtalk](https://economic.github.io/realtalk/)
+**Note:** Users will need to install realtalk and epiextractr for this example. Refer to [EPI built libraries](epi-libraries.qmd) for installation instructions
 
--   Install required libraries
-
-```{r installation of required libraries, results=FALSE}
-# install.packages("devtools")
-# devtools::install_github("Economic/realtalk")
-```
-
-Load necessary libraries
+## Loading CPI Indices using the [realtalk](https://economic.github.io/realtalk/) library
 
 ```{r Load libraries, message=FALSE}
+
+#Load necessary libraries
 library(tidyverse)
 library(realtalk)
+library(epiextractr)
+library(here)
 ```
 
 The RealTalk package includes several datasets of common US price indices. EPI often uses the CPI-U-RS series to inflation adjust wages
@@ -32,24 +29,7 @@ cpi_data <- realtalk::cpi_u_rs_annual
 cpi2022 <- cpi_data$cpi_u_rs[cpi_data$year==2022]
 ```
 
-```{r Create fake wage data}
-
-set.seed(123) # for reproducibility
-
-years <- 1978:2021
-start_wage <- 5 # Arbitrary starting wage in 1978, in dollars
-
-# Generate fake wage data with an average increase of 2.5% per year with some random noise
-fake_wages <- cumprod(rep(1.025, length(years)) + rnorm(length(years), mean = 0, sd = 0.02)) * start_wage
-
-# Create a tibble
-wage_data <- tibble(
-  year = years,
-  avg_hrly_wage = round(fake_wages, 2) 
-)
-
-wage_data
-```
+## A refresher on inflation adjustment
 
 Before jumping into the full code. Let's refresh on how to calculate inflation using the Consumer Price Index.
 
@@ -67,18 +47,50 @@ $$
 
 And voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.
 
-Below, I merge the CPI-U-RS index to our fictitious wage-data, and then inflation adjust our wages using this same procedure.
+## Applying inflation adjustment to CPS ORG wage data
+
+Below, I load CPS ORG data and define my sample:
+
+```{r Wage data, message=FALSE}
+
+org <- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat,
+         .extracts_dir = here('data/cps/')) %>% 
+    #define sample universe
+    filter(age>=16, lfstat %in% c(1,2))
+
+```
+
+Next, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()
+
+```{r Calculate median wages in the CPS ORG}
+
+#Calculate median wages in the CPS ORG
+wage_data <- org %>% 
+  #use spatstat package to calculate a weighted median
+  #Note: I am pooling 12 months of CPS data, 
+  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.
+  summarize(nominal_median_wage = 
+              spatstat.geom::weighted.median(wage, w=orgwgt/12, na.rm=TRUE),
+            .by=year) %>% 
+
+#Merge annual CPI data to dataframe by year.
+  left_join(cpi_data, by='year') 
+
+wage_data
+```
+
+Finally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:
 
 ```{r Clean and prepare data for inflation adjustment}
 
-#Load example data of US personal expenditures on various household goods.
-clean_data <- wage_data %>% 
+adjusted_data <- wage_data %>% 
  
-  #Merge CPI data to dataframe by year.
-  left_join(cpi_data, by='year') %>% 
+  #This mutate command calculates inflation in a given year, relative to 2022
+  #and multiplies nominal median wages by the inflation quotient
+  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),
+         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %>% 
   
-  #This mutate command multiplies adjust personal expenditures
-  mutate(real_wage = avg_hrly_wage*(cpi2022/cpi_u_rs))
+  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)
   
-clean_data
+adjusted_data
 ```

@@ -4,27 +4,42 @@ title: "About"
 
 Welcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice.
 
-```{r}
-# Load necessary libraries
-library(ggplot2)
+```{css include=FALSE}
+#square-container {
+  width: 100%;
+  padding-bottom: 100%;
+  position: relative;
+}
+
+#square-container .hc-chart {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+```
+
+::: {#square-container}
+```{r highcharterExample, message=FALSE}
+
+# Load required libraries
+library(highcharter)
 
 # Generate heart-shaped data
-t <- seq(0, 2*pi, by=0.01)
-x <- 16*sin(t)^3
-y <- 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t)
+t <- seq(0, 2 * pi, by = 0.01)
+x <- 16 * sin(t)^3
+y <- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)
 
-# Create a scatterplot with a transparent background, visible axes, and custom labels
-ggplot(data.frame(x, y), aes(x, y)) +
-  geom_point(color="red", size=2) +
-  coord_fixed(ratio = 1) +
-  labs(x = "Love", y = "Peace") +
-  theme(
-    plot.background = element_rect(fill = "transparent", colour = NA),
-    panel.background = element_rect(fill = "transparent", colour = NA),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    axis.line = element_line(colour = "black")
-  )
+# Create a data frameh
+df <- data.frame(x, y)
 
+# Create highcharter plot
+highchart(type = "chart") %>% 
+  hc_add_series(data = df, type = "scatter", color = "red", marker = list(radius = 2)) %>% 
+  hc_xAxis(title = list(text = "Justice"), min = -20, max = 20) %>% 
+  hc_yAxis(title = list(text = "Peace"), min = -20, max = 15) %>% 
+  hc_chart(backgroundColor = "transparent") %>% 
+  hc_legend(enabled = FALSE)
 ```
+:::

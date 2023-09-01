@@ -1,0 +1,30 @@
+---
+title: "Using EPI's CPS Extracts"
+---
+
+**Note:** Users will need to install epiextractr for this example. Refer to [EPI built libraries](epi-libraries.qmd) for installation instructions
+
+```{r Load libraries, message=FALSE}
+library(tidyverse)
+library(epiextractr)
+library(here)
+```
+
+```{r Download CPS files from microdata site, eval=FALSE, message=FALSE}
+
+download_cps("org", here('data/cps'))
+
+```
+
+will download the latest EPI CPS ORG extracts in .feather format from [https://microdata.epi.org](https://microdata.epi.org/) and place them in the directory `C:\data\cps`.
+
+After the data is downloaded, load a selection of CPS data for your analysis:
+
+```{r Load ORG, message=FALSE}
+
+org <- load_cps("org", 2020:2022, year, orgwgt, wage, age, statefips, wbho, 
+         .extracts_dir = here('data/cps/'))
+
+org
+
+```
