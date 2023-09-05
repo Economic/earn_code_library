@@ -4,6 +4,10 @@ title: "About"
 
 Welcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice.
 
+## User submissions
+
+Have a coding sample you would like to submit to the EARN code library? Contact us at [EARN\@epi.org](mailto:EARN@epi.org)
+
 ```{css include=FALSE}
 #square-container {
   width: 100%;

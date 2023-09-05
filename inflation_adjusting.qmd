@@ -6,8 +6,9 @@ title: 'Inflation adjusting with Realtalk'
 
 ## Loading CPI Indices using the [realtalk](https://economic.github.io/realtalk/) library
 
-```{r Load libraries, message=FALSE}
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.
 
+```{r Load libraries, message=FALSE}
 #Load necessary libraries
 library(tidyverse)
 library(realtalk)
@@ -15,13 +16,17 @@ library(epiextractr)
 library(here)
 ```
 
-The RealTalk package includes several datasets of common US price indices. EPI often uses the CPI-U-RS series to inflation adjust wages
+The RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.
 
 ```{r List price indices}
 
 #list available cpi series
 realtalk::available_price_indexes
+```
 
+EPI uses the CPI-U-RS series to inflation adjust wages, so we'll select that series and assign it to a dataframe.
+
+```{r }
 #this creates a dataframe with the annual CPI-U-RS index from 1937-2022
 cpi_data <- realtalk::cpi_u_rs_annual
 

@@ -1,0 +1,23 @@
+---
+title: "Visualization workshop 2023"
+---
+
+## Welcome to the EARNCon 2023 Visualization workshop page
+
+In this workshop you will learn how to create data visualizations using free tools like ggplot2 and Tableau.
+
+### Creating visualizations using ggplot2
+
+Download
+
+```{r Libraries, message=FALSE}
+#Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+
+# educ_data <- read.csv(url('https://github.com/dperez-epi/visualization_workshop/blob/eae274c7f65b8d7b5c93b3e82922560dc14e8d4a/output/educ_attainment_regional.csv'))
+
+```

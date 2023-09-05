@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">EPI Libraries for R</span></a>
+ <span class="menu-text">EPI built libraries</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -176,7 +176,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./epi-libraries.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EPI built libraries</span></a>
+ <span class="menu-text">EPI libraries for R</span></a>
   </div>
 </li>
       </ul>
@@ -274,6 +274,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Note:</strong> Users will need to install realtalk and epiextractr for this example. Refer to <a href="./epi-libraries.html">EPI built libraries</a> for installation instructions</p>
 <section id="loading-cpi-indices-using-the-realtalk-library" class="level2">
 <h2 class="anchored" data-anchor-id="loading-cpi-indices-using-the-realtalk-library">Loading CPI Indices using the <a href="https://economic.github.io/realtalk/">realtalk</a> library</h2>
+<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -281,7 +282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The RealTalk package includes several datasets of common US price indices. EPI often uses the CPI-U-RS series to inflation adjust wages</p>
+<p>The RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#list available cpi series</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>realtalk<span class="sc">::</span>available_price_indexes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -303,6 +304,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 12 PCE                annual    &lt;NA&gt;     1929     2022     pce_annual           
 13 PCE                monthly   SA       Jan 1959 Apr 2023 pce_monthly_sa       </code></pre>
 </div>
+</div>
+<p>EPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#this creates a dataframe with the annual CPI-U-RS index from 1937-2022</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>cpi_u_rs_annual</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>

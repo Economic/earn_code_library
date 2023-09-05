@@ -8,6 +8,7 @@ website:
   navbar:
     search: true
     logo: /graphics/EARN_logo_primary.png
+    collapse: true
 
 
   sidebar: 
@@ -18,8 +19,8 @@ website:
     - section: "Home"
       contents: 
       - about.qmd
-      
-    - section: "EPI Libraries for R"
+
+    - section: "EPI built libraries"
       contents:
       - epi-libraries.qmd
       
@@ -27,12 +28,14 @@ website:
       contents:
       - epi_microdata.qmd
       - inflation_adjusting.qmd
+
     - section: "Stata examples"
       contents:
       - text: "Coming soon"
     
     - section: "EARNCon Resources"
       contents:
+       - viz_workshop.qmd
        - prev_bootcamps.qmd
     
 format:

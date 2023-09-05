@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Code Library - EPI libraries for R</title>
+<title>Code Library - Visualization workshop 2023</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -125,7 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./epi-libraries.html">EPI built libraries</a></li><li class="breadcrumb-item"><a href="./epi-libraries.html">EPI libraries for R</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./viz_workshop.html">EARNCon Resources</a></li><li class="breadcrumb-item"><a href="./viz_workshop.html">Visualization workshop 2023</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -173,7 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./epi-libraries.html" class="sidebar-item-text sidebar-link active">
+  <a href="./epi-libraries.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EPI libraries for R</span></a>
   </div>
 </li>
@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Visualization workshop 2023</span></a>
   </div>
 </li>
@@ -249,7 +249,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-to-install-epis-data-tools" id="toc-how-to-install-epis-data-tools" class="nav-link active" data-scroll-target="#how-to-install-epis-data-tools">How to install EPI’s data tools</a></li>
+  <li><a href="#welcome-to-the-earncon-2023-visualization-workshop-page" id="toc-welcome-to-the-earncon-2023-visualization-workshop-page" class="nav-link active" data-scroll-target="#welcome-to-the-earncon-2023-visualization-workshop-page">Welcome to the EARNCon 2023 Visualization workshop page</a>
+  <ul class="collapse">
+  <li><a href="#creating-visualizations-using-ggplot2" id="toc-creating-visualizations-using-ggplot2" class="nav-link" data-scroll-target="#creating-visualizations-using-ggplot2">Creating visualizations using ggplot2</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -258,7 +261,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">EPI libraries for R</h1>
+<h1 class="title">Visualization workshop 2023</h1>
 </div>
 
 
@@ -273,32 +276,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><a href="https://economic.github.io/realtalk/">realtalk</a></p>
-<ul>
-<li>realtalk makes it easy to use common US price indexes in R.</li>
-</ul>
-<p><a href="https://economic.github.io/epidatatools/">epidatatools</a></p>
-<ul>
-<li>epidatatools contains functions we find useful at <a href="https://epi.org/">EPI</a> that don’t have exact analogues elsewhere in the R package ecosystem.</li>
-</ul>
-<p><a href="https://economic.github.io/epiextractr">epiextractr</a></p>
-<ul>
-<li>epiextractr makes it easy to use the <a href="https://microdata.epi.org/">EPI microdata extracts</a> in R.</li>
-</ul>
-<section id="how-to-install-epis-data-tools" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-install-epis-data-tools">How to install EPI’s data tools</h2>
-<p><strong>Note!</strong> EPI’s R packages require users to install <a href="https://www.r-project.org/nosvn/pandoc/devtools.html">devtools</a></p>
+<section id="welcome-to-the-earncon-2023-visualization-workshop-page" class="level2">
+<h2 class="anchored" data-anchor-id="welcome-to-the-earncon-2023-visualization-workshop-page">Welcome to the EARNCon 2023 Visualization workshop page</h2>
+<p>In this workshop you will learn how to create data visualizations using free tools like ggplot2 and Tableau.</p>
+<section id="creating-visualizations-using-ggplot2" class="level3">
+<h3 class="anchored" data-anchor-id="creating-visualizations-using-ggplot2">Creating visualizations using ggplot2</h3>
+<p>Download</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'devtools'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Once you’ve installed devtools, you can install all three EPI packages using the following commands</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"Economic/realtalk"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"economic/epidatatools"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"economic/epiextractr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># educ_data &lt;- read.csv(url('https://github.com/dperez-epi/visualization_workshop/blob/eae274c7f65b8d7b5c93b3e82922560dc14e8d4a/output/educ_attainment_regional.csv'))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
