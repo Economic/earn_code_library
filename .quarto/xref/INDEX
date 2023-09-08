@@ -19,5 +19,26 @@
   },
   "viz_workshop.qmd": {
     "viz_workshop.html": "5da9bfcc"
+  },
+  "code/about.qmd": {
+    "about.html": "e75e28e0"
+  },
+  "code/epi-libraries.qmd": {
+    "epi-libraries.html": "3ac954ff"
+  },
+  "code/epi_microdata.qmd": {
+    "epi_microdata.html": "4484a422"
+  },
+  "code/inflation_adjusting.qmd": {
+    "inflation_adjusting.html": "3eec6d78"
+  },
+  "code/prev_bootcamps.qmd": {
+    "prev_bootcamps.html": "f7de47e8"
+  },
+  "code/viz_workshop.qmd": {
+    "viz_workshop.html": "739ef5bb"
+  },
+  "code/bootcamp_preview.qmd": {
+    "bootcamp_preview.html": "7af77b08"
   }
 }

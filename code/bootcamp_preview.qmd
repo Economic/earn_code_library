@@ -1,0 +1,77 @@
+---
+title: "EARNCon 2023 Bootcamp Preview"
+---
+
+Welcome to the EARNCon 2023 data bootcamp preview page!
+
+This step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization.\
+
+## Agenda
+
+**Facilitators:** Daniel Perez & Sebastian Hickey
+
+**EARNTalk date:** Thursday, September 21st, 2023. 2-3:00 p.m. ET
+
+**Process:**
+
+1.  EARN Code Library preview
+
+2.  Downloading and installing R and RStudio Desktop
+
+3.  Exploring the RStudio user interface
+
+    -   Demonstrate
+
+        -   Setting a working directory
+
+        -   Creating a project
+
+        -   Downloading packages that will be used at EARNCon
+
+        -   Creating a script
+
+4.  Registering for Tableau Public
+
+### EARN Code Library preview
+
+We're glad you're here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.
+
+### Downloading and installing R and Rstudio desktop
+
+Installing R and RStudio on work machines can sometimes be challenging due to a variety of reasons.
+
+#### Some common issues (and resolutions):
+
+1.  **Administrative Privileges**: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.
+
+    -   **Resolution:** Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.
+
+2.  **Firewall and Network Restrictions**: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).
+
+    -   **Resolution:** Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.
+
+3.  **Dependency Issues**: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.
+
+    -   **Resolution:** Ensure that all required dependencies are installed. You can use the **`install.packages()`** function with the **`dependencies=TRUE`** argument in R to automatically install package dependencies.
+
+4.  **Operating System Specific Issues**: Depending on whether you're using Windows, macOS, or Linux, there might be OS-specific issues to consider.
+
+    -   **Resolution:** Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like **`apt-get`** or **`yum`** can be used to install the necessary libraries.
+
+5.  **Package Binary vs. Source Installation**: On some systems, users might encounter issues when trying to install package binaries.
+
+    -   **Resolution:** Ensure you have the necessary development tools installed (like **`gcc`** on Linux or Xcode on macOS). When installing a package in R, you can use the **`type="source"`** argument with **`install.packages()`** to install from source.
+
+6.  **Mismatched Versions**: Ensure that the version of RStudio you're installing is compatible with the version of R you have installed.
+
+    -   **Resolution:** Always check the compatibility of RStudio with your R version before installation. If there's a mismatch, consider upgrading R or downloading a compatible version of RStudio.
+
+7.  **Rtools Installation (Windows only)**: Rtools is essential for building and installing some R packages from source on Windows.
+
+    -   **Resolution:** Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.
+
+#### Enough talk, time to download!
+
+1.  Navigate to <https://posit.co/downloads/>
+
+2.  

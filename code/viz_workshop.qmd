@@ -14,10 +14,11 @@ Download
 #Load necessary libraries
 library(tidyverse)
 library(ggplot2)
+library(here)
 ```
 
-```{r}
+```{r Load education data}
 
-# educ_data <- read.csv(url('https://github.com/dperez-epi/visualization_workshop/blob/eae274c7f65b8d7b5c93b3e82922560dc14e8d4a/output/educ_attainment_regional.csv'))
+educ_data <- read_csv('https://raw.githubusercontent.com/dperez-epi/visualization_workshop/master/output/educ_attainment_regional.csv')
 
 ```

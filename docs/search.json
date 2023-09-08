@@ -131,5 +131,152 @@
     "title": "2021 and 2022 data bootcamps",
     "section": "2021 Using R effectively (Video)",
     "text": "2021 Using R effectively (Video)\nSlides\nacs_2019.dta\ngeocorr2018.csv\nacs_wage_analysis_LAST_TIME.R\nacs_wage_analysis_FINAL.R"
+  },
+  {
+    "objectID": "code/about.html",
+    "href": "code/about.html",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice."
+  },
+  {
+    "objectID": "code/about.html#user-submissions",
+    "href": "code/about.html#user-submissions",
+    "title": "About",
+    "section": "User submissions",
+    "text": "User submissions\nHave a coding sample you would like to submit to the EARN code library? Contact us at EARN@epi.org\n\n\n# Load required libraries\nlibrary(highcharter)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2 * pi, by = 0.01)\nx &lt;- 16 * sin(t)^3\ny &lt;- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)\n\n# Create a data frameh\ndf &lt;- data.frame(x, y)\n\n# Create highcharter plot\nhighchart(type = \"chart\") %&gt;% \n  hc_add_series(data = df, type = \"scatter\", color = \"red\", marker = list(radius = 2)) %&gt;% \n  hc_xAxis(title = list(text = \"Justice\"), min = -20, max = 20) %&gt;% \n  hc_yAxis(title = list(text = \"Peace\"), min = -20, max = 15) %&gt;% \n  hc_chart(backgroundColor = \"transparent\") %&gt;% \n  hc_legend(enabled = FALSE)"
+  },
+  {
+    "objectID": "code/viz_workshop.html",
+    "href": "code/viz_workshop.html",
+    "title": "Visualization workshop 2023",
+    "section": "",
+    "text": "In this workshop you will learn how to create data visualizations using free tools like ggplot2 and Tableau.\n\n\nDownload\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(here)\n\n\neduc_data &lt;- read_csv('https://raw.githubusercontent.com/dperez-epi/visualization_workshop/master/output/educ_attainment_regional.csv')\n\nRows: 921 Columns: 5\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): region, educ\ndbl (3): year, educ_count, educ_share\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "code/viz_workshop.html#welcome-to-the-earncon-2023-visualization-workshop-page",
+    "href": "code/viz_workshop.html#welcome-to-the-earncon-2023-visualization-workshop-page",
+    "title": "Visualization workshop 2023",
+    "section": "",
+    "text": "In this workshop you will learn how to create data visualizations using free tools like ggplot2 and Tableau.\n\n\nDownload\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(here)\n\n\neduc_data &lt;- read_csv('https://raw.githubusercontent.com/dperez-epi/visualization_workshop/master/output/educ_attainment_regional.csv')\n\nRows: 921 Columns: 5\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): region, educ\ndbl (3): year, educ_count, educ_share\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "code/inflation_adjusting.html",
+    "href": "code/inflation_adjusting.html",
+    "title": "Inflation adjusting with Realtalk",
+    "section": "",
+    "text": "Note: Users will need to install realtalk and epiextractr for this example. Refer to EPI built libraries for installation instructions"
+  },
+  {
+    "objectID": "code/inflation_adjusting.html#loading-cpi-indices-using-the-realtalk-library",
+    "href": "code/inflation_adjusting.html#loading-cpi-indices-using-the-realtalk-library",
+    "title": "Inflation adjusting with Realtalk",
+    "section": "Loading CPI Indices using the realtalk library",
+    "text": "Loading CPI Indices using the realtalk library\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(realtalk)\nlibrary(epiextractr)\nlibrary(here)\n\nThe RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.\n\n#list available cpi series\nrealtalk::available_price_indexes\n\n# A tibble: 13 × 6\n   index_name         frequency seasonal min_date max_date package_data_name    \n   &lt;chr&gt;              &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                \n 1 C-CPI-U            annual    &lt;NA&gt;     2000     2022     c_cpi_u_annual       \n 2 C-CPI-U            monthly   NSA      Dec 1999 May 2023 c_cpi_u_monthly_nsa  \n 3 CPI-U              annual    &lt;NA&gt;     1937     2022     cpi_u_annual         \n 4 CPI-U              monthly   NSA      Jan 1937 May 2023 cpi_u_monthly_nsa    \n 5 CPI-U              monthly   SA       Jan 1947 May 2023 cpi_u_monthly_sa     \n 6 CPI-U-RS           annual    &lt;NA&gt;     1978     2022     cpi_u_rs_annual      \n 7 CPI-U-RS           monthly   NSA      Dec 1977 Dec 2022 cpi_u_rs_monthly_nsa \n 8 CPI-U-RS, extended annual    &lt;NA&gt;     1937     2022     cpi_u_rs_extended_an…\n 9 CPI-U-RS, extended monthly   NSA      Jan 1937 May 2023 cpi_u_rs_extended_mo…\n10 CPI-U-X1           annual    &lt;NA&gt;     1967     1982     cpi_u_x1_annual      \n11 CPI-U-X1           monthly   NSA      Jan 1967 Dec 1982 cpi_u_x1_monthly_nsa \n12 PCE                annual    &lt;NA&gt;     1929     2022     pce_annual           \n13 PCE                monthly   SA       Jan 1959 Apr 2023 pce_monthly_sa       \n\n\nEPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.\n\n#this creates a dataframe with the annual CPI-U-RS index from 1937-2022\ncpi_data &lt;- realtalk::cpi_u_rs_annual\n\n#Set base year to 2022\ncpi2022 &lt;- cpi_data$cpi_u_rs[cpi_data$year==2022]"
+  },
+  {
+    "objectID": "code/inflation_adjusting.html#a-refresher-on-inflation-adjustment",
+    "href": "code/inflation_adjusting.html#a-refresher-on-inflation-adjustment",
+    "title": "Inflation adjusting with Realtalk",
+    "section": "A refresher on inflation adjustment",
+    "text": "A refresher on inflation adjustment\nBefore jumping into the full code. Let’s refresh on how to calculate inflation using the Consumer Price Index.\nInflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:\n\\[\n\\frac{\\text{Given year}}{\\text{Base year}} * 100\n\\]\nFor example, let’s calculate how much the CPI-U-RS index has increased from 1978 to 2022.\n\\[\n\\frac{\\text{CPI}_{2022}}{\\text{CPI}_{1978}} = \\frac{431.5}{104} \\approx 4.149038 \\text{ or } 414.9\\%\n\\]\nAnd voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978."
+  },
+  {
+    "objectID": "code/inflation_adjusting.html#applying-inflation-adjustment-to-cps-org-wage-data",
+    "href": "code/inflation_adjusting.html#applying-inflation-adjustment-to-cps-org-wage-data",
+    "title": "Inflation adjusting with Realtalk",
+    "section": "Applying inflation adjustment to CPS ORG wage data",
+    "text": "Applying inflation adjustment to CPS ORG wage data\nBelow, I load CPS ORG data and define my sample:\n\norg &lt;- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat,\n         .extracts_dir = here('data/cps/')) %&gt;% \n    #define sample universe\n    filter(age&gt;=16, lfstat %in% c(1,2))\n\nNext, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()\n\n#Calculate median wages in the CPS ORG\nwage_data &lt;- org %&gt;% \n  #use spatstat package to calculate a weighted median\n  #Note: I am pooling 12 months of CPS data, \n  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.\n  summarize(nominal_median_wage = \n              spatstat.geom::weighted.median(wage, w=orgwgt/12, na.rm=TRUE),\n            .by=year) %&gt;% \n\n#Merge annual CPI data to dataframe by year.\n  left_join(cpi_data, by='year') \n\nwage_data\n\n# A tibble: 11 × 3\n    year nominal_median_wage cpi_u_rs\n   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;\n 1  2012                16.0     337.\n 2  2013                16.4     342 \n 3  2014                16.7     348.\n 4  2015                17.0     348.\n 5  2016                17.5     353.\n 6  2017                18.0     360.\n 7  2018                18.7     369.\n 8  2019                19.2     376.\n 9  2020                21.0     381.\n10  2021                21.4     399.\n11  2022                22.9     432.\n\n\nFinally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:\n\nadjusted_data &lt;- wage_data %&gt;% \n \n  #This mutate command calculates inflation in a given year, relative to 2022\n  #and multiplies nominal median wages by the inflation quotient\n  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),\n         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %&gt;% \n  \n  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)\n  \nadjusted_data\n\n# A tibble: 11 × 5\n    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022\n   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n 1  2012     337.            0.28                 16.0           20.5\n 2  2013     342             0.26                 16.4           20.7\n 3  2014     348.            0.24                 16.7           20.8\n 4  2015     348.            0.24                 17.0           21.1\n 5  2016     353.            0.22                 17.5           21.4\n 6  2017     360.            0.2                  18.0           21.6\n 7  2018     369.            0.17                 18.7           21.9\n 8  2019     376.            0.15                 19.2           22.1\n 9  2020     381.            0.13                 21.0           23.8\n10  2021     399.            0.081                21.4           23.1\n11  2022     432.            0                    22.9           22.9"
+  },
+  {
+    "objectID": "code/epi-libraries.html",
+    "href": "code/epi-libraries.html",
+    "title": "EPI libraries for R",
+    "section": "",
+    "text": "realtalk\nepidatatools\nepiextractr"
+  },
+  {
+    "objectID": "code/epi-libraries.html#how-to-install-epis-data-tools",
+    "href": "code/epi-libraries.html#how-to-install-epis-data-tools",
+    "title": "EPI libraries for R",
+    "section": "How to install EPI’s data tools",
+    "text": "How to install EPI’s data tools\nNote! EPI’s R packages require users to install devtools\n\ninstall.packages('devtools')\n\nOnce you’ve installed devtools, you can install all three EPI packages using the following commands\n\ndevtools::install_github(\"Economic/realtalk\")\ndevtools::install_github(\"economic/epidatatools\")\ndevtools::install_github(\"economic/epiextractr\")"
+  },
+  {
+    "objectID": "code/epi_microdata.html",
+    "href": "code/epi_microdata.html",
+    "title": "Using EPI’s CPS Extracts",
+    "section": "",
+    "text": "Note: Users will need to install epiextractr for this example. Refer to EPI built libraries for installation instructions\n\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\ndownload_cps(\"org\", here('data/cps'))\n\nwill download the latest EPI CPS ORG extracts in .feather format from https://microdata.epi.org and place them in the directory C:\\data\\cps.\nAfter the data is downloaded, load a selection of CPS data for your analysis:\n\norg &lt;- load_cps(\"org\", 2020:2022, year, orgwgt, wage, age, statefips, wbho, \n         .extracts_dir = here('data/cps/'))\n\norg\n\n# A tibble: 786,123 × 6\n    year orgwgt  wage age       statefips wbho     \n   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt;\n 1  2020  8879.  11.2 23        1 [AL]    2 [Black]\n 2  2020  8466.  20   50        1 [AL]    2 [Black]\n 3  2020  5948.  NA   70        1 [AL]    2 [Black]\n 4  2020  6664.  NA   77        1 [AL]    2 [Black]\n 5  2020  7850.  NA   77        1 [AL]    4 [Other]\n 6  2020 10222.  NA   54        1 [AL]    4 [Other]\n 7  2020  7283.  NA   79        1 [AL]    1 [White]\n 8  2020  7483.  NA   76        1 [AL]    1 [White]\n 9  2020  7368.  NA   63        1 [AL]    1 [White]\n10  2020  7022.  NA   80 [80+]  1 [AL]    1 [White]\n# ℹ 786,113 more rows"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html",
+    "href": "code/prev_bootcamps.html",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "",
+    "text": "EPI Bootcamp Website"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#data-analysis-in-r-video",
+    "href": "code/prev_bootcamps.html#data-analysis-in-r-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2022 Data analysis in R (Video)",
+    "text": "2022 Data analysis in R (Video)\nData analysis in R slides\nHistorical minimum wage data\nCPI-U-RS data\nEPI CPS ORG data"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#data-bootcamp-code-library-presentation-video",
+    "href": "code/prev_bootcamps.html#data-bootcamp-code-library-presentation-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2022 Data bootcamp: Code Library Presentation (Video)",
+    "text": "2022 Data bootcamp: Code Library Presentation (Video)\nCode library powerpoint"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#data-analysis-in-stata-video",
+    "href": "code/prev_bootcamps.html#data-analysis-in-stata-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2022 Data analysis in Stata (Video)",
+    "text": "2022 Data analysis in Stata (Video)\nData analysis in Stata slides\nStata session do file"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#first-steps-in-stata-video",
+    "href": "code/prev_bootcamps.html#first-steps-in-stata-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2021 First steps in Stata (Video)",
+    "text": "2021 First steps in Stata (Video)\nStata session 1 slides\nStata session 1 do file\nEPI CPS ORG 2020 stata data file"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#using-stata-effectively-video",
+    "href": "code/prev_bootcamps.html#using-stata-effectively-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2021 Using Stata effectively (Video)",
+    "text": "2021 Using Stata effectively (Video)\nStata session 2 slides\nStata session 2 do file\nCPI-U-RS data\nEPI CPS ORG 2020 stata data file\nFull EPI CPS ORG (zipped data files)"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#first-steps-in-r-video",
+    "href": "code/prev_bootcamps.html#first-steps-in-r-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2021 First steps in R (Video)",
+    "text": "2021 First steps in R (Video)\nSlides\nacs_2019.dta\nepi_wage_percentiles.csv\nacs_wage_analysis.R"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#using-r-effectively-video",
+    "href": "code/prev_bootcamps.html#using-r-effectively-video",
+    "title": "2021 and 2022 data bootcamps",
+    "section": "2021 Using R effectively (Video)",
+    "text": "2021 Using R effectively (Video)\nSlides\nacs_2019.dta\ngeocorr2018.csv\nacs_wage_analysis_LAST_TIME.R\nacs_wage_analysis_FINAL.R"
+  },
+  {
+    "objectID": "code/bootcamp_preview.html",
+    "href": "code/bootcamp_preview.html",
+    "title": "EARNCon 2023 Bootcamp Preview",
+    "section": "",
+    "text": "Welcome to the EARNCon 2023 data bootcamp preview page!\nThis step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization."
+  },
+  {
+    "objectID": "code/bootcamp_preview.html#agenda",
+    "href": "code/bootcamp_preview.html#agenda",
+    "title": "EARNCon 2023 Bootcamp Preview",
+    "section": "Agenda",
+    "text": "Agenda\nFacilitators: Daniel Perez & Sebastian Hickey\nEARNTalk date: Thursday, September 21st, 2023. 2-3:00 p.m. ET\nProcess:\n\nEARN Code Library preview\nDownloading and installing R and RStudio Desktop\nExploring the RStudio user interface\n\nDemonstrate\n\nSetting a working directory\nCreating a project\nDownloading packages that will be used at EARNCon\nCreating a script\n\n\nRegistering for Tableau Public\n\n\nEARN Code Library preview\nWe’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.\n\n\nDownloading and installing R and Rstudio desktop\nInstalling R and RStudio on work machines can sometimes be challenging due to a variety of reasons.\n\nSome common issues (and resolutions):\n\nAdministrative Privileges: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.\n\nResolution: Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.\n\nFirewall and Network Restrictions: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).\n\nResolution: Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.\n\nDependency Issues: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.\n\nResolution: Ensure that all required dependencies are installed. You can use the install.packages() function with the dependencies=TRUE argument in R to automatically install package dependencies.\n\nOperating System Specific Issues: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.\n\nResolution: Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like apt-get or yum can be used to install the necessary libraries.\n\nPackage Binary vs. Source Installation: On some systems, users might encounter issues when trying to install package binaries.\n\nResolution: Ensure you have the necessary development tools installed (like gcc on Linux or Xcode on macOS). When installing a package in R, you can use the type=\"source\" argument with install.packages() to install from source.\n\nMismatched Versions: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.\n\nResolution: Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.\n\nRtools Installation (Windows only): Rtools is essential for building and installing some R packages from source on Windows.\n\nResolution: Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.\n\n\n\n\nEnough talk, time to download!\n\nNavigate to https://posit.co/downloads/"
   }
 ]

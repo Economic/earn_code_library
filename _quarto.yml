@@ -2,6 +2,9 @@ project:
   type: website
   output-dir: docs
   
+  # render:
+  # - bootcamp_preview.qmd
+  
 website:
   title: "Code Library"
   
@@ -18,16 +21,16 @@ website:
 
     - section: "Home"
       contents: 
-      - about.qmd
+      - code/about.qmd
 
     - section: "EPI built libraries"
       contents:
-      - epi-libraries.qmd
+      - code/epi-libraries.qmd
       
     - section: "R examples"
       contents:
-      - epi_microdata.qmd
-      - inflation_adjusting.qmd
+      - code/epi_microdata.qmd
+      - code/inflation_adjusting.qmd
 
     - section: "Stata examples"
       contents:
@@ -35,8 +38,9 @@ website:
     
     - section: "EARNCon Resources"
       contents:
-       - viz_workshop.qmd
-       - prev_bootcamps.qmd
+       - code/bootcamp_preview.qmd
+       # - code/viz_workshop.qmd
+       - code/prev_bootcamps.qmd
     
 format:
   html:
