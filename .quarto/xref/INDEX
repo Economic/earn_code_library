@@ -40,5 +40,8 @@
   },
   "code/bootcamp_preview.qmd": {
     "bootcamp_preview.html": "7af77b08"
+  },
+  "code/bin_wage_deciles.qmd": {
+    "bin_wage_deciles.html": "d21d2bb5"
   }
 }

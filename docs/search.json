@@ -16,30 +16,30 @@
   {
     "objectID": "code/inflation_adjusting.html",
     "href": "code/inflation_adjusting.html",
-    "title": "Inflation adjusting with Realtalk",
+    "title": "R: Inflation adjusting with Realtalk",
     "section": "",
     "text": "Note: Users will need to install realtalk and epiextractr for this example. Refer to EPI built libraries for installation instructions"
   },
   {
     "objectID": "code/inflation_adjusting.html#loading-cpi-indices-using-the-realtalk-library",
     "href": "code/inflation_adjusting.html#loading-cpi-indices-using-the-realtalk-library",
-    "title": "Inflation adjusting with Realtalk",
+    "title": "R: Inflation adjusting with Realtalk",
     "section": "Loading CPI Indices using the realtalk library",
     "text": "Loading CPI Indices using the realtalk library\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(realtalk)\nlibrary(epiextractr)\nlibrary(here)\n\nThe RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.\n\n#list available cpi series\nrealtalk::available_price_indexes\n\n# A tibble: 13 × 6\n   index_name         frequency seasonal min_date max_date package_data_name    \n   &lt;chr&gt;              &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                \n 1 C-CPI-U            annual    &lt;NA&gt;     2000     2022     c_cpi_u_annual       \n 2 C-CPI-U            monthly   NSA      Dec 1999 May 2023 c_cpi_u_monthly_nsa  \n 3 CPI-U              annual    &lt;NA&gt;     1937     2022     cpi_u_annual         \n 4 CPI-U              monthly   NSA      Jan 1937 May 2023 cpi_u_monthly_nsa    \n 5 CPI-U              monthly   SA       Jan 1947 May 2023 cpi_u_monthly_sa     \n 6 CPI-U-RS           annual    &lt;NA&gt;     1978     2022     cpi_u_rs_annual      \n 7 CPI-U-RS           monthly   NSA      Dec 1977 Dec 2022 cpi_u_rs_monthly_nsa \n 8 CPI-U-RS, extended annual    &lt;NA&gt;     1937     2022     cpi_u_rs_extended_an…\n 9 CPI-U-RS, extended monthly   NSA      Jan 1937 May 2023 cpi_u_rs_extended_mo…\n10 CPI-U-X1           annual    &lt;NA&gt;     1967     1982     cpi_u_x1_annual      \n11 CPI-U-X1           monthly   NSA      Jan 1967 Dec 1982 cpi_u_x1_monthly_nsa \n12 PCE                annual    &lt;NA&gt;     1929     2022     pce_annual           \n13 PCE                monthly   SA       Jan 1959 Apr 2023 pce_monthly_sa       \n\n\nEPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.\n\n#this creates a dataframe with the annual CPI-U-RS index from 1937-2022\ncpi_data &lt;- realtalk::cpi_u_rs_annual\n\n#Set base year to 2022\ncpi2022 &lt;- cpi_data$cpi_u_rs[cpi_data$year==2022]"
   },
   {
     "objectID": "code/inflation_adjusting.html#a-refresher-on-inflation-adjustment",
     "href": "code/inflation_adjusting.html#a-refresher-on-inflation-adjustment",
-    "title": "Inflation adjusting with Realtalk",
+    "title": "R: Inflation adjusting with Realtalk",
     "section": "A refresher on inflation adjustment",
     "text": "A refresher on inflation adjustment\nBefore jumping into the full code. Let’s refresh on how to calculate inflation using the Consumer Price Index.\nInflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:\n\\[\n\\frac{\\text{Given year}}{\\text{Base year}} * 100\n\\]\nFor example, let’s calculate how much the CPI-U-RS index has increased from 1978 to 2022.\n\\[\n\\frac{\\text{CPI}_{2022}}{\\text{CPI}_{1978}} = \\frac{431.5}{104} \\approx 4.149038 \\text{ or } 414.9\\%\n\\]\nAnd voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978."
   },
   {
     "objectID": "code/inflation_adjusting.html#applying-inflation-adjustment-to-cps-org-wage-data",
     "href": "code/inflation_adjusting.html#applying-inflation-adjustment-to-cps-org-wage-data",
-    "title": "Inflation adjusting with Realtalk",
+    "title": "R: Inflation adjusting with Realtalk",
     "section": "Applying inflation adjustment to CPS ORG wage data",
-    "text": "Applying inflation adjustment to CPS ORG wage data\nBelow, I load CPS ORG data and define my sample:\n\norg &lt;- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat,\n         .extracts_dir = here('data/cps/')) %&gt;% \n    #define sample universe\n    filter(age&gt;=16, lfstat %in% c(1,2))\n\nNext, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()\n\n#Calculate median wages in the CPS ORG\nwage_data &lt;- org %&gt;% \n  #use spatstat package to calculate a weighted median\n  #Note: I am pooling 12 months of CPS data, \n  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.\n  summarize(nominal_median_wage = \n              spatstat.geom::weighted.median(wage, w=orgwgt/12, na.rm=TRUE),\n            .by=year) %&gt;% \n\n#Merge annual CPI data to dataframe by year.\n  left_join(cpi_data, by='year') \n\nwage_data\n\n# A tibble: 11 × 3\n    year nominal_median_wage cpi_u_rs\n   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;\n 1  2012                16.0     337.\n 2  2013                16.4     342 \n 3  2014                16.7     348.\n 4  2015                17.0     348.\n 5  2016                17.5     353.\n 6  2017                18.0     360.\n 7  2018                18.7     369.\n 8  2019                19.2     376.\n 9  2020                21.0     381.\n10  2021                21.4     399.\n11  2022                22.9     432.\n\n\nFinally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:\n\nadjusted_data &lt;- wage_data %&gt;% \n \n  #This mutate command calculates inflation in a given year, relative to 2022\n  #and multiplies nominal median wages by the inflation quotient\n  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),\n         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %&gt;% \n  \n  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)\n  \nadjusted_data\n\n# A tibble: 11 × 5\n    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022\n   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n 1  2012     337.            0.28                 16.0           20.5\n 2  2013     342             0.26                 16.4           20.7\n 3  2014     348.            0.24                 16.7           20.8\n 4  2015     348.            0.24                 17.0           21.1\n 5  2016     353.            0.22                 17.5           21.4\n 6  2017     360.            0.2                  18.0           21.6\n 7  2018     369.            0.17                 18.7           21.9\n 8  2019     376.            0.15                 19.2           22.1\n 9  2020     381.            0.13                 21.0           23.8\n10  2021     399.            0.081                21.4           23.1\n11  2022     432.            0                    22.9           22.9"
+    "text": "Applying inflation adjustment to CPS ORG wage data\nThis section uses epiextractr to load Current Population Survey data. Refer to the Using EPI’s CPS Extracts to learn how to use this library.\nBelow, I load CPS ORG data and define my sample:\n\norg &lt;- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat,\n         .extracts_dir = here('data/cps/')) %&gt;% \n    #define sample universe\n    filter(age&gt;=16, lfstat %in% c(1,2))\n\nNext, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()\n\n#Calculate median wages in the CPS ORG\nwage_data &lt;- org %&gt;% \n  #use spatstat package to calculate a weighted median\n  #Note: I am pooling 12 months of CPS data, \n  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.\n  summarize(nominal_median_wage = \n              spatstat.geom::weighted.median(wage, w=orgwgt/12, na.rm=TRUE),\n            .by=year) %&gt;% \n\n#Merge annual CPI data to dataframe by year.\n  left_join(cpi_data, by='year') \n\nwage_data\n\n# A tibble: 11 × 3\n    year nominal_median_wage cpi_u_rs\n   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;\n 1  2012                16.0     337.\n 2  2013                16.4     342 \n 3  2014                16.7     348.\n 4  2015                17.0     348.\n 5  2016                17.5     353.\n 6  2017                18.0     360.\n 7  2018                18.7     369.\n 8  2019                19.2     376.\n 9  2020                21.0     381.\n10  2021                21.4     399.\n11  2022                22.9     432.\n\n\nFinally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:\n\nadjusted_data &lt;- wage_data %&gt;% \n \n  #This mutate command calculates inflation in a given year, relative to 2022\n  #and multiplies nominal median wages by the inflation quotient\n  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),\n         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %&gt;% \n  \n  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)\n  \nadjusted_data\n\n# A tibble: 11 × 5\n    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022\n   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n 1  2012     337.            0.28                 16.0           20.5\n 2  2013     342             0.26                 16.4           20.7\n 3  2014     348.            0.24                 16.7           20.8\n 4  2015     348.            0.24                 17.0           21.1\n 5  2016     353.            0.22                 17.5           21.4\n 6  2017     360.            0.2                  18.0           21.6\n 7  2018     369.            0.17                 18.7           21.9\n 8  2019     376.            0.15                 19.2           22.1\n 9  2020     381.            0.13                 21.0           23.8\n10  2021     399.            0.081                21.4           23.1\n11  2022     432.            0                    22.9           22.9"
   },
   {
     "objectID": "code/epi-libraries.html",
@@ -60,14 +60,14 @@
     "href": "code/about.html",
     "title": "About",
     "section": "",
-    "text": "Welcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice."
+    "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used methodologies for economic analysis, EARN resources, and beyond. User contributions are warmly welcomed."
   },
   {
     "objectID": "code/about.html#user-submissions",
     "href": "code/about.html#user-submissions",
     "title": "About",
     "section": "User submissions",
-    "text": "User submissions\nHave a coding sample you would like to submit to the EARN code library? Contact us at EARN@epi.org\n\n\n# Load required libraries\nlibrary(highcharter)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2 * pi, by = 0.01)\nx &lt;- 16 * sin(t)^3\ny &lt;- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)\n\n# Create a data frameh\ndf &lt;- data.frame(x, y)\n\n# Create highcharter plot\nhighchart(type = \"chart\") %&gt;% \n  hc_add_series(data = df, type = \"scatter\", color = \"red\", marker = list(radius = 2)) %&gt;% \n  hc_xAxis(title = list(text = \"Justice\"), min = -20, max = 20) %&gt;% \n  hc_yAxis(title = list(text = \"Peace\"), min = -20, max = 15) %&gt;% \n  hc_chart(backgroundColor = \"transparent\") %&gt;% \n  hc_legend(enabled = FALSE)"
+    "text": "User submissions\nHave a coding sample you would like to submit to the EARN code library? Contact us at EARN@epi.org\nComponents of a code library submission are:\n\nDescription​\nCode file(s)​\nSupplementary data​\nOutput example\nAuthor contact information"
   },
   {
     "objectID": "code/bootcamp_preview.html",
@@ -145,5 +145,26 @@
     "title": "2021 and 2022 data bootcamps",
     "section": "2021 Using R effectively (Video)",
     "text": "2021 Using R effectively (Video)\nSlides\nacs_2019.dta\ngeocorr2018.csv\nacs_wage_analysis_LAST_TIME.R\nacs_wage_analysis_FINAL.R"
+  },
+  {
+    "objectID": "code/about.html#about-this-site",
+    "href": "code/about.html#about-this-site",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used methodologies for economic analysis, EARN resources, and beyond. User contributions are warmly welcomed."
+  },
+  {
+    "objectID": "code/about.html#happy-coding",
+    "href": "code/about.html#happy-coding",
+    "title": "About",
+    "section": "Happy coding!",
+    "text": "Happy coding!\n\n\n#This R code generates an interactive scatterplot in the shape of a heart\n\n# Load required libraries\nlibrary(highcharter)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2 * pi, by = 0.01)\nx &lt;- 16 * sin(t)^3\ny &lt;- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)\n\n# Create a data frame\ndf &lt;- data.frame(x, y)\n\n# Create highcharter plot\nhighchart(type = \"chart\") %&gt;% \n  hc_add_series(data = df, type = \"scatter\", color = \"red\", marker = list(radius = 2)) %&gt;% \n  hc_xAxis(title = list(text = \"Justice\"), min = -20, max = 20) %&gt;% \n  hc_yAxis(title = list(text = \"Peace\"), min = -20, max = 15) %&gt;% \n  hc_chart(backgroundColor = \"transparent\") %&gt;% \n  hc_legend(enabled = FALSE)"
+  },
+  {
+    "objectID": "code/bin_wage_deciles.html",
+    "href": "code/bin_wage_deciles.html",
+    "title": "Wage deciles by state",
+    "section": "",
+    "text": "library(Statamarkdown)\n\nNo Stata executable found.\nNo Stata executable found.\nNo Stata executable found.\nNo Stata executable found.\n\n\nThe 'stata' engine is ready to use.\n\nstata_path &lt;- \"Z:/usr/local/stata14/xstata-se\"\n\n\n\nsysuse auto, clear\nsum weight\n\nError in running command Z:/usr/local/stata14/xstata-se\n\n\n\nnet install binipolate, from(\"https://raw.githubusercontent.com/Economic/binipolate/master/\")\n\nError: &lt;text&gt;:1:5: unexpected symbol\n1: net install\n        ^"
   }
 ]

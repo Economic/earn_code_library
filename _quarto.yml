@@ -27,18 +27,21 @@ website:
       contents:
       - code/epi-libraries.qmd
       
-    - section: "R examples"
+    - section: "Annotated tutorials"
       contents:
-      - code/epi_microdata.qmd
       - code/inflation_adjusting.qmd
+      - code/epi_microdata.qmd
+      
+    - section: "R examples"
+      contents: 
 
     - section: "Stata examples"
       contents:
-      - text: "Coming soon"
+      - code/bin_wage_deciles.qmd
     
     - section: "EARNCon Resources"
       contents:
-       - code/bootcamp_preview.qmd
+       # - code/bootcamp_preview.qmd
        # - code/viz_workshop.qmd
        - code/prev_bootcamps.qmd
     

@@ -1,5 +1,5 @@
 ---
-title: 'Inflation adjusting with Realtalk'
+title: 'R: Inflation adjusting with Realtalk'
 ---
 
 **Note:** Users will need to install realtalk and epiextractr for this example. Refer to [EPI built libraries](epi-libraries.qmd) for installation instructions
@@ -53,6 +53,8 @@ $$
 And voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.
 
 ## Applying inflation adjustment to CPS ORG wage data
+
+This section uses [epiextractr](https://economic.github.io/epiextractr) to load Current Population Survey data. Refer to the [Using EPI's CPS Extracts](epi_microdata.qmd) to learn how to use this library.
 
 Below, I load CPS ORG data and define my sample:
 

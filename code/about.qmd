@@ -2,11 +2,29 @@
 title: "About"
 ---
 
-Welcome to the EARN code library, a resource dedicated to empowering allies in the pursuit of economic and racial justice.
+## About this site
+
+Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.
+
+This library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.
+
+On this site, you will find coding examples, commonly used methodologies for economic analysis, EARN resources, and beyond. User contributions are warmly welcomed.
 
 ## User submissions
 
 Have a coding sample you would like to submit to the EARN code library? Contact us at [EARN\@epi.org](mailto:EARN@epi.org)
+
+Components of a code library submission are:
+
+1.  Description​
+
+2.  Code file(s)​
+
+3.  Supplementary data​
+
+4.  Output example
+
+5.  Author contact information
 
 ```{css include=FALSE}
 #square-container {
@@ -24,8 +42,11 @@ Have a coding sample you would like to submit to the EARN code library? Contact 
 }
 ```
 
+## Happy coding!
+
 ::: {#square-container}
 ```{r highcharterExample, message=FALSE}
+#This R code generates an interactive scatterplot in the shape of a heart
 
 # Load required libraries
 library(highcharter)
@@ -35,7 +56,7 @@ t <- seq(0, 2 * pi, by = 0.01)
 x <- 16 * sin(t)^3
 y <- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)
 
-# Create a data frameh
+# Create a data frame
 df <- data.frame(x, y)
 
 # Create highcharter plot
