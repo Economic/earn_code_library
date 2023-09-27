@@ -34,6 +34,7 @@ website:
       
     - section: "R examples"
       contents: 
+      - code/union_density.qmd
 
     - section: "Stata examples"
       contents:

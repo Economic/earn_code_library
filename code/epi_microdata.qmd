@@ -13,7 +13,10 @@ library(here)
 
 ```{r Download CPS files from microdata site, eval=FALSE, message=FALSE}
 
-download_cps("org", here('data/cps'))
+# download CPS ORG files  
+download_cps( sample = 'org', extracts_dir = here('data/cps'))
+
+# Users can also download CPS Basic (4085.3 MB) and CPS May (38.8 MB) files 
 
 ```
 

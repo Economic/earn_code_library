@@ -43,5 +43,8 @@
   },
   "code/bin_wage_deciles.qmd": {
     "bin_wage_deciles.html": "d21d2bb5"
+  },
+  "code/union_density.qmd": {
+    "union_density.html": "5cbb0924"
   }
 }
