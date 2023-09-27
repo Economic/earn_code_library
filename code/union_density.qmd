@@ -8,7 +8,7 @@ author: 'Daniel Perez, EARN/EPI'
 library(tidyverse)
 library(here)
 library(epiextractr)
-library(openxlsx)
+
 ```
 
 Load CPS data using [epiextractr](epi_microdata.qmd)
@@ -41,6 +41,8 @@ density_us_org <- org %>%
 
 density_us_org
 ```
+
+Calculate state level union representation, 1983--2022
 
 ```{r Year and state}
 

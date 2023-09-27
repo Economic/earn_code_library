@@ -29,8 +29,8 @@ website:
       
     - section: "Code tutorials"
       contents:
-      - code/inflation_adjusting.qmd
       - code/epi_microdata.qmd
+      - code/inflation_adjusting.qmd
       
     - section: "R examples"
       contents: 
@@ -38,6 +38,7 @@ website:
 
     - section: "Stata examples"
       contents:
+      
       - code/bin_wage_deciles.qmd
     
     - section: "EARNCon Resources"

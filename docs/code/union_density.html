@@ -191,14 +191,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/inflation_adjusting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">R: Inflation adjusting with Realtalk</span></a>
+  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R: Using EPI’s CPS Extracts</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">R: Using EPI’s CPS Extracts</span></a>
+  <a href="../code/inflation_adjusting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R: Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
       </ul>
@@ -291,8 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Load CPS data using <a href="../code/epi_microdata.html">epiextractr</a></p>
 <div class="cell">
@@ -337,6 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 30 more rows</code></pre>
 </div>
 </div>
+<p>Calculate state level union representation, 1983–2022</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Union representation by year and state, 1983–Present</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>density_state_org <span class="ot">&lt;-</span> org <span class="sc">%&gt;%</span> </span>
