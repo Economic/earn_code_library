@@ -27,7 +27,7 @@ website:
       contents:
       - code/epi-libraries.qmd
       
-    - section: "Annotated tutorials"
+    - section: "Code tutorials"
       contents:
       - code/inflation_adjusting.qmd
       - code/epi_microdata.qmd

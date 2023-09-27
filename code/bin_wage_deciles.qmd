@@ -1,21 +1,17 @@
 ---
 title: "Wage deciles by state"
+execute:
+  echo: false
 ---
 
 ```{r, include=FALSE}
 
-library(Statamarkdown)
-stata_path <- "Z:/usr/local/stata14/xstata-se"
+stata_path <- "z:/usr/local/stata14/xstata-se"
+knitr::opts_chunk$set(engine.path = stata_path)
 
 ```
 
-```{stata, engine.path=stata_path, comment="" include=FALSE}
-
-sysuse auto, clear
-sum weight
-```
-
-```{r, execute=FALSE}
+```{stata, evaluate=FALSE, output=FALSE}
 
 set more off
 clear all
@@ -50,14 +46,12 @@ keep if selfemp!=1 & selfemp!=.
 use `allthedata', clear
 binipolate wage [pw=orgwgt/12], binsize(.50) by(year statefips) collapsefun(gcollapse) p(10 20 30 40 50 60 70 80 90)
 
-
 *Turn statefips labels into strings
 decode statefips, gen(states)
 drop statefips
 
 *Reshape data wide
 reshape wide wage_binned, i(year percentile) j(states) string
-
 
 *Export state wage deciles to csv file
 export delim ${output}wbhao_worker_medwage.csv, replace
