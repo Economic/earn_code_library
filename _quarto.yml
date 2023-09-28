@@ -38,7 +38,6 @@ website:
 
     - section: "Stata examples"
       contents:
-      
       - code/bin_wage_deciles.qmd
     
     - section: "EARNCon Resources"
