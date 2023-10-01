@@ -6,11 +6,17 @@ project:
   
 website:
   title: "Code Library"
+  page-navigation: true
+  back-to-top-navigation: true
   
   navbar:
     search: true
     logo: /graphics/EARN_logo_primary.png
     collapse: true
+  
+    right: 
+      - icon: fa-github
+        href: https://github.com/Economic/earn_code_library
 
 
   sidebar: 
@@ -36,8 +42,10 @@ website:
     - section: "R code"
       contents: 
       - code/union_density.qmd
+      - text: "---"
+
       
-      - section: "R tutorials"
+      - section: "Annotated examples"
         contents:
         - code/epi_microdata.qmd
         - code/inflation_adjusting.qmd
