@@ -8,11 +8,11 @@ Welcome to the EARN code library, a resource dedicated to the pursuit of economi
 
 This library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.
 
-On this site, you will find coding examples, commonly used methodologies for economic analysis, EARN resources, and beyond. User contributions are warmly welcomed.
+On this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!
 
-## User submissions
+## User code submissions
 
-Have a coding sample you would like to submit to the EARN code library? Contact us at [EARN\@epi.org](mailto:EARN@epi.org)
+Have a coding sample you would like to submit to the EARN code library? Contact [dperez\@epi.org](mailto:dperez@epi.org)
 
 Components of a code library submission are:
 

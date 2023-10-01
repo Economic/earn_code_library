@@ -8,11 +8,11 @@ eval: false
 library(Statamarkdown)
 ```
 
-```{stata}
+```stata
 set more off
 clear all
 
-*Set directories and relative directories 
+*NOTE: Users will need to create their own directory and relative directories 
 global base "/your_directory"
 global code ${base}code/
 global output ${base}output/
@@ -50,6 +50,6 @@ drop statefips
 reshape wide wage_binned, i(year percentile) j(states) string
 
 *Export state wage deciles to csv file
-export delim ${output}wbhao_worker_medwage.csv, replace
+export delim ${output}state_wage_deciles.csv, replace
 
 ```

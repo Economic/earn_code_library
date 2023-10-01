@@ -3,7 +3,6 @@ project:
   output-dir: docs
   
   # render:
-  # - bootcamp_preview.qmd
   
 website:
   title: "Code Library"
@@ -23,27 +22,34 @@ website:
       contents: 
       - code/about.qmd
 
-    - section: "EPI built libraries"
+    - section: "EPI-built resources"
       contents:
-      - code/epi-libraries.qmd
       
-    - section: "Code tutorials"
-      contents:
-      - code/epi_microdata.qmd
-      - code/inflation_adjusting.qmd
+      - section: "R libraries"
+        contents:
+        - code/epi_libraries.qmd
+          
+      - section: "Stata packages"
+        contents:
+        - code/stata_binipolate.qmd
       
-    - section: "R examples"
+    - section: "R code"
       contents: 
       - code/union_density.qmd
+      
+      - section: "R tutorials"
+        contents:
+        - code/epi_microdata.qmd
+        - code/inflation_adjusting.qmd
 
-    - section: "Stata examples"
+    - section: "Stata code"
       contents:
       - code/bin_wage_deciles.qmd
     
     - section: "EARNCon Resources"
       contents:
        # - code/bootcamp_preview.qmd
-       # - code/viz_workshop.qmd
+       - code/viz_workshop.qmd
        - code/prev_bootcamps.qmd
     
 format:

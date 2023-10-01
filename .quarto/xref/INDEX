@@ -46,5 +46,11 @@
   },
   "code/union_density.qmd": {
     "union_density.html": "5cbb0924"
+  },
+  "code/epi_libraries.qmd": {
+    "epi_libraries.html": "745d532f"
+  },
+  "code/stata_binipolate.qmd": {
+    "stata_binipolate.html": "a2c5b470"
   }
 }

@@ -6,19 +6,268 @@ title: "Visualization workshop 2023"
 
 In this workshop you will learn how to create data visualizations using free tools like ggplot2 and Tableau.
 
-### Creating visualizations using ggplot2
+## 1. Introduction
 
-Download
+### 1.1 Brief Overview of `ggplot2`
 
-```{r Libraries, message=FALSE}
-#Load necessary libraries
+<!-- speaker notes -->
+
+```{=html}
+<!--
+`ggplot2` is highly regarded in the R community because of its flexibility. Base R graphics have their own merits, but `ggplot2` stands out by offering a more structured way to visualize data.
+Many of the visualizations seen in scientific journals and professional reports use `ggplot2` because its capable of producing publication-quality graphics with few steps.
+-->
+```
+`ggplot2` is a data visualization package for R that allows users to create complex plots in a structured manner. It's based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.
+
+### 1.2 Philosophy Behind ggplot2
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+The Grammar of Graphics [Book], written by Leland Wilkinson, serves as the foundation for `ggplot2`.
+Note: Leland Wilkinson, was VP of Statistics for Tableau before his passing.
+Visualizing a plot in `ggplot2` is about understanding its layers. Starting from the data, we layer on aesthetics, and geometries [lines, bars, points, etc.]. 
+This structured layer-wise approach makes constructing and then iterating on charts, clear and intuitive.
+-->
+```
+At the core of `ggplot2` is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.
+
+## 2. Basic Chart Creation
+
+### 2.1. Basic Syntax: The big three
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- `ggplot2` functions can be broken down intuitively:
+  - `ggplot()`: Initiates the canvas and data setup.
+  - `aes()`: Designates which columns of our data map to specific visual properties, such as x and y axes.
+  - Geometries (e.g., `geom_point()`): Dictate the type of plot, be it a scatter plot, line plot, bar plot, etc.
+- Using this approach is like saying: "With this data, using these columns for these aesthetics, render this specific type of plot."
+-->
+```
+1.  `ggplot2`
+2.  `aes()`
+3.  `geom_point()`
+
+The foundation of any `ggplot2` visualization starts with the `ggplot()` function. Within `ggplot()`, we call `aes()` to designate aesthetic mappings, and then append geometries like `geom_point()` to visually represent data points.
+
+### 2.2. Practical Example
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+We'll now delve into the `mtcars` dataset, a default R dataset, which showcases diverse attributes of cars. - A common relationship to explore is deciphering how the horsepower (`hp`) of a car impacts its fuel efficiency, measured as miles per gallon (`mpg`). - Plotting these variables against each other facilitates a visual assessment of their relationship, enabling preliminary insights.
+-->
+```
+Using the **`mtcars`** dataset, we'll illustrate the relationship between a car's horsepower (**`hp`**) and its fuel efficiency (**`mpg`**).
+
+```{r Load gg and mtcars, message=FALSE}
+#Load tidyverse library
 library(tidyverse)
-library(ggplot2)
-library(here)
+
+mtcars
 ```
 
-```{r Load education data}
+```{r Car scatter}
+ggplot(data=mtcars, aes(x=mpg, y=hp)) +
+  geom_point()
+```
 
-educ_data <- read_csv('https://raw.githubusercontent.com/dperez-epi/visualization_workshop/master/output/educ_attainment_regional.csv')
+-note: Fix example and tell folks all code will live on code library
+
+## 3. Adding Layers and Customizations
+
+### 3.1. Adding Geometries
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- One of the foundational concepts of `ggplot2` is the layering system. Plots are constructed by "stacking" different layers.
+- Various "geoms" (short for "geometric objects") can be added, each representing different types of charts.
+-->
+```
+`ggplot2` operates on a layered design, allowing users to superimpose multiple layers on a plot. This is achieved by adding various geometries.
+
+For instance, apart from scatter plots, you can add lines using `geom_line()` or view data distributions with `geom_histogram()`.
+
+A simple line plot using .... \[union data\] .... \[membership\] changes over time
+
+```{r Line chart}
+
+# LINE CHART EXAMPLE
 
 ```
+
+And a histogram to see the distribution of car mileages (mpg):
+
+```{r Histogram}
+ggplot(mtcars, aes(x=mpg)) + geom_histogram(binwidth=3)
+```
+
+### 3.2 Customizing Aesthetics
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- Beyond layering geometries, `ggplot2` allows for robust customization of visual properties, enabling intricate and informative visualizations.
+- Adjusting properties like color, size, shape, and transparency can enhance plot interpretability and aesthetic.
+-->
+```
+A major advantage of ggplot2 is its flexibility in customizing visual properties, enabling you to enhance both the aesthetics and interpretability of your plots.
+
+For instance, modifying the scatter plot by adjusting point properties:
+
+```{r, Aesthetics}
+ggplot(mtcars, aes(x=mpg, y=hp, color=as.factor(cyl), shape=as.factor(vs), size=wt, alpha=gear)) + 
+  geom_point()
+```
+
+Here:
+
+color: Colored by cylinder count (cyl).
+
+shape: Shaped by whether the car is V/S (vs).
+
+size: Sized by the car's weight (wt).
+
+alpha: Transparency adjusted by the gear count (gear).
+
+### 3.3 Practical Example
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- `ggplot2`, combining various geometries and aesthetic customizations is key.
+- Adding regression lines or smoothed lines to scatter plots can help discern patterns and relationships more effectively.
+-->
+```
+An insightful visualization often arises from combining various layers and customizing aesthetics.
+
+Building on our scatter plot from earlier, let's include a smoothed line to better discern the relationship between mpg and hp:
+
+```{r}
+ggplot(mtcars, aes(x=mpg, y=hp)) + 
+  geom_point(aes(color=cyl)) + 
+  geom_smooth(method="lm", se=FALSE, color="red")
+```
+
+Question: Why would I add aes to geom point vs aes?
+
+The geom_smooth() with method="lm" adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we've chosen a distinct red color for the line.
+
+Layering and customization in ggplot2 ensures your visualizations are both visually appealing and insightful.
+
+## 4. Customizing Plots with Themes and Labels
+
+### 4.1. Themes in `ggplot2`
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- Another strength of `ggplot2` is the ease with which you can polish the appearance of your plots.
+- There are many ready-made themes you can pick from, but you can also create your own or modify existing ones.
+-This is especially cool if your organization has a design standard manual, color schemes or logos you regularly use
+-->
+```
+`ggplot2` offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.
+
+For instance, let's take the scatter plot we've been working with and apply a black and white theme:
+
+\[Insert EARN/EPI/CGI example\]
+
+```{r applying themes}
+ggplot(mtcars, aes(x=mpg, y=hp)) + geom_point() + theme_bw()
+```
+
+### 4.2. Labeling and Titling
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- Labeling plots is essential part communicating your data. Titles, axis labels, and legends can provide crucial context.
+- While `ggplot2` can infer some labels from the data, it's often beneficial to customize them for clarity and presentation.
+-->
+```
+Labeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.
+
+Here's how to add a title, x-axis label, and y-axis label to our scatter plot:
+
+```{r Labeling}
+
+ggplot(mtcars, aes(x=mpg, y=hp)) + 
+  geom_point() + 
+  labs(
+    title = "Relationship between MPG and Horsepower",
+    x = "Miles Per Gallon (MPG)",
+    y = "Horsepower (HP)",
+    
+  )
+```
+
+### 4.3. Adjusting Text Elements
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- Text elements (like axis labels, titles, and plot text) can be adjusted in terms of size, color, and font.
+- Consistent and readable text ensures your plots are easily understandable and can enhance overall aesthetics.
+-->
+```
+Text elements such as titles, axis labels, and annotations can be modified to better fit your plot's aesthetic or to match specific publication requirements.
+
+Here's an example of adjusting the title's size and color:
+
+Note:
+
+```{r}
+
+ggplot(mtcars, aes(x=mpg, y=hp)) + 
+  geom_point() + 
+  
+  labs(title = "Relationship between MPG and Horsepower") +
+  theme(plot.title = element_text(size=14, color='blue', face = 'italic'))
+
+# Note: Add some Hex code examples
+
+```
+
+Mastering these customization techniques will make your plots informative, engaging, and tailored for their intended audience!
+
+## 5. Advanced Plot Types
+
+### 5.1. Faceting and Multi-panel Plots
+
+### 5.2. Interactive charts
+
+<!-- speaker notes -->
+
+```{=html}
+<!--
+- Faceting is a feature that lets you split one plot into multiple plots based on a factor or category.
+- Particularly useful when you want to visualize the relationship between variables across different subgroups of your data.
+-->
+```
+Faceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.
+
+Let's view scatter plots of mpg vs. hp but facet them by the number of cylinders:
+
+```{r faceting}
+ggplot(mtcars, aes(x=mpg, y=hp)) + 
+  geom_point() + 
+  facet_wrap(~cyl)
+```
+
+Advanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.
+
+## 6.0 Resources for layer-based chart visualization!

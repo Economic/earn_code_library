@@ -1,0 +1,19 @@
+---
+title: "Binipolate for Stata"
+---
+
+# binipolate
+
+Binipolate is a Stata function to bin data and linearly interpolate percentiles. See the [binipolate](https://github.com/Economic/binipolate) github page for more detail.
+
+## Installation
+
+``` stata
+net install binipolate, from("https://raw.githubusercontent.com/Economic/binipolate/master/")
+```
+
+## Citations
+
+If you use binipolate, please cite it:
+
+> Zipperer, Ben and Zane Mokhiber. 2020. binipolate: A Stata function to bin data and linearly interpolate percentiles. https://github.com/Economic/binipolate
