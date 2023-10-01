@@ -15,7 +15,7 @@ website:
     collapse: true
   
     right: 
-      - icon: fa-github
+      - icon: fab fa-github
         href: https://github.com/Economic/earn_code_library
 
 

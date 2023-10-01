@@ -1,6 +1,6 @@
 ---
 title: "Wage deciles by state"
-
+author: 'Daniel Perez, EARN/EPI'
 eval: false
 ---
 
@@ -38,7 +38,7 @@ keep if emp==1
 keep if selfemp!=1 & selfemp!=.
 
 
-* Calculate state wage deciles
+* Calculate wage deciles, by year and statefips
 use `allthedata', clear
 binipolate wage [pw=orgwgt/12], binsize(.50) by(year statefips) collapsefun(gcollapse) p(10 20 30 40 50 60 70 80 90)
 
