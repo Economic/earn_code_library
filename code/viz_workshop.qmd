@@ -8,7 +8,7 @@ In this workshop you will learn how to create data visualizations using free too
 
 ## 1. Introduction
 
-### 1.1 Brief Overview of `ggplot2`
+### 1.1 Brief overview of `ggplot2`
 
 <!-- speaker notes -->
 
@@ -20,7 +20,7 @@ Many of the visualizations seen in scientific journals and professional reports 
 ```
 `ggplot2` is a data visualization package for R that allows users to create complex plots in a structured manner. It's based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.
 
-### 1.2 Philosophy Behind ggplot2
+### 1.2 Philosophy behind ggplot2
 
 <!-- speaker notes -->
 
@@ -34,9 +34,9 @@ This structured layer-wise approach makes constructing and then iterating on cha
 ```
 At the core of `ggplot2` is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.
 
-## 2. Basic Chart Creation
+## 2. Basic chart creation
 
-### 2.1. Basic Syntax: The big three
+### 2.1. Basic syntax: The Big Three
 
 <!-- speaker notes -->
 
@@ -49,13 +49,13 @@ At the core of `ggplot2` is the idea of layers. This means starting with a blank
 - Using this approach is like saying: "With this data, using these columns for these aesthetics, render this specific type of plot."
 -->
 ```
-1.  `ggplot2`
+1.  `ggplot()`
 2.  `aes()`
 3.  `geom_point()`
 
 The foundation of any `ggplot2` visualization starts with the `ggplot()` function. Within `ggplot()`, we call `aes()` to designate aesthetic mappings, and then append geometries like `geom_point()` to visually represent data points.
 
-### 2.2. Practical Example
+### 2.2. Practical example
 
 <!-- speaker notes -->
 
@@ -70,76 +70,73 @@ Using the **`mtcars`** dataset, we'll illustrate the relationship between a car'
 #Load tidyverse library
 library(tidyverse)
 
-mtcars
+mtcars <- mtcars
 ```
 
 ```{r Car scatter}
-ggplot(data=mtcars, aes(x=mpg, y=hp)) +
+# A simple scatter
+ggplot(data = mtcars, aes(x=mpg, y=hp)) +
   geom_point()
 ```
 
--note: Fix example and tell folks all code will live on code library
-
-## 3. Adding Layers and Customizations
-
-### 3.1. Adding Geometries
-
-<!-- speaker notes -->
-
-```{=html}
-<!--
-- One of the foundational concepts of `ggplot2` is the layering system. Plots are constructed by "stacking" different layers.
-- Various "geoms" (short for "geometric objects") can be added, each representing different types of charts.
--->
+```{r Histogram}
+ggplot(mtcars, aes(x=mpg)) + 
+  geom_histogram(binwidth=3)
 ```
-`ggplot2` operates on a layered design, allowing users to superimpose multiple layers on a plot. This is achieved by adding various geometries.
 
-For instance, apart from scatter plots, you can add lines using `geom_line()` or view data distributions with `geom_histogram()`.
+\-**Note**: All code will live on code library
+
+## 3. Adding layers and customizations
+
+```{r Industry data}
+
+# Load some data from Github. 
+# Major industries, union density, real median wages, and employment. 2000 to 2022
+ind_data <- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))
+
+#Keep 2022 data
+ind_data2022 <- ind_data %>% 
+  filter(year==2022)
+
+ggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +
+  geom_point() +
+  # Add a smoothed line with customized aesthetics
+  geom_smooth(method = 'lm', se = FALSE, col = "red")
+```
 
 A simple line plot using .... \[union data\] .... \[membership\] changes over time
 
-```{r Line chart}
+```{r Simple charts}
 
-# LINE CHART EXAMPLE
-
+ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
+  geom_line() +
+  theme(legend.position = "bottom")
 ```
 
-And a histogram to see the distribution of car mileages (mpg):
-
-```{r Histogram}
-ggplot(mtcars, aes(x=mpg)) + geom_histogram(binwidth=3)
-```
-
-### 3.2 Customizing Aesthetics
+### 3.1 Customizing Aesthetics
 
 <!-- speaker notes -->
 
 ```{=html}
 <!--
-- Beyond layering geometries, `ggplot2` allows for robust customization of visual properties, enabling intricate and informative visualizations.
-- Adjusting properties like color, size, shape, and transparency can enhance plot interpretability and aesthetic.
+- Beyond geometries, `ggplot2` allows us to customize the visual properties of charts fairly extensively.
+- Specifically, we can adjust properties like color, size, shape, and transparency of the objects in our plot
 -->
 ```
 A major advantage of ggplot2 is its flexibility in customizing visual properties, enabling you to enhance both the aesthetics and interpretability of your plots.
 
 For instance, modifying the scatter plot by adjusting point properties:
 
-```{r, Aesthetics}
-ggplot(mtcars, aes(x=mpg, y=hp, color=as.factor(cyl), shape=as.factor(vs), size=wt, alpha=gear)) + 
-  geom_point()
+```{r Ind aesthetics}
+
+ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=total_emp)) + 
+  geom_point() +
+  theme(legend.position = "bottom",
+        legend)
+
 ```
 
-Here:
-
-color: Colored by cylinder count (cyl).
-
-shape: Shaped by whether the car is V/S (vs).
-
-size: Sized by the car's weight (wt).
-
-alpha: Transparency adjusted by the gear count (gear).
-
-### 3.3 Practical Example
+### 3.2 Practical Example
 
 <!-- speaker notes -->
 
@@ -153,10 +150,12 @@ An insightful visualization often arises from combining various layers and custo
 
 Building on our scatter plot from earlier, let's include a smoothed line to better discern the relationship between mpg and hp:
 
-```{r}
-ggplot(mtcars, aes(x=mpg, y=hp)) + 
-  geom_point(aes(color=cyl)) + 
-  geom_smooth(method="lm", se=FALSE, color="red")
+```{r Ind lm plot}
+
+ggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +
+  geom_point() +
+  # Add a smoothed line with customized aesthetics
+  geom_smooth(method = 'lm', se = FALSE, col = "red")
 ```
 
 Question: Why would I add aes to geom point vs aes?
