@@ -2,4 +2,7 @@
 .Rproj.user
 *.Rproj
 /.quarto/
-data/cps
+data/org
+data/may
+data/basic
+

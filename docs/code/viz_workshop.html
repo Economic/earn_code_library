@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../code/prev_bootcamps.html" rel="next">
+<link href="../code/benchmarking_workshop.html" rel="next">
 <link href="../code/bin_wage_deciles.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/Economic/earn_code_library" rel="" target=""><i class="bi bi-fa-github" role="img">
+    <a class="nav-link" href="https://github.com/Economic/earn_code_library" rel="" target=""><i class="bi bi-fab fa-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -236,10 +236,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Historical state union density</span></a>
   </div>
 </li>
+          <li class="px-0"><hr class="sidebar-divider hi "></li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">R tutorials</span></a>
+ <span class="menu-text">Annotated examples</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -295,6 +296,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../code/benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benchmarking workshop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../code/prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">2021 and 2022 data bootcamps</span></a>
   </div>
@@ -314,32 +321,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#welcome-to-the-earncon-2023-visualization-workshop-page" id="toc-welcome-to-the-earncon-2023-visualization-workshop-page" class="nav-link active" data-scroll-target="#welcome-to-the-earncon-2023-visualization-workshop-page">Welcome to the EARNCon 2023 Visualization workshop page</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">1. Introduction</a>
   <ul class="collapse">
-  <li><a href="#brief-overview-of-ggplot2" id="toc-brief-overview-of-ggplot2" class="nav-link" data-scroll-target="#brief-overview-of-ggplot2">1.1 Brief Overview of <code>ggplot2</code></a></li>
-  <li><a href="#philosophy-behind-ggplot2" id="toc-philosophy-behind-ggplot2" class="nav-link" data-scroll-target="#philosophy-behind-ggplot2">1.2 Philosophy Behind ggplot2</a></li>
+  <li><a href="#brief-overview-of-ggplot2" id="toc-brief-overview-of-ggplot2" class="nav-link" data-scroll-target="#brief-overview-of-ggplot2">1.1 Brief overview of <code>ggplot2</code></a></li>
+  <li><a href="#philosophy-behind-ggplot2" id="toc-philosophy-behind-ggplot2" class="nav-link" data-scroll-target="#philosophy-behind-ggplot2">1.2 Philosophy behind ggplot2</a></li>
   </ul></li>
-  <li><a href="#basic-chart-creation" id="toc-basic-chart-creation" class="nav-link" data-scroll-target="#basic-chart-creation">2. Basic Chart Creation</a>
+  <li><a href="#basic-chart-creation" id="toc-basic-chart-creation" class="nav-link" data-scroll-target="#basic-chart-creation">2. Basic chart creation</a>
   <ul class="collapse">
-  <li><a href="#basic-syntax-the-big-three" id="toc-basic-syntax-the-big-three" class="nav-link" data-scroll-target="#basic-syntax-the-big-three">2.1. Basic Syntax: The big three</a></li>
-  <li><a href="#practical-example" id="toc-practical-example" class="nav-link" data-scroll-target="#practical-example">2.2. Practical Example</a></li>
+  <li><a href="#basic-syntax-the-big-three" id="toc-basic-syntax-the-big-three" class="nav-link" data-scroll-target="#basic-syntax-the-big-three">2.1. Basic syntax: The Big Three</a></li>
+  <li><a href="#practical-example" id="toc-practical-example" class="nav-link" data-scroll-target="#practical-example">2.2. Practical example</a></li>
   </ul></li>
-  <li><a href="#adding-layers-and-customizations" id="toc-adding-layers-and-customizations" class="nav-link" data-scroll-target="#adding-layers-and-customizations">3. Adding Layers and Customizations</a>
+  <li><a href="#adding-layers-and-customizations" id="toc-adding-layers-and-customizations" class="nav-link" data-scroll-target="#adding-layers-and-customizations">3. Adding layers and customizations</a>
   <ul class="collapse">
-  <li><a href="#adding-geometries" id="toc-adding-geometries" class="nav-link" data-scroll-target="#adding-geometries">3.1. Adding Geometries</a></li>
+  <li><a href="#adding-geometries" id="toc-adding-geometries" class="nav-link" data-scroll-target="#adding-geometries">3.1 Adding geometries</a></li>
   <li><a href="#customizing-aesthetics" id="toc-customizing-aesthetics" class="nav-link" data-scroll-target="#customizing-aesthetics">3.2 Customizing Aesthetics</a></li>
-  <li><a href="#practical-example-1" id="toc-practical-example-1" class="nav-link" data-scroll-target="#practical-example-1">3.3 Practical Example</a></li>
   </ul></li>
-  <li><a href="#customizing-plots-with-themes-and-labels" id="toc-customizing-plots-with-themes-and-labels" class="nav-link" data-scroll-target="#customizing-plots-with-themes-and-labels">4. Customizing Plots with Themes and Labels</a>
+  <li><a href="#customizing-plots-with-labels-and-themes" id="toc-customizing-plots-with-labels-and-themes" class="nav-link" data-scroll-target="#customizing-plots-with-labels-and-themes">4. Customizing Plots with labels and themes</a>
   <ul class="collapse">
-  <li><a href="#themes-in-ggplot2" id="toc-themes-in-ggplot2" class="nav-link" data-scroll-target="#themes-in-ggplot2">4.1. Themes in <code>ggplot2</code></a></li>
-  <li><a href="#labeling-and-titling" id="toc-labeling-and-titling" class="nav-link" data-scroll-target="#labeling-and-titling">4.2. Labeling and Titling</a></li>
-  <li><a href="#adjusting-text-elements" id="toc-adjusting-text-elements" class="nav-link" data-scroll-target="#adjusting-text-elements">4.3. Adjusting Text Elements</a></li>
+  <li><a href="#labeling-and-titling" id="toc-labeling-and-titling" class="nav-link" data-scroll-target="#labeling-and-titling">4.1. Labeling and Titling</a></li>
+  <li><a href="#adjusting-text-elements" id="toc-adjusting-text-elements" class="nav-link" data-scroll-target="#adjusting-text-elements">4.2. Adjusting Text Elements</a></li>
+  <li><a href="#themes-in-ggplot2" id="toc-themes-in-ggplot2" class="nav-link" data-scroll-target="#themes-in-ggplot2">4.3. Themes in <code>ggplot2</code></a></li>
   </ul></li>
-  <li><a href="#advanced-plot-types" id="toc-advanced-plot-types" class="nav-link" data-scroll-target="#advanced-plot-types">5. Advanced Plot Types</a>
+  <li><a href="#exporting-your-plot" id="toc-exporting-your-plot" class="nav-link" data-scroll-target="#exporting-your-plot">5. Exporting your plot</a>
   <ul class="collapse">
-  <li><a href="#faceting-and-multi-panel-plots" id="toc-faceting-and-multi-panel-plots" class="nav-link" data-scroll-target="#faceting-and-multi-panel-plots">5.1. Faceting and Multi-panel Plots</a></li>
-  <li><a href="#interactive-charts" id="toc-interactive-charts" class="nav-link" data-scroll-target="#interactive-charts">5.2. Interactive charts</a></li>
+  <li><a href="#saving-your-ggplot" id="toc-saving-your-ggplot" class="nav-link" data-scroll-target="#saving-your-ggplot">5.1 Saving your ggplot</a></li>
   </ul></li>
-  <li><a href="#resources-for-layer-based-chart-visualization" id="toc-resources-for-layer-based-chart-visualization" class="nav-link" data-scroll-target="#resources-for-layer-based-chart-visualization">6.0 Resources for layer-based chart visualization!</a></li>
+  <li><a href="#advanced-plot-types" id="toc-advanced-plot-types" class="nav-link" data-scroll-target="#advanced-plot-types">6. Advanced Plot Types</a>
+  <ul class="collapse">
+  <li><a href="#faceting-and-multi-panel-plots" id="toc-faceting-and-multi-panel-plots" class="nav-link" data-scroll-target="#faceting-and-multi-panel-plots">6.1. Faceting and Multi-panel Plots</a></li>
+  <li><a href="#interactive-charts" id="toc-interactive-charts" class="nav-link" data-scroll-target="#interactive-charts">6.2. Interactive charts</a></li>
+  </ul></li>
+  <li><a href="#resources-for-layer-based-chart-visualization" id="toc-resources-for-layer-based-chart-visualization" class="nav-link" data-scroll-target="#resources-for-layer-based-chart-visualization">7.0 Resources for layer-based chart visualization!</a></li>
   </ul>
 </nav>
     </div>
@@ -370,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
 <section id="brief-overview-of-ggplot2" class="level3">
-<h3 class="anchored" data-anchor-id="brief-overview-of-ggplot2">1.1 Brief Overview of <code>ggplot2</code></h3>
+<h3 class="anchored" data-anchor-id="brief-overview-of-ggplot2">1.1 Brief overview of <code>ggplot2</code></h3>
 <!-- speaker notes -->
 <!--
 `ggplot2` is highly regarded in the R community because of its flexibility. Base R graphics have their own merits, but `ggplot2` stands out by offering a more structured way to visualize data.
@@ -379,7 +389,7 @@ Many of the visualizations seen in scientific journals and professional reports 
 <p><code>ggplot2</code> is a data visualization package for R that allows users to create complex plots in a structured manner. It’s based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.</p>
 </section>
 <section id="philosophy-behind-ggplot2" class="level3">
-<h3 class="anchored" data-anchor-id="philosophy-behind-ggplot2">1.2 Philosophy Behind ggplot2</h3>
+<h3 class="anchored" data-anchor-id="philosophy-behind-ggplot2">1.2 Philosophy behind ggplot2</h3>
 <!-- speaker notes -->
 
 <!--
@@ -392,9 +402,9 @@ This structured layer-wise approach makes constructing and then iterating on cha
 </section>
 </section>
 <section id="basic-chart-creation" class="level2">
-<h2 class="anchored" data-anchor-id="basic-chart-creation">2. Basic Chart Creation</h2>
+<h2 class="anchored" data-anchor-id="basic-chart-creation">2. Basic chart creation</h2>
 <section id="basic-syntax-the-big-three" class="level3">
-<h3 class="anchored" data-anchor-id="basic-syntax-the-big-three">2.1. Basic Syntax: The big three</h3>
+<h3 class="anchored" data-anchor-id="basic-syntax-the-big-three">2.1. Basic syntax: The Big Three</h3>
 <!-- speaker notes -->
 <!--
 - `ggplot2` functions can be broken down intuitively:
@@ -404,14 +414,14 @@ This structured layer-wise approach makes constructing and then iterating on cha
 - Using this approach is like saying: "With this data, using these columns for these aesthetics, render this specific type of plot."
 -->
 <ol type="1">
-<li><code>ggplot2</code></li>
+<li><code>ggplot()</code></li>
 <li><code>aes()</code></li>
-<li><code>geom_point()</code></li>
+<li><a href="https://ggplot2.tidyverse.org/reference/index.html#geoms">geom_point()</a></li>
 </ol>
 <p>The foundation of any <code>ggplot2</code> visualization starts with the <code>ggplot()</code> function. Within <code>ggplot()</code>, we call <code>aes()</code> to designate aesthetic mappings, and then append geometries like <code>geom_point()</code> to visually represent data points.</p>
 </section>
 <section id="practical-example" class="level3">
-<h3 class="anchored" data-anchor-id="practical-example">2.2. Practical Example</h3>
+<h3 class="anchored" data-anchor-id="practical-example">2.2. Practical example</h3>
 <!-- speaker notes -->
 <!--
 We'll now delve into the `mtcars` dataset, a default R dataset, which showcases diverse attributes of cars. - A common relationship to explore is deciphering how the horsepower (`hp`) of a car impacts its fuel efficiency, measured as miles per gallon (`mpg`). - Plotting these variables against each other facilitates a visual assessment of their relationship, enabling preliminary insights.
@@ -420,169 +430,151 @@ We'll now delve into the `mtcars` dataset, a default R dataset, which showcases 
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load tidyverse library</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
-Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
-Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
-Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
-Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
-Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
-Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
-Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
-Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
-Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
-Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
-Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
-AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
-Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
-Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
-Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
-Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
-Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
-Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
-Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
-Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-</div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mtcars <span class="ot">&lt;-</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A simple scatter</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="viz_workshop_files/figure-html/Car scatter-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>-note: Fix example and tell folks all code will live on code library</p>
-</section>
-</section>
-<section id="adding-layers-and-customizations" class="level2">
-<h2 class="anchored" data-anchor-id="adding-layers-and-customizations">3. Adding Layers and Customizations</h2>
-<section id="adding-geometries" class="level3">
-<h3 class="anchored" data-anchor-id="adding-geometries">3.1. Adding Geometries</h3>
-<!-- speaker notes -->
-<!--
-- One of the foundational concepts of `ggplot2` is the layering system. Plots are constructed by "stacking" different layers.
-- Various "geoms" (short for "geometric objects") can be added, each representing different types of charts.
--->
-<p><code>ggplot2</code> operates on a layered design, allowing users to superimpose multiple layers on a plot. This is achieved by adding various geometries.</p>
-<p>For instance, apart from scatter plots, you can add lines using <code>geom_line()</code> or view data distributions with <code>geom_histogram()</code>.</p>
-<p>A simple line plot using …. [union data] …. [membership] changes over time</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LINE CHART EXAMPLE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>And a histogram to see the distribution of car mileages (mpg):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg)) <span class="sc">+</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="viz_workshop_files/figure-html/Histogram-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>-<strong>Note</strong>: All code will live on code library</p>
+</section>
+</section>
+<section id="adding-layers-and-customizations" class="level2">
+<h2 class="anchored" data-anchor-id="adding-layers-and-customizations">3. Adding layers and customizations</h2>
+<!-- speaker notes -->
+<!--
+
+First thing first, we'll load some pre-tabulated data directly from github page.
+It contains variables on employment, union density, and wages by industry. Stuff we commonly work with.
+-->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load some data from Github. </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Major industries, union density, real median wages, and employment. 2000 to 2022</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ind_data &lt;- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ind_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">'data/industry_union_wage_emp.csv'</span>), <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 368 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): mind16
+dbl (5): year, total_emp, union_emp, real_med_wage, union_density
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Keep 2022 data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ind_data2022 <span class="ot">&lt;-</span> ind_data <span class="sc">%&gt;%</span>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2022</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage)) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/Industry data-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="adding-geometries" class="level3">
+<h3 class="anchored" data-anchor-id="adding-geometries">3.1 Adding geometries</h3>
+<!-- speaker notes -->
+<!--
+- With `ggplot2`, combining different geometries and aesthetic customizations can really elevate a chart.
+- For example, on a scatter geometry, we can transpose "smooth" geometry `geom_smooth()` in the form of a regression line. 
+--[Run example at this point]
+--In this case, adding a secondary geometry gives us a visual diagnostic, that allows us to examine the data for patterns and relationships .
+-->
+<p>An insightful visualization often arises from combining various layers and customizing aesthetics.</p>
+<p>Building on our scatter plot from earlier, let’s include a smoothed line to better discern the relationship between mpg and hp:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add a smoothed line with customized aesthetics</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'lm'</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/Ind lm plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The geom_smooth() with method=“lm” adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we’ve chosen a distinct red color for the line.</p>
 </section>
 <section id="customizing-aesthetics" class="level3">
 <h3 class="anchored" data-anchor-id="customizing-aesthetics">3.2 Customizing Aesthetics</h3>
 <!-- speaker notes -->
 <!--
-- Beyond layering geometries, `ggplot2` allows for robust customization of visual properties, enabling intricate and informative visualizations.
-- Adjusting properties like color, size, shape, and transparency can enhance plot interpretability and aesthetic.
+- In addition to layering geometries, `ggplot2` lets us customize the visual properties of charts fairly extensively.
+- Specifically, we can adjust the colors, sizes, shapes, and transparencies of the objects in our plot
 -->
-<p>A major advantage of ggplot2 is its flexibility in customizing visual properties, enabling you to enhance both the aesthetics and interpretability of your plots.</p>
+<p>A major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.</p>
 <p>For instance, modifying the scatter plot by adjusting point properties:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp, <span class="at">color=</span><span class="fu">as.factor</span>(cyl), <span class="at">shape=</span><span class="fu">as.factor</span>(vs), <span class="at">size=</span>wt, <span class="at">alpha=</span>gear)) <span class="sc">+</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Line chart with colors</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>ind_data, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>union_density, <span class="at">color=</span>mind16)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="viz_workshop_files/figure-html/Aesthetics-1.png" class="img-fluid" width="672"></p>
+<p><img src="viz_workshop_files/figure-html/Ind aesthetics-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<p>Here:</p>
-<p>color: Colored by cylinder count (cyl).</p>
-<p>shape: Shaped by whether the car is V/S (vs).</p>
-<p>size: Sized by the car’s weight (wt).</p>
-<p>alpha: Transparency adjusted by the gear count (gear).</p>
-</section>
-<section id="practical-example-1" class="level3">
-<h3 class="anchored" data-anchor-id="practical-example-1">3.3 Practical Example</h3>
-<!-- speaker notes -->
-<!--
-- `ggplot2`, combining various geometries and aesthetic customizations is key.
-- Adding regression lines or smoothed lines to scatter plots can help discern patterns and relationships more effectively.
--->
-<p>An insightful visualization often arises from combining various layers and customizing aesthetics.</p>
-<p>Building on our scatter plot from earlier, let’s include a smoothed line to better discern the relationship between mpg and hp:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>cyl)) <span class="sc">+</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">color=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar chart with colors</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>mind16, <span class="at">y=</span>real_med_wage, <span class="at">fill=</span>mind16))<span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="viz_workshop_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<p><img src="viz_workshop_files/figure-html/Ind aesthetics-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bubble scatter chart</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/Ind aesthetics-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bubble color scatter chart</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">color=</span>mind16, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/Ind aesthetics-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Question: Why would I add aes to geom point vs aes?</p>
-<p>The geom_smooth() with method=“lm” adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we’ve chosen a distinct red color for the line.</p>
 <p>Layering and customization in ggplot2 ensures your visualizations are both visually appealing and insightful.</p>
 </section>
 </section>
-<section id="customizing-plots-with-themes-and-labels" class="level2">
-<h2 class="anchored" data-anchor-id="customizing-plots-with-themes-and-labels">4. Customizing Plots with Themes and Labels</h2>
-<section id="themes-in-ggplot2" class="level3">
-<h3 class="anchored" data-anchor-id="themes-in-ggplot2">4.1. Themes in <code>ggplot2</code></h3>
-<!-- speaker notes -->
-<!--
-- Another strength of `ggplot2` is the ease with which you can polish the appearance of your plots.
-- There are many ready-made themes you can pick from, but you can also create your own or modify existing ones.
--This is especially cool if your organization has a design standard manual, color schemes or logos you regularly use
--->
-<p><code>ggplot2</code> offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.</p>
-<p>For instance, let’s take the scatter plot we’ve been working with and apply a black and white theme:</p>
-<p>[Insert EARN/EPI/CGI example]</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="viz_workshop_files/figure-html/applying themes-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
+<section id="customizing-plots-with-labels-and-themes" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-plots-with-labels-and-themes">4. Customizing Plots with labels and themes</h2>
 <section id="labeling-and-titling" class="level3">
-<h3 class="anchored" data-anchor-id="labeling-and-titling">4.2. Labeling and Titling</h3>
+<h3 class="anchored" data-anchor-id="labeling-and-titling">4.1. Labeling and Titling</h3>
 <!-- speaker notes -->
 <!--
-- Labeling plots is essential part communicating your data. Titles, axis labels, and legends can provide crucial context.
-- While `ggplot2` can infer some labels from the data, it's often beneficial to customize them for clarity and presentation.
+- Labeling plots is essential part communicating your data. Titles, axis labels, and legends provide the crucial context, and allow your chart to stand alone.
+- `ggplot2` can sometimes infer some labels from the data, but it's typically best practice to customize them for clarity and presentation.
 -->
 <p>Labeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.</p>
-<p>Here’s how to add a title, x-axis label, and y-axis label to our scatter plot:</p>
+<p>Here’s how to add a title, x-axis label, and y-axis label to our scatter plot with the <code>labs()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Relationship between MPG and Horsepower"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Miles Per Gallon (MPG)"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Horsepower (HP)"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">color=</span>mind16, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Relationship between union density and industry median wage, 2022'</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Union density'</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Real median wage'</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">'Industry'</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">size =</span> <span class="st">'Total emp (1000s)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="viz_workshop_files/figure-html/Labeling-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 <section id="adjusting-text-elements" class="level3">
-<h3 class="anchored" data-anchor-id="adjusting-text-elements">4.3. Adjusting Text Elements</h3>
+<h3 class="anchored" data-anchor-id="adjusting-text-elements">4.2. Adjusting Text Elements</h3>
 <!-- speaker notes -->
 <!--
 - Text elements (like axis labels, titles, and plot text) can be adjusted in terms of size, color, and font.
@@ -592,26 +584,200 @@ Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></
 <p>Here’s an example of adjusting the title’s size and color:</p>
 <p>Note:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relationship between MPG and Horsepower"</span>) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>, <span class="at">color=</span><span class="st">'blue'</span>, <span class="at">face =</span> <span class="st">'italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">color=</span>mind16, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Relationship between union density and industry median wage, 2022'</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Union density'</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Real median wage'</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">'Industry'</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">size =</span> <span class="st">'Total emp (1000s)'</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#fix our ugly legend!</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>))<span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">2</span>),</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">color=</span><span class="st">'red'</span>, <span class="at">face=</span><span class="st">'italic'</span>)) <span class="sc">+</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a taller plot</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> .<span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="viz_workshop_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="viz_workshop_files/figure-html/Text elements-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Add some Hex code examples</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relationship between MPG and Horsepower"</span>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>, <span class="at">color=</span><span class="st">'blue'</span>, <span class="at">face =</span> <span class="st">'italic'</span>))<span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> .<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/Text elements-2.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Add some Hex code examples</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="themes-in-ggplot2" class="level3">
+<h3 class="anchored" data-anchor-id="themes-in-ggplot2">4.3. Themes in <code>ggplot2</code></h3>
+<!-- speaker notes -->
+<!--
+- `ggplot2` lets us easily polish the appearance of plots with themes.
+- There are many ready-made themes you can pick from, you can modify existing ones, and you can create your own presets.
+- This is especially cool if your organization has a design standard manual, color schemes or logos you regularly use
+-->
+<p><code>ggplot2</code> offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.</p>
+<p>For instance, let’s take the scatter plot we’ve been working with and apply a black and white theme:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">color=</span>mind16, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Relationship between union density and industry median wage, 2022'</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Union density'</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Real median wage'</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">'Industry'</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">size =</span> <span class="st">'Total emp (1000s)'</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: Every subsequent theme() will supersede the previous. So be mindful!</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># theme_bw() +</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># theme_dark() +</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()<span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#fix our ugly legend!</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="st">'cm'</span>))<span class="sc">+</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change order of legends</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">2</span>),</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change theme and color of chart</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">color=</span><span class="st">'red'</span>, <span class="at">face=</span><span class="st">'italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/applying themes-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Using pre-made theme. <a href="https://github.com/MatthewBJane/ThemePark">ThemePark</a> by Matthew B. Jane</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## install.packages("remotes")</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("MatthewBJane/ThemePark")</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ThemePark)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>themepark_themes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              theme                     creator
+1            barbie             Matthew B. Jané
+2       oppenheimer Matthew B. Jané &amp; Toki Liam
+3          starwars             Matthew B. Jané
+4             zelda               Alex Slavenko
+5        terminator               Alex Slavenko
+6         spiderman           Velu P.K. Immonen
+7            avatar           Velu P.K. Immonen
+8        gryffindor                Begum Ozemek
+9        hufflepuff                Begum Ozemek
+10        ravenclaw                Begum Ozemek
+11        slytherin                Begum Ozemek
+12         futurama             Tylor J. Harlow
+13         simpsons             Tylor J. Harlow
+14   lordoftherings                 Ethan Milne
+15    gameofthrones              Brennan Antone
+16        godfather      Francisco Garre-Frutos
+17             nemo        Christopher T. Kenny
+18          friends         Alexis van STRAATEN
+19            alien                Luke Pilling
+20   grand_budapest               Katya Kustova
+21    asteroid_city               Katya Kustova
+22  french_dispatch               Katya Kustova
+23 moonrise_kingdom               Katya Kustova</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data2022, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">color=</span>mind16, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Relationship between union density and industry median wage, 2022'</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Union density'</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Real median wage'</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">'Industry'</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">size =</span> <span class="st">'Total emp (1000s)'</span>) <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#fix our ugly legend!</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="st">'cm'</span>))<span class="sc">+</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change order of legends</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">2</span>),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change theme and color of chart</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">color=</span><span class="st">'red'</span>, <span class="at">face=</span><span class="st">'italic'</span>)) <span class="sc">+</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_barbie</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/applying ThemePark themes-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>[Insert EARN/EPI/CGI example]?</p>
 <p>Mastering these customization techniques will make your plots informative, engaging, and tailored for their intended audience!</p>
 </section>
 </section>
-<section id="advanced-plot-types" class="level2">
-<h2 class="anchored" data-anchor-id="advanced-plot-types">5. Advanced Plot Types</h2>
-<section id="faceting-and-multi-panel-plots" class="level3">
-<h3 class="anchored" data-anchor-id="faceting-and-multi-panel-plots">5.1. Faceting and Multi-panel Plots</h3>
+<section id="exporting-your-plot" class="level2">
+<h2 class="anchored" data-anchor-id="exporting-your-plot">5. Exporting your plot</h2>
+<!-- Speaker notes -->
+<!--
+- So you've created a beautiful ggplot. Now you want to save the image and tweet/blog/print/frame/put it on the refrigerator
+-->
+<p>Now to export your ggplot for the refrigerator</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>final_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ind_data2022, </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage, <span class="at">color=</span>mind16, <span class="at">size=</span>(total_emp<span class="sc">/</span><span class="dv">1000</span>))) <span class="sc">+</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Set our chart labels</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Relationship between union density and industry median wage, 2022'</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Union density'</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Real median wage'</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color=</span> <span class="st">'Industry'</span>,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">size =</span> <span class="st">'Total emp (1000s)'</span>) <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#fix our ugly legend!</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>),</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="st">'cm'</span>))<span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change order of legends</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">2</span>),</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">order=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#change theme and color of chart</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">color=</span><span class="st">'red'</span>, <span class="at">face=</span><span class="st">'italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="saving-your-ggplot" class="level3">
+<h3 class="anchored" data-anchor-id="saving-your-ggplot">5.1 Saving your ggplot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Our chart object</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>final_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/Save options-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">plot =</span> final_plot,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>       <span class="co">#name of our chart</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">filename =</span> <span class="st">'final_union_industry_scatter.png'</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>       <span class="co"># Save location for our chart</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">path =</span> <span class="fu">here</span>(<span class="st">'output/'</span>), </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>       <span class="co"># Dots per inch (300+ is considered high-res)</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="interactive-charts" class="level3">
-<h3 class="anchored" data-anchor-id="interactive-charts">5.2. Interactive charts</h3>
+</section>
+<section id="advanced-plot-types" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-plot-types">6. Advanced Plot Types</h2>
+<section id="faceting-and-multi-panel-plots" class="level3">
+<h3 class="anchored" data-anchor-id="faceting-and-multi-panel-plots">6.1. Faceting and Multi-panel Plots</h3>
 <!-- speaker notes -->
 <!--
 - Faceting is a feature that lets you split one plot into multiple plots based on a factor or category.
@@ -620,23 +786,44 @@ Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></
 <p>Faceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.</p>
 <p>Let’s view scatter plots of mpg vs.&nbsp;hp but facet them by the number of cylinders:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>hp)) <span class="sc">+</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>cyl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">y=</span>hp, <span class="at">x=</span>mpg))<span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>cyl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="viz_workshop_files/figure-html/faceting-1.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ind_data_years <span class="ot">&lt;-</span> ind_data <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">2008</span>, <span class="dv">2022</span>))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ind_data_years, <span class="fu">aes</span>(<span class="at">x=</span>union_density, <span class="at">y=</span>real_med_wage)) <span class="sc">+</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="viz_workshop_files/figure-html/faceting-2.png" class="img-fluid" width="672"></p>
 </div>
+</div>
+</section>
+<section id="interactive-charts" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-charts">6.2. Interactive charts</h3>
+<!--
+- Faceting is a feature that lets you split one plot into multiple plots based on a factor or category.
+- Particularly useful when you want to visualize the relationship between variables across different subgroups of your data.
+-->
 <p>Advanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.</p>
 </section>
 </section>
 <section id="resources-for-layer-based-chart-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="resources-for-layer-based-chart-visualization">6.0 Resources for layer-based chart visualization!</h2>
+<h2 class="anchored" data-anchor-id="resources-for-layer-based-chart-visualization">7.0 Resources for layer-based chart visualization!</h2>
+<ol type="1">
+<li>Official Tidyverse page for ggplot2 <a href="https://ggplot2.tidyverse.org/index.html" class="uri">https://ggplot2.tidyverse.org/index.html</a></li>
+<li>Highcharter</li>
+</ol>
 
 
 </section>
 
-</main> <!-- /main -->
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -992,8 +1179,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../code/prev_bootcamps.html" class="pagination-link">
-        <span class="nav-page-text">2021 and 2022 data bootcamps</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../code/benchmarking_workshop.html" class="pagination-link">
+        <span class="nav-page-text">Benchmarking workshop</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

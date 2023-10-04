@@ -3,8 +3,11 @@ title: "Historical state union density"
 author: 'Daniel Perez, EARN/EPI'
 ---
 
-```{r Libraries, message=FALSE}
+Contact: [dperez\@epi.org](mailto:%20dperez@epi.org)
 
+### This script uses Current Population Survey (CPS) microdata extracts from <https://microdata.epi.org/> to calculate union density from 1983-Present.
+
+```{r Libraries, message=FALSE}
 library(tidyverse)
 library(here)
 library(epiextractr)
@@ -13,10 +16,10 @@ library(epiextractr)
 
 Load CPS data using [epiextractr](epi_microdata.qmd)
 
-```{r epiextractr}
+```{r Load CPS Basic}
 
-org <- load_org(1983:2022, year, month, statefips, orgwgt, union, unmem, cow1, age, emp, unemp, lfstat, pubsec, selfemp, selfinc,
-                .extracts_dir = here('data/cps/')) %>%
+basic <- load_basic(1983:2022, year, month, statefips, basicwgt, union, unmem, cow1, age, emp, unemp, lfstat, pubsec, selfemp, selfinc,
+                .extracts_dir = here('data/basic/')) %>%
   filter(age>=16) %>%
   #remove self-employed and self-incorporated workers from sample
   mutate(selfemp0 = ifelse(selfemp==1 & !is.na(selfemp), yes=1, no=0),
@@ -31,15 +34,15 @@ Calculate US union density 1983--2022
 
 #US union members and union represented by year, 1983-2022
 
-density_us_org <- org %>% 
+density_us <- basic %>% 
   group_by(year) %>% 
-  summarise(represented_share = weighted.mean(union, w=orgwgt/12, na.rm=TRUE),
+  summarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),
             rep_n = sum(union, na.rm=TRUE),
-            member_share = weighted.mean(unmem, w=orgwgt/12, na.rm=TRUE),
+            member_share = weighted.mean(unmem, w=basicwgt/12, na.rm=TRUE),
             memb_n = sum(unmem, na.rm=TRUE),
-            wgt_memb = sum(unmem * orgwgt/12, na.rm=TRUE))
+            wgt_memb = sum(unmem * basicwgt/12, na.rm=TRUE))
 
-density_us_org
+density_us
 ```
 
 Calculate state level union representation, 1983--2022
@@ -47,8 +50,8 @@ Calculate state level union representation, 1983--2022
 ```{r Year and state}
 
 #Union representation by year and state, 1983–Present
-density_state_org <- org %>% 
-summarise(represented_share = weighted.mean(union, w=orgwgt/12, na.rm=TRUE),
+density_state <- basic %>% 
+summarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),
           .by = c(year, statefips)) %>%
   
   #Turn statefips labels into strings
@@ -58,5 +61,5 @@ summarise(represented_share = weighted.mean(union, w=orgwgt/12, na.rm=TRUE),
   #reshape data
   pivot_wider(id_cols = year, names_from = statefips, values_from = represented_share)
 
-density_state_org
+density_state
 ```

@@ -61,7 +61,7 @@ Below, I load CPS ORG data and define my sample:
 ```{r Wage data, message=FALSE}
 
 org <- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat,
-         .extracts_dir = here('data/cps/')) %>% 
+         .extracts_dir = here('data/org/')) %>% 
     #define sample universe
     filter(age>=16, lfstat %in% c(1,2))
 

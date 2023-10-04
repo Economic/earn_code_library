@@ -58,6 +58,7 @@ website:
       contents:
        # - code/bootcamp_preview.qmd
        - code/viz_workshop.qmd
+       - code/benchmarking_workshop.qmd
        - code/prev_bootcamps.qmd
     
 format:

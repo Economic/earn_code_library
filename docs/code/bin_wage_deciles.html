@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Daniel Perez, EARN/EPI">
 
 <title>Code Library - Wage deciles by state</title>
 <style>
@@ -123,7 +124,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/Economic/earn_code_library" rel="" target=""><i class="bi bi-fa-github" role="img">
+    <a class="nav-link" href="https://github.com/Economic/earn_code_library" rel="" target=""><i class="bi bi-fab fa-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -296,6 +297,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../code/benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benchmarking workshop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../code/prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">2021 and 2022 data bootcamps</span></a>
   </div>
@@ -322,6 +329,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Daniel Perez, EARN/EPI </p>
+          </div>
+  </div>
     
   
     
@@ -359,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="kw">keep</span> <span class="kw">if</span> selfemp!=1 &amp; selfemp!=.</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>* Calculate state wage deciles</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>* Calculate wage deciles, <span class="kw">by</span> <span class="fu">year</span> and statefips</span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="ot">`allthedata'</span>, <span class="kw">clear</span></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>binipolate wage [pw=orgwgt/12], binsize(.50) <span class="kw">by</span>(<span class="fu">year</span> statefips) collapsefun(gcollapse) <span class="kw">p</span>(10 20 30 40 50 60 70 80 90)</span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>

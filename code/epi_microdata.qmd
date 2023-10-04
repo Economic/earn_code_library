@@ -14,9 +14,12 @@ library(here)
 ```{r Download CPS files from microdata site, eval=FALSE, message=FALSE}
 
 # download CPS ORG files  
-download_cps( sample = 'org', extracts_dir = here('data/cps'))
+download_cps( sample = 'org', extracts_dir = here('data/org'))
 
 # Users can also download CPS Basic (4085.3 MB) and CPS May (38.8 MB) files 
+download_cps(sample='basic', extracts_dir = here('data/basic'))
+
+download_cps(sample='may', extracts_dir = here('data/may'))
 
 ```
 
@@ -27,7 +30,7 @@ After the data is downloaded, load a selection of CPS data for your analysis:
 ```{r Load ORG, message=FALSE}
 
 org <- load_cps("org", 2020:2022, year, orgwgt, wage, age, statefips, wbho, 
-         .extracts_dir = here('data/cps/'))
+         .extracts_dir = here('data/org/'))
 
 org
 

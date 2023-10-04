@@ -52,5 +52,8 @@
   },
   "code/stata_binipolate.qmd": {
     "stata_binipolate.html": "a2c5b470"
+  },
+  "code/benchmarking_workshop.qmd": {
+    "benchmarking_workshop.html": "296b098f"
   }
 }
