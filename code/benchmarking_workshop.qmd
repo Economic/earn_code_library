@@ -3,7 +3,7 @@ title: "Benchmarking workshop"
 author: "Jori Kandra"
 ---
 
-Powerpoint:
+[Benchmarking PowerPoint slides](https://github.com/Economic/earn_code_library/blob/main/supp_files/earncon2023_%20benchmarking_workshop.pdf)
 
 ### Publication: [Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes](https://www.epi.org/publication/older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes-epi-testimony-for-the-senate-special-committee-on-aging/)
 
