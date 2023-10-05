@@ -67,6 +67,12 @@ We'll now delve into the `mtcars` dataset, a default R dataset, which showcases 
 Using the **`mtcars`** dataset, we'll illustrate the relationship between a car's horsepower (**`hp`**) and its fuel efficiency (**`mpg`**).
 
 ```{r Load gg and mtcars, message=FALSE}
+
+#First thing first, install Tidyverse using
+
+# install.packages('tidyverse')
+# install.packages('highcharter')
+
 #Load tidyverse library
 library(tidyverse)
 library(here)
@@ -93,19 +99,17 @@ ggplot(mtcars, aes(x=mpg)) +
 
 ```{=html}
 <!--
-
 First thing first, we'll load some pre-tabulated data directly from github page.
 It contains variables on employment, union density, and wages by industry. Stuff we commonly work with.
 -->
 ```
-
 ```{r Industry data}
 
 # Load some data from Github. 
 # Major industries, union density, real median wages, and employment. 2000 to 2022
-# ind_data <- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))
+ind_data <- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))
 
-ind_data <- read_csv(file = here('data/industry_union_wage_emp.csv'), col_names = TRUE)
+# ind_data <- read_csv(file = here('data/industry_union_wage_emp.csv'), col_names = TRUE)
 
 #Keep 2022 data
 ind_data2022 <- ind_data %>%  
@@ -114,6 +118,7 @@ ind_data2022 <- ind_data %>%
 ggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +
   geom_point()
 ```
+
 ### 3.1 Adding geometries
 
 <!-- speaker notes -->
@@ -126,7 +131,6 @@ ggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +
 --In this case, adding a secondary geometry gives us a visual diagnostic, that allows us to examine the data for patterns and relationships .
 -->
 ```
-
 An insightful visualization often arises from combining various layers and customizing aesthetics.
 
 Building on our scatter plot from earlier, let's include a smoothed line to better discern the relationship between mpg and hp:
@@ -138,6 +142,7 @@ ggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +
   # Add a smoothed line with customized aesthetics
   geom_smooth(method = 'lm', se = FALSE, col = "red")
 ```
+
 The geom_smooth() with method="lm" adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we've chosen a distinct red color for the line.
 
 ### 3.2 Customizing Aesthetics
@@ -150,16 +155,11 @@ The geom_smooth() with method="lm" adds a linear regression line. The se=FALSE e
 - Specifically, we can adjust the colors, sizes, shapes, and transparencies of the objects in our plot
 -->
 ```
-
 A major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.
 
 For instance, modifying the scatter plot by adjusting point properties:
 
 ```{r Ind aesthetics}
-
-#Line chart with colors
-ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
-  geom_line()
 
 #Bar chart with colors
 ggplot(data=ind_data2022, aes(x=mind16, y=real_med_wage, fill=mind16))+
@@ -188,20 +188,24 @@ Layering and customization in ggplot2 ensures your visualizations are both visua
 - `ggplot2` can sometimes infer some labels from the data, but it's typically best practice to customize them for clarity and presentation.
 -->
 ```
-
 Labeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.
 
 Here's how to add a title, x-axis label, and y-axis label to our scatter plot with the `labs()` function:
 
 ```{r Labeling}
 
-ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + 
-  geom_point() +
-  labs(title = 'Relationship between union density and industry median wage, 2022',
+ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
+  geom_line() +
+  
+  # labs() function to add labels
+  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',
+       subtitle = 'Union density by industry, 2000-2022',
        x = 'Union density',
        y = 'Real median wage',
        color= 'Industry',
-       size = 'Total emp (1000s)')
+       size = 'Total emp (1000s)',
+       caption = 'Note: Data refers to workers 16+. Union workers are those who \n are members or covered by a union contract.\nSource: EARN Analysis of CPS ORG data.')
+  
 
 ```
 
@@ -215,46 +219,35 @@ ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(t
 - Consistent and readable text ensures your plots are easily understandable and can enhance overall aesthetics.
 -->
 ```
-
 Text elements such as titles, axis labels, and annotations can be modified to better fit your plot's aesthetic or to match specific publication requirements.
 
-Here's an example of adjusting the title's size and color:
-
-Note:
+Here's an example of adjusting the legend's size and position
 
 ```{r Text elements}
 
-ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + 
-  geom_point() +
-  labs(title = 'Relationship between union density and industry median wage, 2022',
+#Example of our line plot
+ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
+  geom_line() +
+  # labs() function to add labels
+
+  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',
+       subtitle = 'Union density by industry, 2000-2022',
        x = 'Union density',
        y = 'Real median wage',
        color= 'Industry',
-       size = 'Total emp (1000s)') +
-  #fix our ugly legend!
+       size = 'Total emp (1000s)',
+       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\nSource: EARN Analysis of CPS ORG data.') +
+   #fix our ugly legend!
   theme(legend.position = "bottom",
         legend.box = "vertical",
-        legend.text = element_text(size = 6),
-        legend.title = element_text(size=6))+
-  
-  guides(size = guide_legend(order=2),
-         color = guide_legend(order=1)) +
-  theme(plot.title = element_text(size=12, color='red', face='italic')) +
-  
-  # Create a taller plot
-  theme(aspect.ratio = .25)
-
-ggplot(mtcars, aes(x=mpg, y=hp)) + 
-  geom_point() + 
-  
-  labs(title = "Relationship between MPG and Horsepower") +
-  theme(plot.title = element_text(size=14, color='blue', face = 'italic'))+
-  theme(aspect.ratio = .5)
-
-
-# Note: Add some Hex code examples
+        legend.text = element_text(size = 9),
+        legend.title = element_text(size = 9),
+        # Edit plot caption
+        plot.caption = element_text(hjust = 0),
+        plot.title = element_text(size=12, color='maroon4', face='bold'))
 
 ```
+
 ### 4.3. Themes in `ggplot2`
 
 <!-- speaker notes -->
@@ -266,12 +259,11 @@ ggplot(mtcars, aes(x=mpg, y=hp)) +
 - This is especially cool if your organization has a design standard manual, color schemes or logos you regularly use
 -->
 ```
-
 `ggplot2` offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.
 
 For instance, let's take the scatter plot we've been working with and apply a black and white theme:
 
-```{r applying themes}
+```{r applying themes, fig.height=6, fig.width=10}
 
 ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + 
   geom_point() +
@@ -287,14 +279,14 @@ ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(t
   #fix our ugly legend!
   theme(legend.position = "bottom",
         legend.box = "vertical",
-        legend.text = element_text(size = 6),
-        legend.title = element_text(size=6),
+        legend.text = element_text(size = 11),
+        legend.title = element_text(size=10),
         plot.margin = unit(c(1,2,1,1), 'cm'))+
   #change order of legends
   guides(size = guide_legend(order=2),
          color = guide_legend(order=1)) +
   #change theme and color of chart
-  theme(plot.title = element_text(size=12, color='red', face='italic'))
+  theme(plot.title = element_text(size=16, color='red', face='italic'))
 
 ```
 
@@ -309,7 +301,7 @@ library(ThemePark)
 themepark_themes
 ```
 
-```{r applying ThemePark themes}
+```{r applying ThemePark themes, fig.height=6, fig.width=10}
 
 ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + 
   geom_point() +
@@ -318,17 +310,21 @@ ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(t
        y = 'Real median wage',
        color= 'Industry',
        size = 'Total emp (1000s)') +
+  #Note: Every subsequent theme() will supersede the previous. So be mindful!
+  # theme_bw() +
+  # theme_dark() +
+  theme_light()+
   #fix our ugly legend!
   theme(legend.position = "bottom",
         legend.box = "vertical",
-        legend.text = element_text(size = 6),
-        legend.title = element_text(size=6),
+        legend.text = element_text(size = 11),
+        legend.title = element_text(size=10),
         plot.margin = unit(c(1,2,1,1), 'cm'))+
   #change order of legends
   guides(size = guide_legend(order=2),
          color = guide_legend(order=1)) +
   #change theme and color of chart
-  theme(plot.title = element_text(size=12, color='red', face='italic')) +
+  # theme(plot.title = element_text(size=16, color='red', face='italic')) +
 
   theme_barbie()
 
@@ -347,39 +343,39 @@ Mastering these customization techniques will make your plots informative, engag
 - So you've created a beautiful ggplot. Now you want to save the image and tweet/blog/print/frame/put it on the refrigerator
 -->
 ```
-
 Now to export your ggplot for the refrigerator
 
-```{r gg export}
+```{r gg export, , fig.height=6, fig.width=10}
 
-final_plot <- ggplot(ind_data2022, 
-                     aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + 
+final_plot <- ggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + 
   geom_point() +
-  
-  #Set our chart labels
   labs(title = 'Relationship between union density and industry median wage, 2022',
        x = 'Union density',
        y = 'Real median wage',
        color= 'Industry',
        size = 'Total emp (1000s)') +
-  
+  #Note: Every subsequent theme() will supersede the previous. So be mindful!
+  # theme_bw() +
+  # theme_dark() +
+  theme_light()+
   #fix our ugly legend!
   theme(legend.position = "bottom",
         legend.box = "vertical",
-        legend.text = element_text(size = 6),
-        legend.title = element_text(size=6),
+        legend.text = element_text(size = 11),
+        legend.title = element_text(size=10),
         plot.margin = unit(c(1,2,1,1), 'cm'))+
-  
   #change order of legends
   guides(size = guide_legend(order=2),
          color = guide_legend(order=1)) +
-  
   #change theme and color of chart
-  theme(plot.title = element_text(size=12, color='red', face='italic'))
+  # theme(plot.title = element_text(size=16, color='red', face='italic')) +
+
+  theme_barbie()
 ```
+
 ### 5.1 Saving your ggplot
 
-```{r Save options}
+```{r Save options, fig.height=6, fig.width=10}
 # Our chart object
 final_plot
 
@@ -396,7 +392,6 @@ ggsave(plot = final_plot,
 
 ```
 
-
 ## 6. Advanced Plot Types
 
 ### 6.1. Faceting and Multi-panel Plots
@@ -409,11 +404,9 @@ ggsave(plot = final_plot,
 - Particularly useful when you want to visualize the relationship between variables across different subgroups of your data.
 -->
 ```
-
 Faceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.
 
 Let's view scatter plots of mpg vs. hp but facet them by the number of cylinders:
-
 
 ```{r faceting}
 
@@ -430,8 +423,27 @@ ggplot(ind_data_years, aes(x=union_density, y=real_med_wage)) +
   theme_bw()
 ```
 
-
 ### 6.2. Interactive charts
+
+```{r Highcharter, message=FALSE}
+
+#install.packages('highcharter')
+library(highcharter)
+
+```
+
+```{r Highcharter line chart}
+
+#Line chart with colors
+
+linechart <- highchart() %>%
+  
+  hc_add_series(data = ind_data, hcaes(x = year, y = union_density, group = mind16), 
+                type = 'line')
+
+linechart
+
+```
 
 ```{=html}
 <!--
@@ -439,9 +451,6 @@ ggplot(ind_data_years, aes(x=union_density, y=real_med_wage)) +
 - Particularly useful when you want to visualize the relationship between variables across different subgroups of your data.
 -->
 ```
-
-
-
 Advanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.
 
 ## 7.0 Resources for layer-based chart visualization!

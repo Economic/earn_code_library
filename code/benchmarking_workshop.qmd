@@ -3,11 +3,13 @@ title: "Benchmarking workshop"
 author: "Jori Kandra"
 ---
 
-## Publication: [Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes](https://www.epi.org/publication/older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes-epi-testimony-for-the-senate-special-committee-on-aging/)
+Powerpoint:
+
+### Publication: [Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes](https://www.epi.org/publication/older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes-epi-testimony-for-the-senate-special-committee-on-aging/)
 
 ### import packages
 
-```{r Packages}
+```{r Packages, message=FALSE}
 # import packages
 library(tidyverse)
 library(epiextractr)
