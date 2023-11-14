@@ -168,13 +168,6 @@
     "text": "Benchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars), .extracts_dir = here('data/basic')) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.43\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "code/benchmarking_workshop.html#publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes",
-    "href": "code/benchmarking_workshop.html#publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes",
-    "title": "Benchmarking workshop",
-    "section": "",
-    "text": "# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\n\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars), .extracts_dir = here('data/basic')) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.43\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\n\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\n\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)"
-  },
-  {
     "objectID": "code/bootcamp_preview.html",
     "href": "code/bootcamp_preview.html",
     "title": "EARNCon 2023 Bootcamp Preview",
@@ -198,56 +191,70 @@
   {
     "objectID": "code/prev_bootcamps.html",
     "href": "code/prev_bootcamps.html",
-    "title": "2021 and 2022 data bootcamps",
+    "title": "EARNCon data bootcamp files",
     "section": "",
     "text": "EPI Bootcamp Website"
   },
   {
-    "objectID": "code/prev_bootcamps.html#data-analysis-in-r-video",
-    "href": "code/prev_bootcamps.html#data-analysis-in-r-video",
-    "title": "2021 and 2022 data bootcamps",
-    "section": "2022 Data analysis in R (Video)",
-    "text": "2022 Data analysis in R (Video)\nData analysis in R slides\nHistorical minimum wage data\nCPI-U-RS data\nEPI CPS ORG data"
+    "objectID": "code/prev_bootcamps.html#data-analysis-in-r-first-steps",
+    "href": "code/prev_bootcamps.html#data-analysis-in-r-first-steps",
+    "title": "EARNCon data bootcamp files",
+    "section": "Data analysis in R: First steps",
+    "text": "Data analysis in R: First steps\nFirst steps to data analysis in R slides (pdf)\nEPI national wage percentiles data (csv)\n2022 EPI CPS ORG extracts data (zipped .dta)"
   },
   {
-    "objectID": "code/prev_bootcamps.html#data-bootcamp-code-library-presentation-video",
-    "href": "code/prev_bootcamps.html#data-bootcamp-code-library-presentation-video",
-    "title": "2021 and 2022 data bootcamps",
-    "section": "2022 Data bootcamp: Code Library Presentation (Video)",
-    "text": "2022 Data bootcamp: Code Library Presentation (Video)\nCode library powerpoint"
+    "objectID": "code/prev_bootcamps.html#using-apis-to-access-data-in-r",
+    "href": "code/prev_bootcamps.html#using-apis-to-access-data-in-r",
+    "title": "EARNCon data bootcamp files",
+    "section": "Using APIs to access data in R",
+    "text": "Using APIs to access data in R\nAccessing BLS and Census data (code)"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#data-analysis-in-r-video",
+    "href": "code/prev_bootcamps.html#data-analysis-in-r-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "Data analysis in R (Video)",
+    "text": "Data analysis in R (Video)\nData analysis in R slides\nHistorical minimum wage data\nCPI-U-RS data\nEPI CPS ORG data"
+  },
+  {
+    "objectID": "code/prev_bootcamps.html#code-library-presentation-video",
+    "href": "code/prev_bootcamps.html#code-library-presentation-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "Code Library Presentation (Video)",
+    "text": "Code Library Presentation (Video)\nCode library powerpoint"
   },
   {
     "objectID": "code/prev_bootcamps.html#data-analysis-in-stata-video",
     "href": "code/prev_bootcamps.html#data-analysis-in-stata-video",
-    "title": "2021 and 2022 data bootcamps",
-    "section": "2022 Data analysis in Stata (Video)",
-    "text": "2022 Data analysis in Stata (Video)\nData analysis in Stata slides\nStata session do file"
+    "title": "EARNCon data bootcamp files",
+    "section": "Data analysis in Stata (Video)",
+    "text": "Data analysis in Stata (Video)\nData analysis in Stata slides\nStata session do file"
   },
   {
     "objectID": "code/prev_bootcamps.html#first-steps-in-stata-video",
     "href": "code/prev_bootcamps.html#first-steps-in-stata-video",
-    "title": "2021 and 2022 data bootcamps",
+    "title": "EARNCon data bootcamp files",
     "section": "2021 First steps in Stata (Video)",
     "text": "2021 First steps in Stata (Video)\nStata session 1 slides\nStata session 1 do file\nEPI CPS ORG 2020 stata data file"
   },
   {
     "objectID": "code/prev_bootcamps.html#using-stata-effectively-video",
     "href": "code/prev_bootcamps.html#using-stata-effectively-video",
-    "title": "2021 and 2022 data bootcamps",
+    "title": "EARNCon data bootcamp files",
     "section": "2021 Using Stata effectively (Video)",
     "text": "2021 Using Stata effectively (Video)\nStata session 2 slides\nStata session 2 do file\nCPI-U-RS data\nEPI CPS ORG 2020 stata data file\nFull EPI CPS ORG (zipped data files)"
   },
   {
     "objectID": "code/prev_bootcamps.html#first-steps-in-r-video",
     "href": "code/prev_bootcamps.html#first-steps-in-r-video",
-    "title": "2021 and 2022 data bootcamps",
+    "title": "EARNCon data bootcamp files",
     "section": "2021 First steps in R (Video)",
     "text": "2021 First steps in R (Video)\nSlides\nacs_2019.dta\nepi_wage_percentiles.csv\nacs_wage_analysis.R"
   },
   {
     "objectID": "code/prev_bootcamps.html#using-r-effectively-video",
     "href": "code/prev_bootcamps.html#using-r-effectively-video",
-    "title": "2021 and 2022 data bootcamps",
+    "title": "EARNCon data bootcamp files",
     "section": "2021 Using R effectively (Video)",
     "text": "2021 Using R effectively (Video)\nSlides\nacs_2019.dta\ngeocorr2018.csv\nacs_wage_analysis_LAST_TIME.R\nacs_wage_analysis_FINAL.R"
   },
