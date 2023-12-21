@@ -1,5 +1,5 @@
 ---
-title: 'R: Inflation adjusting with Realtalk'
+title: 'Inflation adjusting with Realtalk'
 ---
 
 **Note:** Users will need to install realtalk and epiextractr for this example. Refer to [EPI built libraries](epi-libraries.qmd) for installation instructions

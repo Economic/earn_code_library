@@ -46,7 +46,7 @@ website:
       - text: "---"
 
       
-      - section: "Annotated examples"
+      - section: "Annotated R examples"
         contents:
         - code/epi_microdata.qmd
         - code/inflation_adjusting.qmd

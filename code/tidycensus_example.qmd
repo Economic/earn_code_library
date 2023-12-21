@@ -24,7 +24,7 @@ Once you've obtained a key, set it to your .Renviron file
 bls_set_key("YOUR BLS API KEY HERE")
 ```
 
-Use the `load_variables()` function to load 2021 ACS 5-year tables
+Use the `load_variables()` function to load available variables from the 2021 ACS 5-year table
 
 ```{r Show variables}
 #show all available tables:
@@ -34,11 +34,13 @@ acs_2021_variables <- load_variables(2021, "acs5", cache = TRUE)
 acs_2021_variables
 ```
 
+Download 2021 5-year ACS tables using `get_acs()` function. Filter to Michigan, include county-level data.
+
 ```{r Load Michigan data}
 
 options(tigris_use_cache = TRUE)
 
-# use get_acs() function to select Michigan, county level data
+# Table B01001: Sex by Age
 MI_demographics <- get_acs(table = "B01001",
                            geography = "county",
                            year = 2021,

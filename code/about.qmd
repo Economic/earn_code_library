@@ -62,8 +62,8 @@ df <- data.frame(x, y)
 # Create highcharter plot
 highchart(type = "chart") %>% 
   hc_add_series(data = df, type = "scatter", color = "red", marker = list(radius = 2)) %>% 
-  hc_xAxis(title = list(text = "Justice"), min = -20, max = 20) %>% 
-  hc_yAxis(title = list(text = "Peace"), min = -20, max = 15) %>% 
+  hc_xAxis(min = -20, max = 20) %>% 
+  hc_yAxis(min = -20, max = 15) %>% 
   hc_chart(backgroundColor = "transparent") %>% 
   hc_legend(enabled = FALSE)
 ```

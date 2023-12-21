@@ -1,5 +1,5 @@
 ---
-title: "Benchmarking workshop"
+title: "Benchmarking workshop 2023"
 author: "Jori Kandra"
 ---
 
