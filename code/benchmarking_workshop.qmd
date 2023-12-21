@@ -28,7 +28,7 @@ cps_vars <- c("year", "month", "age", "female", "emp", "basicwgt")
 
 ```{r Load CPS data}
 # import basic CPS data
-cps_data <- load_basic(cps_years, all_of(cps_vars), .extracts_dir = here('data/basic')) %>% 
+cps_data <- load_basic(cps_years, all_of(cps_vars)) %>% 
   # restrict to 16+
   filter(age >= 16) %>% 
   # create age categories
