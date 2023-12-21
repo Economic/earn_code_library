@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Zane Mokhiber">
 
-<title>Code Library - Load EPI CPS Extracts via epiextractr</title>
+<title>Code Library - Load Census tables via Tidycensus</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +65,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../code/inflation_adjusting.html" rel="next">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../code/">R code</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Annotated examples</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Load EPI CPS Extracts via epiextractr</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Load Census tables via Tidycensus</li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -238,16 +238,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="px-0"><hr class="sidebar-divider hi "></li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
  <span class="menu-text">Annotated examples</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link active">
+  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
   </div>
 </li>
@@ -317,10 +317,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
-  <li><a href="#download-cps-files" id="toc-download-cps-files" class="nav-link" data-scroll-target="#download-cps-files">Download CPS files</a></li>
-  <li><a href="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" id="toc-optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="nav-link" data-scroll-target="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</a></li>
-  <li><a href="#load-your-cps-extracts" id="toc-load-your-cps-extracts" class="nav-link" data-scroll-target="#load-your-cps-extracts">Load your CPS extracts!</a></li>
+  <li><a href="#load-census-tables-via-tidycensus" id="toc-load-census-tables-via-tidycensus" class="nav-link active" data-scroll-target="#load-census-tables-via-tidycensus">Load Census tables via Tidycensus</a></li>
   </ul>
 </nav>
     </div>
@@ -329,13 +326,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Load EPI CPS Extracts via epiextractr</h1>
+<h1 class="title">Load Census tables via Tidycensus</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zane Mokhiber </p>
+          </div>
+  </div>
     
   
     
@@ -344,77 +347,195 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><strong>Note:</strong> Users will need to install <code>epiextractr</code> for this example. Refer to <a href="epi-libraries.qmd">EPI built libraries</a> for installation instructions</p>
-<section id="load-required-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h3>
+<section id="load-census-tables-via-tidycensus" class="level1">
+<h1>Load Census tables via Tidycensus</h1>
+<p>This script provides a few examples of how to load ACS tables from <a href="https://data.census.gov" class="uri">https://data.census.gov</a> using the <a href="https://walker-data.com/tidycensus/index.html">Tidycensus</a> package.</p>
+<p>See more examples from Tidycensus at <a href="https://walker-data.com/tidycensus/articles/basic-usage.html" class="uri">https://walker-data.com/tidycensus/articles/basic-usage.html</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="download-cps-files" class="level3">
-<h3 class="anchored" data-anchor-id="download-cps-files">Download CPS files</h3>
+<p><strong>Note:</strong> A census API key is required to use <code>tidycensus</code>. Register for an API key at <a href="https://api.census.gov/data/key_signup.html" class="uri">https://api.census.gov/data/key_signup.html</a></p>
+<p>Once you’ve obtained a key, set it to your .Renviron file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS ORG files  </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>( <span class="at">sample =</span> <span class="st">'org'</span>, <span class="at">extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS Basic (4085.3 MB) </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>(<span class="at">sample=</span><span class="st">'basic'</span>, <span class="at">extracts_dir =</span><span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS May (38.8 MB)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>(<span class="at">sample=</span><span class="st">'may'</span>, <span class="at">extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sets bls API key (optional but encouraged)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bls_set_key</span>(<span class="st">"YOUR BLS API KEY HERE"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This will download the latest EPI CPS ORG extracts in .feather format from <a href="https://microdata.epi.org/">https://microdata.epi.org</a> and place them in the directory <code>C:\data\cps</code>.</p>
-</section>
-<section id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="level3">
-<h3 class="anchored" data-anchor-id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</h3>
-<p>To simplify usage, you can omit the <code>.extracts_dir</code> argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.</p>
+<p>Use the <code>load_variables()</code> function to load 2021 ACS 5-year tables</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the .Renviron file</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>renviron_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">"HOME"</span>), <span class="st">".Renviron"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file for editing</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(renviron_path)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the environment variable settings into your .Renviron file,</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># and make sure the paths are set to the location of your CPS files</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSBASIC_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSMAY_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSORG_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>After editing your <code>.Renviron</code> file, save your changes and restart R to apply them.</p>
-</section>
-<section id="load-your-cps-extracts" class="level3">
-<h3 class="anchored" data-anchor-id="load-your-cps-extracts">Load your CPS extracts!</h3>
-<p>After the data is downloaded, load a selection of CPS data for your analysis:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho, </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">.extracts_dir =</span> <span class="fu">here</span>(<span class="st">'data/cps'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 1.0.46</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, if you've set your paths in the .Renviron file, you can omit .extracts_dir()</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 1.0.42</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>org</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#show all available tables:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>acs_2021_variables <span class="ot">&lt;-</span> <span class="fu">load_variables</span>(<span class="dv">2021</span>, <span class="st">"acs5"</span>, <span class="at">cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>acs_2021_variables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3,895,343 × 6
-    year orgwgt  wage age       statefips wbho     
-   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt;
- 1  2010 12877.  11.3 58        1 [AL]    1 [White]
- 2  2010 13622.  NA   53        1 [AL]    1 [White]
- 3  2010 11478.  26.0 44        1 [AL]    2 [Black]
- 4  2010 11741.  17.3 49        1 [AL]    2 [Black]
- 5  2010 11770.  16   56        1 [AL]    1 [White]
- 6  2010 13458.  25.5 52        1 [AL]    1 [White]
- 7  2010 14390.  NA   24        1 [AL]    1 [White]
- 8  2010 14543.  NA   29        1 [AL]    1 [White]
- 9  2010 11983.  NA   80 [80+]  1 [AL]    1 [White]
-10  2010 13496.  NA   80 [80+]  1 [AL]    1 [White]
-# ℹ 3,895,333 more rows</code></pre>
+<pre><code># A tibble: 27,886 × 4
+   name        label                                    concept        geography
+   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    
+ 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    
+ 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    
+ 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    
+ 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    
+ 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    
+ 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    
+ 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    
+ 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    
+ 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    
+10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    
+# ℹ 27,876 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># use get_acs() function to select Michigan, county level data</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>MI_demographics <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(<span class="at">table =</span> <span class="st">"B01001"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">year =</span> <span class="dv">2021</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">state =</span> <span class="st">"MI"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">survey =</span> <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Getting data from the 2017-2021 5-year ACS</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>MI_demographics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,067 × 5
+   GEOID NAME                    variable   estimate   moe
+   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
+ 1 26001 Alcona County, Michigan B01001_001    10138    NA
+ 2 26001 Alcona County, Michigan B01001_002     5127    38
+ 3 26001 Alcona County, Michigan B01001_003      169    12
+ 4 26001 Alcona County, Michigan B01001_004      176    40
+ 5 26001 Alcona County, Michigan B01001_005      190    36
+ 6 26001 Alcona County, Michigan B01001_006      132    12
+ 7 26001 Alcona County, Michigan B01001_007       68    17
+ 8 26001 Alcona County, Michigan B01001_008       28    20
+ 9 26001 Alcona County, Michigan B01001_009       47    18
+10 26001 Alcona County, Michigan B01001_010      110    24
+# ℹ 4,057 more rows</code></pre>
+</div>
+</div>
+<p>Data from census tables have geographies associated with them, which can be plotted using base R functions</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot household income by county</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>MI_income <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"MI"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B19013_001"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2021</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(MI_income[<span class="st">"estimate"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tidycensus_example_files/figure-html/Simple MI plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Plot household income for Wayne County, MI at the tract level</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>detroit_income <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"MI"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Wayne"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B19013_001"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2021</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(detroit_income[<span class="st">"estimate"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tidycensus_example_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>More complex data requests using tidycensus</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># poverty in Rhode Island: https://data.census.gov/table?q=B17001B</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># define function to load multiple years of acs data</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>load_acs_tables <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_acs</span>(<span class="at">geography =</span> <span class="st">"state"</span>, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total_count =</span> <span class="st">"B17001_001"</span>,  </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">count_income_below_poverty =</span> <span class="st">"B17001_002"</span>,  </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">count_income_below_poverty_level_male =</span> <span class="st">"B17001_003"</span>,  </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">count_income_below_poverty_level_female =</span> <span class="st">"B17001_017"</span>), </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">state =</span> <span class="st">"RI"</span>, </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">year =</span> x, </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">output =</span> <span class="st">"wide"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#create year variable</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> x)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#load 2009:2018 5yr datasets with map_dfr()</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>RI_Poverty_B <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">2009</span><span class="sc">:</span><span class="dv">2021</span>, load_acs_tables)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>RI_Poverty_B</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 11
+   GEOID NAME         total_countE total_countM count_income_below_povertyE
+   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;
+ 1 44    Rhode Island      1019380          497                      118618
+ 2 44    Rhode Island      1014029          440                      123396
+ 3 44    Rhode Island      1012044          459                      129454
+ 4 44    Rhode Island      1011137          430                      133462
+ 5 44    Rhode Island      1010872          463                      137244
+ 6 44    Rhode Island      1012806          364                      143996
+ 7 44    Rhode Island      1013455          398                      144223
+ 8 44    Rhode Island      1013916          310                      140161
+ 9 44    Rhode Island      1015923          402                      136126
+10 44    Rhode Island      1016029          462                      133055
+11 44    Rhode Island      1016506          463                      125826
+12 44    Rhode Island      1017028          481                      117785
+13 44    Rhode Island      1050314          707                      118257
+# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,
+#   count_income_below_poverty_level_maleE &lt;dbl&gt;,
+#   count_income_below_poverty_level_maleM &lt;dbl&gt;,
+#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,
+#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Define function to load multiple years and multiple demographic groups for table b17001</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>load_acs_tables2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_acs</span>(<span class="at">geography =</span> <span class="st">"state"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total_count =</span> <span class="fu">paste0</span>(<span class="st">"B17001"</span>,y,<span class="st">"_001"</span>),  </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">count_income_below_poverty =</span> <span class="fu">paste0</span>(<span class="st">"B17001"</span>,y,<span class="st">"_002"</span>),  </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">count_income_below_poverty_level_male =</span> <span class="fu">paste0</span>(<span class="st">"B17001"</span>,y,<span class="st">"_003"</span>),  </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">count_income_below_poverty_level_female =</span> <span class="fu">paste0</span>(<span class="st">"B17001"</span>,y,<span class="st">"_017"</span>)), </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">state =</span> <span class="st">"RI"</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">year =</span> x, </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">output =</span> <span class="st">"wide"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">#create variables to identify years and demographic groups</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> x,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">group =</span> y)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#create list of arguments to pass to function</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>crossargs <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x=</span><span class="dv">2009</span><span class="sc">:</span><span class="dv">2021</span>, <span class="at">y=</span>LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>])</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#load all data 2009 to 2021</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>RI_Poverty <span class="ot">&lt;-</span> <span class="fu">map2_dfr</span>(crossargs<span class="sc">$</span>x, crossargs<span class="sc">$</span>y, load_acs_tables2)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>RI_Poverty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 117 × 12
+   GEOID NAME         total_countE total_countM count_income_below_povertyE
+   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;
+ 1 44    Rhode Island       844002         2476                       74676
+ 2 44    Rhode Island       832540         2445                       76711
+ 3 44    Rhode Island       831102         2675                       80691
+ 4 44    Rhode Island       827707         2583                       84578
+ 5 44    Rhode Island       824245         3051                       86232
+ 6 44    Rhode Island       825456         2895                       92849
+ 7 44    Rhode Island       823532         2843                       93988
+ 8 44    Rhode Island       822275         3089                       92245
+ 9 44    Rhode Island       823518         3001                       89596
+10 44    Rhode Island       823420         2950                       89282
+# ℹ 107 more rows
+# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,
+#   count_income_below_poverty_level_maleE &lt;dbl&gt;,
+#   count_income_below_poverty_level_maleM &lt;dbl&gt;,
+#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,
+#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;</code></pre>
 </div>
 </div>
 
@@ -770,15 +891,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../code/inflation_adjusting.html" class="pagination-link">
-        <span class="nav-page-text">R: Inflation adjusting with Realtalk</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 

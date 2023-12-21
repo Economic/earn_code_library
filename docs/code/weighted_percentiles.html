@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ben Zipperer">
 
-<title>Code Library - Load EPI CPS Extracts via epiextractr</title>
+<title>Code Library - Weighted percentiles</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +65,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../code/inflation_adjusting.html" rel="next">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../code/">R code</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Annotated examples</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Load EPI CPS Extracts via epiextractr</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Weighted percentiles</li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -238,16 +238,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="px-0"><hr class="sidebar-divider hi "></li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
  <span class="menu-text">Annotated examples</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link active">
+  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
   </div>
 </li>
@@ -317,10 +317,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
-  <li><a href="#download-cps-files" id="toc-download-cps-files" class="nav-link" data-scroll-target="#download-cps-files">Download CPS files</a></li>
-  <li><a href="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" id="toc-optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="nav-link" data-scroll-target="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</a></li>
-  <li><a href="#load-your-cps-extracts" id="toc-load-your-cps-extracts" class="nav-link" data-scroll-target="#load-your-cps-extracts">Load your CPS extracts!</a></li>
+  <li><a href="#preliminaries" id="toc-preliminaries" class="nav-link active" data-scroll-target="#preliminaries">Preliminaries</a></li>
+  <li><a href="#goal-and-quick-solution" id="toc-goal-and-quick-solution" class="nav-link" data-scroll-target="#goal-and-quick-solution">Goal and quick solution</a></li>
+  <li><a href="#step-by-step-explanation" id="toc-step-by-step-explanation" class="nav-link" data-scroll-target="#step-by-step-explanation">Step-by-step explanation</a></li>
+  <li><a href="#extra-credit" id="toc-extra-credit" class="nav-link" data-scroll-target="#extra-credit">Extra credit</a></li>
   </ul>
 </nav>
     </div>
@@ -329,13 +329,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Load EPI CPS Extracts via epiextractr</h1>
+<h1 class="title">Weighted percentiles</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ben Zipperer </p>
+          </div>
+  </div>
     
   
     
@@ -344,79 +350,283 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><strong>Note:</strong> Users will need to install <code>epiextractr</code> for this example. Refer to <a href="epi-libraries.qmd">EPI built libraries</a> for installation instructions</p>
-<section id="load-required-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h3>
+<p>This script uses Current Population Survey (CPS) microdata <a href="https://microdata.epi.org/">extracts</a> to calculate sample weighted wage percentiles over time.</p>
+<section id="preliminaries" class="level2">
+<h2 class="anchored" data-anchor-id="preliminaries">Preliminaries</h2>
+<p>First, load the required packages:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="download-cps-files" class="level3">
-<h3 class="anchored" data-anchor-id="download-cps-files">Download CPS files</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS ORG files  </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>( <span class="at">sample =</span> <span class="st">'org'</span>, <span class="at">extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS Basic (4085.3 MB) </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>(<span class="at">sample=</span><span class="st">'basic'</span>, <span class="at">extracts_dir =</span><span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS May (38.8 MB)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>(<span class="at">sample=</span><span class="st">'may'</span>, <span class="at">extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This will download the latest EPI CPS ORG extracts in .feather format from <a href="https://microdata.epi.org/">https://microdata.epi.org</a> and place them in the directory <code>C:\data\cps</code>.</p>
-</section>
-<section id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="level3">
-<h3 class="anchored" data-anchor-id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</h3>
-<p>To simplify usage, you can omit the <code>.extracts_dir</code> argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the .Renviron file</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>renviron_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">"HOME"</span>), <span class="st">".Renviron"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file for editing</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(renviron_path)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the environment variable settings into your .Renviron file,</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># and make sure the paths are set to the location of your CPS files</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSBASIC_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSMAY_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSORG_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>After editing your <code>.Renviron</code> file, save your changes and restart R to apply them.</p>
-</section>
-<section id="load-your-cps-extracts" class="level3">
-<h3 class="anchored" data-anchor-id="load-your-cps-extracts">Load your CPS extracts!</h3>
-<p>After the data is downloaded, load a selection of CPS data for your analysis:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho, </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">.extracts_dir =</span> <span class="fu">here</span>(<span class="st">'data/cps'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MetricsWeighted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 1.0.46</code></pre>
+<pre><code>Warning: package 'MetricsWeighted' was built under R version 4.3.2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, if you've set your paths in the .Renviron file, you can omit .extracts_dir()</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 1.0.42</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>org</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then grab wage earner observations from the 1979-2022 CPS ORG data using <a href="../code/epi_microdata.html">epiextractr</a>. If necessary, use the .extracts_dir argument of <code>load_org()</code> to point it to your downloaded CPS extracts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="ot">&lt;-</span> epiextractr<span class="sc">::</span><span class="fu">load_org</span>(<span class="dv">1979</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(wage <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="goal-and-quick-solution" class="level2">
+<h2 class="anchored" data-anchor-id="goal-and-quick-solution">Goal and quick solution</h2>
+<p>Let’s calculate the 10th, 50th, and 90th wage percentiles for each year, where these will be sample weighted percentiles using the <code>orgwgt</code> variable as the weight.</p>
+<p>First I’ll show you how you might do that and then I’ll break it down step-by-step.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># percentiles of interest</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">90</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate percentiles</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> p, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3,895,343 × 6
-    year orgwgt  wage age       statefips wbho     
-   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt;
- 1  2010 12877.  11.3 58        1 [AL]    1 [White]
- 2  2010 13622.  NA   53        1 [AL]    1 [White]
- 3  2010 11478.  26.0 44        1 [AL]    2 [Black]
- 4  2010 11741.  17.3 49        1 [AL]    2 [Black]
- 5  2010 11770.  16   56        1 [AL]    1 [White]
- 6  2010 13458.  25.5 52        1 [AL]    1 [White]
- 7  2010 14390.  NA   24        1 [AL]    1 [White]
- 8  2010 14543.  NA   29        1 [AL]    1 [White]
- 9  2010 11983.  NA   80 [80+]  1 [AL]    1 [White]
-10  2010 13496.  NA   80 [80+]  1 [AL]    1 [White]
-# ℹ 3,895,333 more rows</code></pre>
+<pre><code># A tibble: 132 × 3
+    year percentile value
+   &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;
+ 1  1979         10  2.90
+ 2  1979         50  5   
+ 3  1979         90 10.1 
+ 4  1980         10  3.10
+ 5  1980         50  5.62
+ 6  1980         90 11.2 
+ 7  1981         10  3.35
+ 8  1981         50  6.05
+ 9  1981         90 12.5 
+10  1982         10  3.35
+# ℹ 122 more rows</code></pre>
 </div>
 </div>
+</section>
+<section id="step-by-step-explanation" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-explanation">Step-by-step explanation</h2>
+<p>A simple version of this problem would be to calculate the median wage in 2022.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">p_50 =</span> <span class="fu">median</span>(wage))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+   p_50
+  &lt;dbl&gt;
+1    23</code></pre>
+</div>
+</div>
+<p>Use <code>weighted_median()</code> from the <code>MetricsWeighted</code> package to calculate a sample-weighted median.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">p_50 =</span> <span class="fu">weighted_median</span>(wage, <span class="at">w =</span> orgwgt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+   p_50
+  &lt;dbl&gt;
+1  22.9</code></pre>
+</div>
+</div>
+<p>Use <code>weighted_quantile()</code> and the <code>probs</code> argument to calculate any weighted percentile. Note that probs ranges from 0 to 1.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">p_10 =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> <span class="fl">0.10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+   p_10
+  &lt;dbl&gt;
+1  12.5</code></pre>
+</div>
+</div>
+<p>To calculate multiple percentiles provide, provide a vector of percentiles and also switch from <code>summarize()</code> to <code>reframe()</code> to allow multiple rows of results, as opposed to a single summary row.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">90</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> p, </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  percentile value
+       &lt;dbl&gt; &lt;dbl&gt;
+1         10  12.5
+2         50  22.9
+3         90  57.7</code></pre>
+</div>
+</div>
+<p>Notice how we used <code>probs = p / 100</code> in the arguments to <code>weighted_quantile()</code>.</p>
+<p>Finally, to calculate percentiles for each year, we can use the .by argument of reframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> p, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 132 × 3
+    year percentile value
+   &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;
+ 1  1979         10  2.90
+ 2  1979         50  5   
+ 3  1979         90 10.1 
+ 4  1980         10  3.10
+ 5  1980         50  5.62
+ 6  1980         90 11.2 
+ 7  1981         10  3.35
+ 8  1981         50  6.05
+ 9  1981         90 12.5 
+10  1982         10  3.35
+# ℹ 122 more rows</code></pre>
+</div>
+</div>
+<p>Observe the shape of the resulting output dataset: it is long in both years and percentiles. Long data like this is useful for more data manipulation or for making plots.</p>
+<p>For example, suppose you wanted to plot nominal wage growth since 2000.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct the percentiles in long format</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>percentile_data <span class="ot">&lt;-</span> cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> p, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># grab the 2000 base values</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>base_values <span class="ot">&lt;-</span> percentile_data <span class="sc">%&gt;%</span> </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(percentile, <span class="at">base_value =</span> value)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>percentile_data <span class="sc">%&gt;%</span> </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(base_values, <span class="at">by =</span> <span class="st">"percentile"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">wage_growth =</span> value <span class="sc">/</span> base_value <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> <span class="fu">paste0</span>(percentile, <span class="st">"th percentile"</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> wage_growth, <span class="at">color =</span> percentile)) <span class="sc">+</span> </span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="weighted_percentiles_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>While long data like that is useful for additional analysis, if you need to see more of the data at once, like for a table, you might want to make the data wider. With <code>pivot_wider()</code> you can reshape the data so that it is long in years and wide in percentiles.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> p,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> percentile, <span class="at">values_from =</span> value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44 × 4
+    year  `10`  `50`  `90`
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1979  2.90  5     10.1
+ 2  1980  3.10  5.62  11.2
+ 3  1981  3.35  6.05  12.5
+ 4  1982  3.35  6.5   13.1
+ 5  1983  3.40  6.70  14  
+ 6  1984  3.5   7     15.0
+ 7  1985  3.5   7.47  15  
+ 8  1986  3.60  7.5   16  
+ 9  1987  3.75  8     16.8
+10  1988  4     8.02  17.5
+# ℹ 34 more rows</code></pre>
+</div>
+</div>
+<p>Of course, the column names are pretty ugly. You could add a “th” to the column names from the get-go.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> <span class="fu">paste0</span>(p, <span class="st">"th"</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> percentile, <span class="at">values_from =</span> value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44 × 4
+    year `10th` `50th` `90th`
+   &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1  1979   2.90   5      10.1
+ 2  1980   3.10   5.62   11.2
+ 3  1981   3.35   6.05   12.5
+ 4  1982   3.35   6.5    13.1
+ 5  1983   3.40   6.70   14  
+ 6  1984   3.5    7      15.0
+ 7  1985   3.5    7.47   15  
+ 8  1986   3.60   7.5    16  
+ 9  1987   3.75   8      16.8
+10  1988   4      8.02   17.5
+# ℹ 34 more rows</code></pre>
+</div>
+</div>
+<p>Or you could make the column names more data analysis friendly with a “p_” prefix.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">percentile =</span> p,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> year,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> percentile,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> value,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"p_"</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44 × 4
+    year  p_10  p_50  p_90
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1979  2.90  5     10.1
+ 2  1980  3.10  5.62  11.2
+ 3  1981  3.35  6.05  12.5
+ 4  1982  3.35  6.5   13.1
+ 5  1983  3.40  6.70  14  
+ 6  1984  3.5   7     15.0
+ 7  1985  3.5   7.47  15  
+ 8  1986  3.60  7.5   16  
+ 9  1987  3.75  8     16.8
+10  1988  4     8.02  17.5
+# ℹ 34 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="extra-credit" class="level2">
+<h2 class="anchored" data-anchor-id="extra-credit">Extra credit</h2>
+<p>Consider the concise code</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> p,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">weighted_quantile</span>(wage, <span class="at">w =</span> orgwgt, <span class="at">probs =</span> p <span class="sc">/</span> <span class="dv">100</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_prefix =</span> <span class="st">"p_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44 × 4
+    year  p_10  p_50  p_90
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1979  2.90  5     10.1
+ 2  1980  3.10  5.62  11.2
+ 3  1981  3.35  6.05  12.5
+ 4  1982  3.35  6.5   13.1
+ 5  1983  3.40  6.70  14  
+ 6  1984  3.5   7     15.0
+ 7  1985  3.5   7.47  15  
+ 8  1986  3.60  7.5   16  
+ 9  1987  3.75  8     16.8
+10  1988  4     8.02  17.5
+# ℹ 34 more rows</code></pre>
+</div>
+</div>
+<p>Why does it produce the same results as the longer code above?</p>
 
 
 </section>
@@ -770,15 +980,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../code/inflation_adjusting.html" class="pagination-link">
-        <span class="nav-page-text">R: Inflation adjusting with Realtalk</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 

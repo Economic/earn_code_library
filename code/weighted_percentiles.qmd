@@ -1,0 +1,183 @@
+---
+title: "Weighted percentiles"
+author: "Ben Zipperer"
+format: html
+---
+
+This script uses Current Population Survey (CPS) microdata [extracts](https://microdata.epi.org/) to calculate sample weighted wage percentiles over time.
+
+## Preliminaries
+
+First, load the required packages:
+
+```{r, message=FALSE}
+
+library(tidyverse)
+library(MetricsWeighted)
+library(epiextractr)
+```
+
+Then grab wage earner observations from the 1979-2022 CPS ORG data using [epiextractr](epi_microdata.qmd). If necessary, use the .extracts_dir argument of `load_org()` to point it to your downloaded CPS extracts.
+
+```{r, message=FALSE}
+cps_data <- epiextractr::load_org(1979:2022, year, orgwgt, wage) %>% 
+  filter(wage > 0)
+```
+
+## Goal and quick solution
+
+Let's calculate the 10th, 50th, and 90th wage percentiles for each year, where these will be sample weighted percentiles using the `orgwgt` variable as the weight.
+
+First I'll show you how you might do that and then I'll break it down step-by-step.
+
+```{r}
+# percentiles of interest
+p <- c(10, 50, 90)
+
+# calculate percentiles
+cps_data %>% 
+  reframe(
+    percentile = p, 
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  )
+```
+
+## Step-by-step explanation
+
+A simple version of this problem would be to calculate the median wage in 2022.
+
+```{r}
+cps_data %>% 
+  filter(year == 2022) %>% 
+  summarize(p_50 = median(wage))
+```
+
+Use `weighted_median()` from the `MetricsWeighted` package to calculate a sample-weighted median.
+
+```{r}
+cps_data %>% 
+  filter(year == 2022) %>% 
+  summarize(p_50 = weighted_median(wage, w = orgwgt))
+```
+
+Use `weighted_quantile()` and the `probs` argument to calculate any weighted percentile. Note that probs ranges from 0 to 1.
+
+```{r}
+cps_data %>% 
+  filter(year == 2022) %>% 
+  summarize(p_10 = weighted_quantile(wage, w = orgwgt, probs = 0.10))
+```
+
+To calculate multiple percentiles provide, provide a vector of percentiles and also switch from `summarize()` to `reframe()` to allow multiple rows of results, as opposed to a single summary row.
+
+```{r}
+p <- c(10, 50, 90)
+
+cps_data %>% 
+  filter(year == 2022) %>% 
+  reframe(
+    percentile = p, 
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100)
+  )
+```
+
+Notice how we used `probs = p / 100` in the arguments to `weighted_quantile()`.
+
+Finally, to calculate percentiles for each year, we can use the .by argument of reframe.
+
+```{r}
+cps_data %>% 
+  reframe(
+    percentile = p, 
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  ) 
+```
+
+Observe the shape of the resulting output dataset: it is long in both years and percentiles. Long data like this is useful for more data manipulation or for making plots.
+
+For example, suppose you wanted to plot nominal wage growth since 2000.
+
+```{r}
+# construct the percentiles in long format
+percentile_data <- cps_data %>% 
+  reframe(
+    percentile = p, 
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  )
+
+# grab the 2000 base values
+base_values <- percentile_data %>% 
+  filter(year == 2000) %>% 
+  select(percentile, base_value = value)
+
+percentile_data %>% 
+  filter(year >= 2000) %>% 
+  full_join(base_values, by = "percentile") %>% 
+  mutate(
+    wage_growth = value / base_value - 1,
+    percentile = paste0(percentile, "th percentile")
+  ) %>% 
+  ggplot(aes(x = year, y = wage_growth, color = percentile)) + 
+  geom_line() +
+  theme_minimal()
+```
+
+While long data like that is useful for additional analysis, if you need to see more of the data at once, like for a table, you might want to make the data wider. With `pivot_wider()` you can reshape the data so that it is long in years and wide in percentiles.
+
+```{r}
+cps_data %>%
+  reframe(
+    percentile = p,
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  ) %>%
+  pivot_wider(id_cols = year, names_from = percentile, values_from = value)
+```
+
+Of course, the column names are pretty ugly. You could add a "th" to the column names from the get-go.
+
+```{r}
+cps_data %>%
+  reframe(
+    percentile = paste0(p, "th"),
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  ) %>%
+  pivot_wider(id_cols = year, names_from = percentile, values_from = value)
+```
+
+Or you could make the column names more data analysis friendly with a "p\_" prefix.
+
+```{r}
+cps_data %>%
+  reframe(
+    percentile = p,
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  ) %>%
+  pivot_wider(
+    id_cols = year,
+    names_from = percentile,
+    values_from = value,
+    names_prefix = "p_"
+  )
+```
+
+## Extra credit
+
+Consider the concise code
+
+```{r}
+cps_data %>%
+  reframe(
+    name = p,
+    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),
+    .by = year
+  ) %>%
+  pivot_wider(id_cols = year, names_prefix = "p_")
+```
+
+Why does it produce the same results as the longer code above?

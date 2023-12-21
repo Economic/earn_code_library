@@ -31,7 +31,7 @@ website:
     - section: "EPI-built resources"
       contents:
       
-      - section: "R libraries"
+      - section: "R packages"
         contents:
         - code/epi_libraries.qmd
           
@@ -41,6 +41,7 @@ website:
       
     - section: "R code"
       contents: 
+      - code/tidycensus_example.qmd
       - code/union_density.qmd
       - text: "---"
 
@@ -49,6 +50,7 @@ website:
         contents:
         - code/epi_microdata.qmd
         - code/inflation_adjusting.qmd
+        - code/weighted_percentiles.qmd
 
     - section: "Stata code"
       contents:

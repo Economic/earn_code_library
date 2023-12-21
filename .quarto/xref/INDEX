@@ -55,5 +55,11 @@
   },
   "code/benchmarking_workshop.qmd": {
     "benchmarking_workshop.html": "296b098f"
+  },
+  "code/tidycensus_example.qmd": {
+    "tidycensus_example.html": "23f6845b"
+  },
+  "code/weighted_percentiles.qmd": {
+    "weighted_percentiles.html": "f9fdf727"
   }
 }

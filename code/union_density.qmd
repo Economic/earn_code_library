@@ -18,9 +18,8 @@ Load CPS data using [epiextractr](epi_microdata.qmd)
 
 ```{r Load CPS Basic}
 
-basic <- load_basic(1983:2022, year, month, statefips, basicwgt, union, unmem, cow1, age, emp, unemp, lfstat, pubsec, selfemp, selfinc,
-                .extracts_dir = here('data/basic/')) %>%
-  filter(age>=16) %>%
+basic <- load_basic(1983:2022, year, month, statefips, basicwgt, union, unmem, age, emp, selfemp, selfinc) %>%
+  filter(age>=16, emp==1) %>%
   #remove self-employed and self-incorporated workers from sample
   mutate(selfemp0 = ifelse(selfemp==1 & !is.na(selfemp), yes=1, no=0),
          selfinc0 = ifelse(selfinc==1 & !is.na(selfinc), yes=1, no=0)) %>%

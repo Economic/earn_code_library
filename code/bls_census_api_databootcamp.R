@@ -8,7 +8,7 @@
 # documentation for blsR: https://rdrr.io/cran/blsR/man/blsR.html
 # install.packages("blsR")
 
-#documentation for tidycensus: https://walker-data.com/tidycensus/articles/basic-usage.ht
+#documentation for tidycensus: https://walker-data.com/tidycensus/articles/basic-usage.html
 # install.packages("tidycensus")
 
 library(tidyverse)
