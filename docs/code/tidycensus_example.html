@@ -332,7 +332,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#load-census-tables-via-tidycensus" id="toc-load-census-tables-via-tidycensus" class="nav-link active" data-scroll-target="#load-census-tables-via-tidycensus">Load Census tables via Tidycensus</a></li>
+  <li><a href="#explore-available-variables-in-the-acs-5-year-sample" id="toc-explore-available-variables-in-the-acs-5-year-sample" class="nav-link active" data-scroll-target="#explore-available-variables-in-the-acs-5-year-sample">Explore available variables in the ACS 5-year sample</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
+  <ul class="collapse">
+  <li><a href="#demographic-data" id="toc-demographic-data" class="nav-link" data-scroll-target="#demographic-data">Demographic data</a></li>
+  <li><a href="#map-of-median-household-income-in-mi-by-county" id="toc-map-of-median-household-income-in-mi-by-county" class="nav-link" data-scroll-target="#map-of-median-household-income-in-mi-by-county">Map of median household income in MI, by county</a></li>
+  <li><a href="#map-of-median-household-income-for-wayne-county-mi-by-tract" id="toc-map-of-median-household-income-for-wayne-county-mi-by-tract" class="nav-link" data-scroll-target="#map-of-median-household-income-for-wayne-county-mi-by-tract">Map of median household income for Wayne County, MI, by tract</a></li>
+  <li><a href="#total-income-below-poverty-level-in-rhode-island-by-gender-20092021" id="toc-total-income-below-poverty-level-in-rhode-island-by-gender-20092021" class="nav-link" data-scroll-target="#total-income-below-poverty-level-in-rhode-island-by-gender-20092021">Total income below poverty level in Rhode Island by gender, 2009–2021</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -362,23 +369,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="load-census-tables-via-tidycensus" class="level1">
-<h1>Load Census tables via Tidycensus</h1>
 <p>This script provides a few examples of how to load ACS tables from <a href="https://data.census.gov" class="uri">https://data.census.gov</a> using the <a href="https://walker-data.com/tidycensus/index.html">Tidycensus</a> package.</p>
-<p>See more examples from Tidycensus at <a href="https://walker-data.com/tidycensus/articles/basic-usage.html" class="uri">https://walker-data.com/tidycensus/articles/basic-usage.html</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Note:</strong> A census API key is required to use <code>tidycensus</code>. Register for an API key at <a href="https://api.census.gov/data/key_signup.html" class="uri">https://api.census.gov/data/key_signup.html</a></p>
-<p>Once you’ve obtained a key, set it to your .Renviron file</p>
+<p><strong>Note:</strong> A census API key is required to use <code>tidycensus</code>. Register for a Census API key at <a href="https://api.census.gov/data/key_signup.html" class="uri">https://api.census.gov/data/key_signup.html</a>. Once you’ve obtained a key, you can copy it to your .Renviron file by using the <code>bls_set_key()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sets bls API key (optional but encouraged)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bls_set_key</span>(<span class="st">"YOUR BLS API KEY HERE"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Use the <code>load_variables()</code> function to load available variables from the 2021 ACS 5-year table</p>
+<section id="explore-available-variables-in-the-acs-5-year-sample" class="level2">
+<h2 class="anchored" data-anchor-id="explore-available-variables-in-the-acs-5-year-sample">Explore available variables in the ACS 5-year sample</h2>
+<p>Use the <code>load_variables()</code> function to load available tables derived from the 2021 ACS 5-year survey.</p>
+<ul>
+<li>See a full list of available Census tables at <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html" class="uri">https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html</a></li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#show all available tables:</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show all available tables</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>acs_2021_variables <span class="ot">&lt;-</span> <span class="fu">load_variables</span>(<span class="dv">2021</span>, <span class="st">"acs5"</span>, <span class="at">cache =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -400,16 +408,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 27,876 more rows</code></pre>
 </div>
 </div>
-<p>Download 2021 5-year ACS tables using <code>get_acs()</code> function. Filter to Michigan, include county-level data.</p>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<section id="demographic-data" class="level3">
+<h3 class="anchored" data-anchor-id="demographic-data">Demographic data</h3>
+<p>This example loads demographic data from the 2017-2021 ACS for counties in Michigan.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Table B01001: Sex by Age</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>MI_demographics <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(<span class="at">table =</span> <span class="st">"B01001"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">geography =</span> <span class="st">"county"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">year =</span> <span class="dv">2021</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">state =</span> <span class="st">"MI"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">survey =</span> <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This option will retrieve geographic data from the Census</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Table B01001: Sex by Age</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>MI_demographics <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(<span class="at">table =</span> <span class="st">"B01001"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">year =</span> <span class="dv">2021</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">state =</span> <span class="st">"MI"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">survey =</span> <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Getting data from the 2017-2021 5-year ACS</code></pre>
 </div>
@@ -431,7 +445,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 4,057 more rows</code></pre>
 </div>
 </div>
-<p>Data from census tables have geographies associated with them, which can be plotted using base R functions</p>
+</section>
+<section id="map-of-median-household-income-in-mi-by-county" class="level3">
+<h3 class="anchored" data-anchor-id="map-of-median-household-income-in-mi-by-county">Map of median household income in MI, by county</h3>
+<p>This example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot household income by county</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>MI_income <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
@@ -447,7 +464,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="tidycensus_example_files/figure-html/Simple MI plot-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Plot household income for Wayne County, MI at the tract level</p>
+</section>
+<section id="map-of-median-household-income-for-wayne-county-mi-by-tract" class="level3">
+<h3 class="anchored" data-anchor-id="map-of-median-household-income-for-wayne-county-mi-by-tract">Map of median household income for Wayne County, MI, by tract</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>detroit_income <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>, </span>
@@ -463,11 +482,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="tidycensus_example_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>More complex data requests using tidycensus</p>
+</section>
+<section id="total-income-below-poverty-level-in-rhode-island-by-gender-20092021" class="level3">
+<h3 class="anchored" data-anchor-id="total-income-below-poverty-level-in-rhode-island-by-gender-20092021">Total income below poverty level in Rhode Island by gender, 2009–2021</h3>
+<p>This example defines function to load multiple years and multiple demographic groups for table b17001</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># poverty in Rhode Island: https://data.census.gov/table?q=B17001B</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Poverty in Rhode Island: https://data.census.gov/table?q=B17001B</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># define function to load multiple years of acs data</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  Function to load multiple years of acs data</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>load_acs_tables <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_acs</span>(<span class="at">geography =</span> <span class="st">"state"</span>, </span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total_count =</span> <span class="st">"B17001_001"</span>,  </span>
@@ -509,7 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<p>Define function to load multiple years and multiple demographic groups for table b17001</p>
+<p>A more complex function to load multiple demographic groups</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>load_acs_tables2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_acs</span>(<span class="at">geography =</span> <span class="st">"state"</span>, </span>
@@ -554,8 +576,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;</code></pre>
 </div>
 </div>
+<p>See more examples from Tidycensus at <a href="https://walker-data.com/tidycensus/articles/basic-usage.html" class="uri">https://walker-data.com/tidycensus/articles/basic-usage.html</a></p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

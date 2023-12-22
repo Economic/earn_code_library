@@ -3,20 +3,14 @@ title: "Load Census tables via Tidycensus"
 author: "Zane Mokhiber"
 ---
 
-# Load Census tables via Tidycensus
-
 This script provides a few examples of how to load ACS tables from <https://data.census.gov> using the [Tidycensus](https://walker-data.com/tidycensus/index.html) package.
-
-See more examples from Tidycensus at <https://walker-data.com/tidycensus/articles/basic-usage.html>
 
 ```{r Load packages, message=FALSE}
 library(tidycensus)
 library(tidyverse)
 ```
 
-**Note:** A census API key is required to use `tidycensus`. Register for an API key at <https://api.census.gov/data/key_signup.html>
-
-Once you've obtained a key, set it to your .Renviron file
+**Note:** A census API key is required to use `tidycensus`. Register for a Census API key at <https://api.census.gov/data/key_signup.html>. Once you've obtained a key, you can copy it to your .Renviron file by using the `bls_set_key()` function.
 
 ```{r API key, eval=FALSE}
 
@@ -24,20 +18,29 @@ Once you've obtained a key, set it to your .Renviron file
 bls_set_key("YOUR BLS API KEY HERE")
 ```
 
-Use the `load_variables()` function to load available variables from the 2021 ACS 5-year table
+## Explore available variables in the ACS 5-year sample
+
+Use the `load_variables()` function to load available tables derived from the 2021 ACS 5-year survey.
+
+-   See a full list of available Census tables at <https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html>
 
 ```{r Show variables}
-#show all available tables:
+# Show all available tables
 
 acs_2021_variables <- load_variables(2021, "acs5", cache = TRUE)
 
 acs_2021_variables
 ```
 
-Download 2021 5-year ACS tables using `get_acs()` function. Filter to Michigan, include county-level data.
+## Examples
+
+### Demographic data
+
+This example loads demographic data from the 2017-2021 ACS for counties in Michigan.
 
 ```{r Load Michigan data}
 
+# This option will retrieve geographic data from the Census
 options(tigris_use_cache = TRUE)
 
 # Table B01001: Sex by Age
@@ -51,7 +54,9 @@ MI_demographics
 
 ```
 
-Data from census tables have geographies associated with them, which can be plotted using base R functions
+### Map of median household income in MI, by county
+
+This example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.
 
 ```{r Simple MI plot,  message=FALSE}
 
@@ -68,7 +73,7 @@ plot(MI_income["estimate"])
 
 ```
 
-Plot household income for Wayne County, MI at the tract level
+### Map of median household income for Wayne County, MI, by tract
 
 ```{r, message=FALSE}
 
@@ -85,13 +90,15 @@ plot(detroit_income["estimate"])
 
 ```
 
-More complex data requests using tidycensus
+### Total income below poverty level in Rhode Island by gender, 2009--2021
+
+This example defines function to load multiple years and multiple demographic groups for table b17001
 
 ```{r RI Poverty, message=FALSE}
 
-# poverty in Rhode Island: https://data.census.gov/table?q=B17001B
+# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B
 
-# define function to load multiple years of acs data
+#  Function to load multiple years of acs data
 load_acs_tables <- function(x){
   get_acs(geography = "state", 
           variables = c(total_count = "B17001_001",  
@@ -112,7 +119,7 @@ RI_Poverty_B
 
 ```
 
-Define function to load multiple years and multiple demographic groups for table b17001
+A more complex function to load multiple demographic groups
 
 ```{r Function, message=FALSE}
 
@@ -139,3 +146,5 @@ RI_Poverty <- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)
 RI_Poverty
 
 ```
+
+See more examples from Tidycensus at <https://walker-data.com/tidycensus/articles/basic-usage.html>
