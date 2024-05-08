@@ -18,7 +18,7 @@ title: "EPI packages for R"
 
 **Note!** EPI's R packages require users to install [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html)
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, message=FALSE}
 
 install.packages('devtools')
 
@@ -26,7 +26,7 @@ install.packages('devtools')
 
 Once you've installed devtools, you can install all three EPI packages using the following commands
 
-```{r EPI library installation, eval=FALSE}
+```{r EPI library installation, message=FALSE, eval=FALSE}
 
 devtools::install_github("Economic/realtalk")
 devtools::install_github("economic/epidatatools")

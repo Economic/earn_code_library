@@ -2,7 +2,7 @@
 title: "Load EPI CPS Extracts via epiextractr"
 ---
 
-**Note:** Users will need to install `epiextractr` for this example. Refer to [EPI packages for R](code/epi_libraries.qmd) for installation instructions
+**Note:** Users will need to install `epiextractr` for this example. Refer to [EPI packages for R](epi_libraries.qmd) for installation instructions
 
 ```{r Internal load libraries, include=FALSE, message=FALSE}
 library(tidyverse)

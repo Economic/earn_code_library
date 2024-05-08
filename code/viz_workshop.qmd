@@ -314,8 +314,8 @@ ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
 Now, let's try using pre-made theme. [ThemePark](https://github.com/MatthewBJane/ThemePark) by Matthew B. Jane
 
 ```{r Installing themes}
-## install.packages("remotes")
-# remotes::install_github("MatthewBJane/ThemePark")
+install.packages("remotes")
+remotes::install_github("MatthewBJane/ThemePark")
 
 library(ThemePark)
 
