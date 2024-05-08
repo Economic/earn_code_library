@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -92,8 +92,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
@@ -142,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../code/tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Annotated R examples</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Load EPI CPS Extracts via epiextractr</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -332,8 +331,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
   <li><a href="#download-cps-files" id="toc-download-cps-files" class="nav-link" data-scroll-target="#download-cps-files">Download CPS files</a></li>
-  <li><a href="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" id="toc-optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="nav-link" data-scroll-target="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</a></li>
   <li><a href="#load-your-cps-extracts" id="toc-load-your-cps-extracts" class="nav-link" data-scroll-target="#load-your-cps-extracts">Load your CPS extracts!</a></li>
+  <li><a href="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" id="toc-optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="nav-link" data-scroll-target="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</a></li>
   </ul>
 </nav>
     </div>
@@ -357,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><strong>Note:</strong> Users will need to install <code>epiextractr</code> for this example. Refer to <a href="epi-libraries.qmd">EPI built libraries</a> for installation instructions</p>
+<p><strong>Note:</strong> Users will need to install <code>epiextractr</code> for this example. Refer to <a href="code/epi_libraries.qmd">EPI packages for R</a> for installation instructions</p>
 <section id="load-required-libraries" class="level3">
 <h3 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h3>
 <div class="cell">
@@ -379,56 +378,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This will download the latest EPI CPS ORG extracts in .feather format from <a href="https://microdata.epi.org/">https://microdata.epi.org</a> and place them in the directory <code>C:\data\cps</code>.</p>
 </section>
-<section id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="level3">
-<h3 class="anchored" data-anchor-id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</h3>
-<p>To simplify usage, you can omit the <code>.extracts_dir</code> argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the .Renviron file</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>renviron_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">"HOME"</span>), <span class="st">".Renviron"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file for editing</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(renviron_path)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the environment variable settings into your .Renviron file,</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># and make sure the paths are set to the location of your CPS files</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSBASIC_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSMAY_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSORG_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>After editing your <code>.Renviron</code> file, save your changes and restart R to apply them.</p>
-</section>
 <section id="load-your-cps-extracts" class="level3">
 <h3 class="anchored" data-anchor-id="load-your-cps-extracts">Load your CPS extracts!</h3>
 <p>After the data is downloaded, load a selection of CPS data for your analysis:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho, </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">.extracts_dir =</span> <span class="fu">here</span>(<span class="st">'data/cps'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 1.0.46</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">.extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, if you've set your paths in the .Renviron file, you can omit .extracts_dir()</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 1.0.42</code></pre>
+</section>
+<section id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="level3">
+<h3 class="anchored" data-anchor-id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</h3>
+<p>To simplify usage, you can omit the <code>.extracts_dir</code> argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the .Renviron file</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>renviron_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">"HOME"</span>), <span class="st">".Renviron"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file for editing</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(renviron_path)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the environment variable settings into your .Renviron file,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># and make sure the paths are set to the location of your CPS files</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSBASIC_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSMAY_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSORG_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>org</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3,895,343 × 6
-    year orgwgt  wage age       statefips wbho     
-   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt; &lt;int+lbl&gt;
- 1  2010 12877.  11.3 58        1 [AL]    1 [White]
- 2  2010 13622.  NA   53        1 [AL]    1 [White]
- 3  2010 11478.  26.0 44        1 [AL]    2 [Black]
- 4  2010 11741.  17.3 49        1 [AL]    2 [Black]
- 5  2010 11770.  16   56        1 [AL]    1 [White]
- 6  2010 13458.  25.5 52        1 [AL]    1 [White]
- 7  2010 14390.  NA   24        1 [AL]    1 [White]
- 8  2010 14543.  NA   29        1 [AL]    1 [White]
- 9  2010 11983.  NA   80 [80+]  1 [AL]    1 [White]
-10  2010 13496.  NA   80 [80+]  1 [AL]    1 [White]
-# ℹ 3,895,333 more rows</code></pre>
-</div>
+<p>After editing your <code>.Renviron</code> file, save your changes and restart R to apply them.</p>
+<p>If you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the <code>.extracts_dir()</code> command</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
