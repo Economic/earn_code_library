@@ -61,5 +61,8 @@
   },
   "code/weighted_percentiles.qmd": {
     "weighted_percentiles.html": "f9fdf727"
+  },
+  "code/blsR_example.qmd": {
+    "blsR_example.html": "5a3bc095"
   }
 }

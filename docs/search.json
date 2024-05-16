@@ -320,5 +320,40 @@
     "title": "Weighted percentiles",
     "section": "Extra credit",
     "text": "Extra credit\nConsider the concise code\n\ncps_data %&gt;%\n  reframe(\n    name = p,\n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  ) %&gt;%\n  pivot_wider(id_cols = year, names_prefix = \"p_\")\n\n# A tibble: 44 × 4\n    year  p_10  p_50  p_90\n   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n 1  1979  2.90  5     10.1\n 2  1980  3.10  5.62  11.2\n 3  1981  3.35  6.05  12.5\n 4  1982  3.35  6.5   13.1\n 5  1983  3.40  6.70  14  \n 6  1984  3.5   7     15.0\n 7  1985  3.5   7.47  15  \n 8  1986  3.60  7.5   16  \n 9  1987  3.75  8     16.8\n10  1988  4     8.02  17.5\n# ℹ 34 more rows\n\n\nWhy does it produce the same results as the longer code above?"
+  },
+  {
+    "objectID": "code/blsR_example.html",
+    "href": "code/blsR_example.html",
+    "title": "Downloading BLS data via blsR",
+    "section": "",
+    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")"
+  },
+  {
+    "objectID": "code/blsR_example.html#loading-blsr-and-setting-api-key",
+    "href": "code/blsR_example.html#loading-blsr-and-setting-api-key",
+    "title": "Downloading BLS data via blsR",
+    "section": "",
+    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")"
+  },
+  {
+    "objectID": "code/blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
+    "href": "code/blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
+    "title": "Downloading BLS data via blsR",
+    "section": "Nominal average hourly earnings of production and non-supervisory employees",
+    "text": "Nominal average hourly earnings of production and non-supervisory employees\nYou can import a single table using the blsR::get_n_series_table() function:\n\n## use blsR to pull in nominal wages\nnominal_wages &lt;- get_n_series_table(series = \"CEU0500000008\", api_key = bls_key, \n                                    start_year = 1965, end_year = 2023, \n                                    tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter for annual data\n  filter(month == 13)"
+  },
+  {
+    "objectID": "code/blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
+    "href": "code/blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
+    "title": "Downloading BLS data via blsR",
+    "section": "Real average hourly earnings of production and non-supervsory employees",
+    "text": "Real average hourly earnings of production and non-supervsory employees\nYou can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.\n\n# set cpi codes\ncpi_codes &lt;- c(\"CUUR0000SA0\",\n               \"CEU0500000008\")\n\n# set cpi base\n#note: used to set base year for inflation-adjustment\ncpi_base &lt;- get_n_series_table(series_ids = \"CUUR0000SA0\", start_year = 2023, end_year = 2023, \n                               api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual 2023 data and pull CPI value as base\n  filter(month == 13) %&gt;% pull(CUUR0000SA0)\n\n# use blsR to pull CPI data\ncpi_output &lt;- get_n_series_table(series_ids = cpi_codes, start_year = 1947, end_year = 2023, \n                                 api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual data\n  filter(month == 13) %&gt;%\n  # rename for easier handling\n  rename(ahe = CEU0500000008, cpi = CUUR0000SA0) %&gt;% \n  # calculate real wages\n  mutate(ahe_real = ahe * (cpi_base/cpi)) %&gt;% \n  # export to delimited file\n  write.csv(here(\"ahe_real.csv\"))"
+  },
+  {
+    "objectID": "code/blsR_example.html#pulling-more-than-50-series",
+    "href": "code/blsR_example.html#pulling-more-than-50-series",
+    "title": "Downloading BLS data via blsR",
+    "section": "Pulling more than 50 series",
+    "text": "Pulling more than 50 series\nThe BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:\n\n# read in bls series codes\n#note: this is a random selection of codes used in our Jobs and Unemployment figures\nbls_codes &lt;- read.csv(here(\"bls_codes.csv\"))\n# remove any blanks\nbls_codes &lt;- bls_codes$series_id[bls_codes$series_id != \"\"]\n\n\n# use map to iteratively call blsR api at max number of series id\n#note: BLS restricts to max 50 series in a single call\njobs_day_df &lt;- map(split(bls_codes, ceiling(seq_along(bls_codes) / 50)), # split codes into groups of 50\n             # call blsR using series ids sliced into groups of 50\n             ~ get_n_series_table(series_ids = .x, start_year = 1939, end_year = 2023, \n                                  api_key = bls_key, tidy = TRUE)) %&gt;% \n  # map returns list, flatten by joining data\n  reduce(., function(df1, df2) full_join(df1, df2, by = c(\"year\", \"month\"))) %&gt;%\n  # define date\n  mutate(date = as.POSIXct(paste(year,month,1, sep = \"-\")),\n         date = as.Date(date)) %&gt;% \n  write_csv(here(\"jobs_day_example.csv\"))"
   }
 ]

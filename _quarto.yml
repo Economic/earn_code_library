@@ -43,6 +43,7 @@ website:
       contents: 
       - code/tidycensus_example.qmd
       - code/union_density.qmd
+      - code/blsR_example.qmd
       - text: "---"
 
       
