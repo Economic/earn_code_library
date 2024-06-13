@@ -46,9 +46,9 @@ Components of a code library submission are:
 
 ::: {#square-container}
 ```{r highcharterExample, message=FALSE}
-#This R code generates an interactive scatterplot in the shape of a heart
+# A heart-shaped scatterplot
 
-# Load required libraries
+# Load highcharter library
 library(highcharter)
 
 # Generate heart-shaped data
@@ -56,7 +56,7 @@ t <- seq(0, 2 * pi, by = 0.01)
 x <- 16 * sin(t)^3
 y <- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)
 
-# Create a data frame
+# Create our data frame
 df <- data.frame(x, y)
 
 # Create highcharter plot
