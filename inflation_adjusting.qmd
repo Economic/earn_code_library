@@ -1,0 +1,102 @@
+---
+title: 'Inflation adjusting with Realtalk'
+---
+
+**Note:** Users will need to install realtalk and epiextractr for this example. Refer to [EPI built libraries](epi-libraries.qmd) for installation instructions
+
+## Loading CPI Indices using the [realtalk](https://economic.github.io/realtalk/) library
+
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.
+
+```{r Load libraries, message=FALSE}
+#Load necessary libraries
+library(tidyverse)
+library(realtalk)
+library(epiextractr)
+library(here)
+```
+
+The RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.
+
+```{r List price indices}
+
+#list available cpi series
+realtalk::available_price_indexes
+```
+
+EPI uses the CPI-U-RS series to inflation adjust wages, so we'll select that series and assign it to a dataframe.
+
+```{r }
+#this creates a dataframe with the annual CPI-U-RS index from 1937-2022
+cpi_data <- realtalk::cpi_u_rs_annual
+
+#Set base year to 2022
+cpi2022 <- cpi_data$cpi_u_rs[cpi_data$year==2022]
+```
+
+## A refresher on inflation adjustment
+
+Before jumping into the full code. Let's refresh on how to calculate inflation using the Consumer Price Index.
+
+Inflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:
+
+$$
+\frac{\text{Given year}}{\text{Base year}} * 100
+$$
+
+For example, let's calculate how much the CPI-U-RS index has increased from 1978 to 2022.
+
+$$
+\frac{\text{CPI}_{2022}}{\text{CPI}_{1978}} = \frac{431.5}{104} \approx 4.149038 \text{ or } 414.9\%
+$$
+
+And voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.
+
+## Applying inflation adjustment to CPS ORG wage data
+
+This section uses [epiextractr](https://economic.github.io/epiextractr) to load Current Population Survey data. Refer to the [Using EPI's CPS Extracts](epi_microdata.qmd) to learn how to use this library.
+
+Below, I load CPS ORG data and define my sample:
+
+```{r Wage data, message=FALSE}
+
+org <- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat) %>% 
+    #define sample universe
+    filter(age>=16, lfstat %in% c(1,2))
+
+```
+
+Next, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()
+
+```{r Calculate median wages in the CPS ORG}
+
+#Calculate median wages in the CPS ORG
+wage_data <- org %>% 
+  #use spatstat package to calculate a weighted median
+  #Note: I am pooling 12 months of CPS data, 
+  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.
+  summarize(nominal_median_wage = 
+              spatstat.geom::weighted.median(wage, w=orgwgt/12, na.rm=TRUE),
+            .by=year) %>% 
+
+#Merge annual CPI data to dataframe by year.
+  left_join(cpi_data, by='year') 
+
+wage_data
+```
+
+Finally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:
+
+```{r Clean and prepare data for inflation adjustment}
+
+adjusted_data <- wage_data %>% 
+ 
+  #This mutate command calculates inflation in a given year, relative to 2022
+  #and multiplies nominal median wages by the inflation quotient
+  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),
+         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %>% 
+  
+  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)
+  
+adjusted_data
+```

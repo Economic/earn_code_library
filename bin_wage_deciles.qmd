@@ -1,0 +1,54 @@
+---
+title: "Wage deciles by state"
+author: 'Daniel Perez, EARN/EPI'
+eval: false
+---
+
+```{r, include=FALSE}
+library(Statamarkdown)
+```
+
+``` stata
+set more off
+clear all
+
+*NOTE: Users will need to create their own directory and relative directories 
+global base "/your_directory"
+global code ${base}code/
+global output ${base}output/
+
+
+*load_epiextracts is an easy way to load a selection of years and variables 
+* of the EPI CPS extracts into memory. First, install the Stata package with
+*See https://microdata.epi.org/basicuse/ for use information.
+
+*net install load_epiextracts, from("https://microdata.epi.org/stata")
+
+* load CPS ORG: wage, wbho
+load_epiextracts, begin(2022m1) end(2022m12) sample(ORG) keep(year month orgwgt age emp selfemp wage statefips)
+
+
+tempfile allthedata
+save `allthedata'
+
+* define sample
+
+keep if age>=16
+keep if emp==1
+keep if selfemp!=1 & selfemp!=.
+
+
+* Calculate wage deciles, by year and statefips
+use `allthedata', clear
+binipolate wage [pw=orgwgt/12], binsize(.50) by(year statefips) collapsefun(gcollapse) p(10 20 30 40 50 60 70 80 90)
+
+*Turn statefips labels into strings
+decode statefips, gen(states)
+drop statefips
+
+*Reshape data wide
+reshape wide wage_binned, i(year percentile) j(states) string
+
+*Export state wage deciles to csv file
+export delim ${output}state_wage_deciles.csv, replace
+```
