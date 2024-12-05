@@ -1,10 +1,12 @@
 ---
-title: "Visualization workshop 2023"
+title: "Visualizing Data"
 ---
 
-## Welcome to the EARNCon 2023 Visualization workshop page
+## Welcome to the Visualizing Data training
 
-In this workshop you will learn how to create data visualizations using free tools like ggplot2 and Tableau.
+This training was originally presented as a workshop at EARNCon 2023.
+
+In this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.
 
 ## 1. Introduction
 
@@ -18,6 +20,7 @@ In this workshop you will learn how to create data visualizations using free too
 -
 -->
 ```
+
 ### 1.1 Brief overview of `ggplot2`
 
 <!-- speaker notes -->
@@ -29,6 +32,7 @@ In this workshop you will learn how to create data visualizations using free too
 -Base R graphics have their own merits, but `ggplot2` stands out because it follows a more structured, iterative way of creating visualizations.
 -->
 ```
+
 `ggplot2` is a data visualization package for R that allows users to create complex plots in a structured manner. It's based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.
 
 ### 1.2 Philosophy behind ggplot2
@@ -43,6 +47,7 @@ Visualizing a plot in `ggplot2` is about understanding its layers. Starting from
 This structured layer-wise approach makes constructing and then iterating on charts, clear and intuitive.
 -->
 ```
+
 At the core of `ggplot2` is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.
 
 ## 2. Basic chart creation
@@ -60,6 +65,7 @@ At the core of `ggplot2` is the idea of layers. This means starting with a blank
 - Using this approach is like saying: "With this data, using these columns for these aesthetics, render this specific type of plot."
 -->
 ```
+
 1.  `ggplot()`
 2.  `aes()`
 3.  [geom_point()](https://ggplot2.tidyverse.org/reference/index.html#geoms)
@@ -78,6 +84,7 @@ The foundation of any `ggplot2` visualization starts with the `ggplot()` functio
 - Plotting these variables against each other lets us visually assess their relationship, giving us some sense of covariance.
 -->
 ```
+
 Using the **`mtcars`** dataset, we'll illustrate the relationship between a car's horsepower (**`hp`**) and its fuel efficiency (**`mpg`**).
 
 ```{r Load gg and mtcars, message=FALSE}
@@ -119,6 +126,7 @@ First thing first, we'll load some pre-tabulated data directly from github page.
 It contains variables on employment, union density, and wages by industry. Stuff we commonly work with.
 -->
 ```
+
 ```{r Industry data}
 
 # Load some data from Github. 
@@ -147,6 +155,7 @@ ggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +
 --In this case, adding a secondary geometry gives us a visual diagnostic, that allows us to examine the data for patterns and relationships .
 -->
 ```
+
 An insightful visualization often arises from combining various layers and customizing aesthetics.
 
 Building on our scatter plot from earlier, let's include a smoothed line to better discern the relationship between mpg and hp:
@@ -171,6 +180,7 @@ The geom_smooth() with method="lm" adds a linear regression line. The se=FALSE e
 - Specifically, we can adjust the colors, sizes, shapes, and transparencies of the objects in our plot
 -->
 ```
+
 A major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.
 
 For instance, modifying the scatter plot by adjusting point properties:
@@ -204,6 +214,7 @@ Layering and customization in ggplot2 ensures your visualizations are both visua
 - `ggplot2` can sometimes infer some labels from the data, but it's typically best practice to customize them for clarity and presentation.
 -->
 ```
+
 Labeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.
 
 Here's how to add a title, x-axis label, and y-axis label to our scatter plot with the `labs()` function:
@@ -235,6 +246,7 @@ ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
 - Consistent and readable text ensures your plots are easily understandable and can enhance overall aesthetics.
 -->
 ```
+
 Text elements such as titles, axis labels, and annotations can be modified to better fit your plot's aesthetic or to match specific publication requirements.
 
 Here's an example of adjusting the legend's size and position
@@ -276,6 +288,7 @@ ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +
 - This is especially cool if your organization has a design standard manual, color schemes or logos you regularly use
 -->
 ```
+
 `ggplot2` offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.
 
 For instance, let's take the line chart we've been working with and apply a black and white theme:
@@ -365,6 +378,7 @@ Mastering these customization techniques will make your plots informative, engag
 - So you've created a beautiful ggplot. Now you want to save the image and tweet/blog/print/frame/put it on the refrigerator
 -->
 ```
+
 Now to export your ggplot for the refrigerator
 
 ```{r gg export, , fig.height=6, fig.width=10}
@@ -421,6 +435,7 @@ ggsave(plot = final_plot,
 - Particularly useful when you want to visualize the relationship between variables across different subgroups of your data.
 -->
 ```
+
 Faceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.
 
 Let's view scatter plots of mpg vs. hp but facet them by the number of cylinders:

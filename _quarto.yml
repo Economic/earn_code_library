@@ -24,45 +24,46 @@ website:
     search: true
     contents:
 
-    - section: "Home"
-      contents: 
-      - about.qmd
+    - section: "About"
+      href: about.qmd
 
-    - section: "EPI-built resources"
+    - section: "Learn R"
       contents:
       
-      - section: "R packages"
+      - section: "Getting Started with R"
         contents:
-        - epi_libraries.qmd
-          
+        - viz_workshop.qmd
+        - benchmarking_workshop.qmd
+        - prev_bootcamps.qmd
+        
+    - section: "Code Packages"
+      contents:
+      
+      - section: "R Packages"
+        contents:
+        - epi_libraries.qmd      
+
       - section: "Stata packages"
         contents:
         - stata_binipolate.qmd
       
-      - section: "R code"
-        contents: 
-        - tidycensus_example.qmd
-        - union_density.qmd
-        - blsR_example.qmd
-        - text: "---"
+    - section: "R code"
+      contents: 
+      - tidycensus_example.qmd
+      - blsR_example.qmd
+      - weighted_percentiles.qmd
+      - epi_microdata.qmd
+      - inflation_adjusting.qmd
+      - text: "---"
 
       
-      - section: "Annotated R examples"
+      - section: "Code Repository"
         contents:
-        - epi_microdata.qmd
-        - inflation_adjusting.qmd
-        - weighted_percentiles.qmd
+        - union_density.qmd
 
-      - section: "Stata code"
-        contents:
-        - bin_wage_deciles.qmd
-    
-      - section: "EARNCon Resources"
-        contents:
-         # - bootcamp_preview.qmd
-         - viz_workshop.qmd
-         - benchmarking_workshop.qmd
-         - prev_bootcamps.qmd
+    - section: "Stata code"
+      contents:
+      - bin_wage_deciles.qmd
     
 format:
   html:

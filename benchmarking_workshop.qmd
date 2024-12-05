@@ -1,7 +1,9 @@
 ---
-title: "Benchmarking workshop 2023"
+title: "Benchmarking Data"
 author: "Jori Kandra"
 ---
+
+This training was originally presented as a workshop at EARNCon 2023.
 
 [Benchmarking PowerPoint slides](https://github.com/Economic/earn_code_library/blob/main/supp_files/earncon2023_%20benchmarking_workshop.pdf)
 
