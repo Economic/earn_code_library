@@ -24,7 +24,7 @@ website:
     search: true
     contents:
 
-    - section: "About"
+    - text: "About"
       href: about.qmd
 
     - section: "Learn R"
@@ -38,14 +38,10 @@ website:
         
     - section: "Code Packages"
       contents:
-      
-      - section: "R Packages"
-        contents:
-        - epi_libraries.qmd      
-
-      - section: "Stata packages"
-        contents:
-        - stata_binipolate.qmd
+      - text: "R Packages"
+        href: epi_libraries.qmd      
+      - text: "Stata packages"
+        href: stata_binipolate.qmd
       
     - section: "R code"
       contents: 
