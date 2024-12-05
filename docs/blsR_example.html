@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Jori Kandra">
 
-<title>EPI packages for R – Code Library</title>
+<title>Downloading BLS data via blsR – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,26 +58,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../code/stata_binipolate.html" rel="next">
-<link href="../code/about.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./union_density.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed">
@@ -116,10 +116,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Code Library</span>
     </a>
   </div>
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="../code/epi_libraries.html">R packages</a></li><li class="breadcrumb-item"><a href="../code/epi_libraries.html">EPI packages for R</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./blsR_example.html">Downloading BLS data via blsR</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -177,7 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/about.html" class="sidebar-item-text sidebar-link">
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -194,16 +194,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">R packages</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_libraries.html" class="sidebar-item-text sidebar-link active">
+  <a href="./epi_libraries.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EPI packages for R</span></a>
   </div>
 </li>
@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/stata_binipolate.html" class="sidebar-item-text sidebar-link">
+  <a href="./stata_binipolate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Binipolate for Stata</span></a>
   </div>
 </li>
@@ -228,28 +228,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">R code</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/tidycensus_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load Census tables via Tidycensus</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/union_density.html" class="sidebar-item-text sidebar-link">
+  <a href="./union_density.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Historical state union density</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/blsR_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./blsR_example.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Downloading BLS data via blsR</span></a>
   </div>
 </li>
@@ -267,19 +267,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_microdata.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/inflation_adjusting.html" class="sidebar-item-text sidebar-link">
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/weighted_percentiles.html" class="sidebar-item-text sidebar-link">
+  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
@@ -296,7 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
+  <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wage deciles by state</span></a>
   </div>
 </li>
@@ -313,19 +313,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/viz_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Visualization workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Benchmarking workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/prev_bootcamps.html" class="sidebar-item-text sidebar-link">
+  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EARNCon data bootcamp files</span></a>
   </div>
 </li>
@@ -343,22 +343,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-to-install-epis-data-tools" id="toc-how-to-install-epis-data-tools" class="nav-link active" data-scroll-target="#how-to-install-epis-data-tools">How to install EPI’s data tools</a></li>
+  <li><a href="#loading-blsr-and-setting-api-key" id="toc-loading-blsr-and-setting-api-key" class="nav-link active" data-scroll-target="#loading-blsr-and-setting-api-key">Loading blsR and setting API key</a></li>
+  <li><a href="#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees" id="toc-nominal-average-hourly-earnings-of-production-and-non-supervisory-employees" class="nav-link" data-scroll-target="#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees">Nominal average hourly earnings of production and non-supervisory employees</a></li>
+  <li><a href="#real-average-hourly-earnings-of-production-and-non-supervsory-employees" id="toc-real-average-hourly-earnings-of-production-and-non-supervsory-employees" class="nav-link" data-scroll-target="#real-average-hourly-earnings-of-production-and-non-supervsory-employees">Real average hourly earnings of production and non-supervsory employees</a></li>
+  <li><a href="#pulling-more-than-50-series" id="toc-pulling-more-than-50-series" class="nav-link" data-scroll-target="#pulling-more-than-50-series">Pulling more than 50 series</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="../code/epi_libraries.html">R packages</a></li><li class="breadcrumb-item"><a href="../code/epi_libraries.html">EPI packages for R</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./blsR_example.html">Downloading BLS data via blsR</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">EPI packages for R</h1>
+<h1 class="title">Downloading BLS data via blsR</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jori Kandra </p>
+          </div>
+  </div>
     
   
     
@@ -369,29 +378,90 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><a href="https://economic.github.io/realtalk/">realtalk</a></p>
-<ul>
-<li>realtalk makes it easy to use common US price indexes in R.</li>
-</ul>
-<p><a href="https://economic.github.io/epidatatools/">epidatatools</a></p>
-<ul>
-<li>epidatatools contains functions we find useful at <a href="https://epi.org/">EPI</a> that don’t have exact analogues elsewhere in the R package ecosystem.</li>
-</ul>
-<p><a href="https://economic.github.io/epiextractr">epiextractr</a></p>
-<ul>
-<li>epiextractr makes it easy to use the <a href="https://microdata.epi.org/">EPI microdata extracts</a> in R.</li>
-</ul>
-<section id="how-to-install-epis-data-tools" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-install-epis-data-tools">How to install EPI’s data tools</h2>
-<p><strong>Note!</strong> EPI’s R packages require users to install <a href="https://www.r-project.org/nosvn/pandoc/devtools.html">devtools</a></p>
+<section id="loading-blsr-and-setting-api-key" class="level2">
+<h2 class="anchored" data-anchor-id="loading-blsr-and-setting-api-key">Loading blsR and setting API key</h2>
+<p>blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation &amp; prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.</p>
+<p>BLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.</p>
+<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'devtools'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download blsR</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.library("blsR")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># import relevant libraries</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(blsR)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Once you’ve installed devtools, you can install all three EPI packages using the following commands</p>
+<p>In order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"Economic/realtalk"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"economic/epidatatools"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"economic/epiextractr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set key for BLS api</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>bls_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"your-key-goes-here"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="nominal-average-hourly-earnings-of-production-and-non-supervisory-employees" class="level2">
+<h2 class="anchored" data-anchor-id="nominal-average-hourly-earnings-of-production-and-non-supervisory-employees">Nominal average hourly earnings of production and non-supervisory employees</h2>
+<p>You can import a single table using the blsR::get_n_series_table() function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## use blsR to pull in nominal wages</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nominal_wages <span class="ot">&lt;-</span> <span class="fu">get_n_series_table</span>(<span class="at">series =</span> <span class="st">"CEU0500000008"</span>, <span class="at">api_key =</span> bls_key, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">start_year =</span> <span class="dv">1965</span>, <span class="at">end_year =</span> <span class="dv">2023</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">tidy =</span> <span class="cn">TRUE</span>, <span class="at">annualaverage =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter for annual data</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">13</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="real-average-hourly-earnings-of-production-and-non-supervsory-employees" class="level2">
+<h2 class="anchored" data-anchor-id="real-average-hourly-earnings-of-production-and-non-supervsory-employees">Real average hourly earnings of production and non-supervsory employees</h2>
+<p>You can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set cpi codes</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cpi_codes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CUUR0000SA0"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"CEU0500000008"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set cpi base</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#note: used to set base year for inflation-adjustment</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>cpi_base <span class="ot">&lt;-</span> <span class="fu">get_n_series_table</span>(<span class="at">series_ids =</span> <span class="st">"CUUR0000SA0"</span>, <span class="at">start_year =</span> <span class="dv">2023</span>, <span class="at">end_year =</span> <span class="dv">2023</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">api_key =</span> bls_key, <span class="at">tidy =</span> <span class="cn">TRUE</span>, <span class="at">annualaverage =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter annual 2023 data and pull CPI value as base</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(CUUR0000SA0)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># use blsR to pull CPI data</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>cpi_output <span class="ot">&lt;-</span> <span class="fu">get_n_series_table</span>(<span class="at">series_ids =</span> cpi_codes, <span class="at">start_year =</span> <span class="dv">1947</span>, <span class="at">end_year =</span> <span class="dv">2023</span>, </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">api_key =</span> bls_key, <span class="at">tidy =</span> <span class="cn">TRUE</span>, <span class="at">annualaverage =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter annual data</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># rename for easier handling</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">ahe =</span> CEU0500000008, <span class="at">cpi =</span> CUUR0000SA0) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate real wages</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ahe_real =</span> ahe <span class="sc">*</span> (cpi_base<span class="sc">/</span>cpi)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># export to delimited file</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(<span class="fu">here</span>(<span class="st">"ahe_real.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pulling-more-than-50-series" class="level2">
+<h2 class="anchored" data-anchor-id="pulling-more-than-50-series">Pulling more than 50 series</h2>
+<p>The BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in bls series codes</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#note: this is a random selection of codes used in our Jobs and Unemployment figures</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>bls_codes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"bls_codes.csv"</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># remove any blanks</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>bls_codes <span class="ot">&lt;-</span> bls_codes<span class="sc">$</span>series_id[bls_codes<span class="sc">$</span>series_id <span class="sc">!=</span> <span class="st">""</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># use map to iteratively call blsR api at max number of series id</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#note: BLS restricts to max 50 series in a single call</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>jobs_day_df <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">split</span>(bls_codes, <span class="fu">ceiling</span>(<span class="fu">seq_along</span>(bls_codes) <span class="sc">/</span> <span class="dv">50</span>)), <span class="co"># split codes into groups of 50</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>             <span class="co"># call blsR using series ids sliced into groups of 50</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>             <span class="sc">~</span> <span class="fu">get_n_series_table</span>(<span class="at">series_ids =</span> .x, <span class="at">start_year =</span> <span class="dv">1939</span>, <span class="at">end_year =</span> <span class="dv">2023</span>, </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">api_key =</span> bls_key, <span class="at">tidy =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># map returns list, flatten by joining data</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(., <span class="cf">function</span>(df1, df2) <span class="fu">full_join</span>(df1, df2, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"month"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># define date</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.POSIXct</span>(<span class="fu">paste</span>(year,month,<span class="dv">1</span>, <span class="at">sep =</span> <span class="st">"-"</span>)),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">date =</span> <span class="fu">as.Date</span>(date)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">here</span>(<span class="st">"jobs_day_example.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -964,14 +1034,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../code/about.html" class="pagination-link" aria-label="About">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">About</span>
+      <a href="./union_density.html" class="pagination-link" aria-label="Historical state union density">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Historical state union density</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../code/stata_binipolate.html" class="pagination-link" aria-label="Binipolate for Stata">
-        <span class="nav-page-text">Binipolate for Stata</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

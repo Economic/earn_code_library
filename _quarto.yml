@@ -26,43 +26,43 @@ website:
 
     - section: "Home"
       contents: 
-      - code/about.qmd
+      - about.qmd
 
     - section: "EPI-built resources"
       contents:
       
       - section: "R packages"
         contents:
-        - code/epi_libraries.qmd
+        - epi_libraries.qmd
           
       - section: "Stata packages"
         contents:
-        - code/stata_binipolate.qmd
+        - stata_binipolate.qmd
       
       - section: "R code"
         contents: 
-        - code/tidycensus_example.qmd
-        - code/union_density.qmd
-        - code/blsR_example.qmd
+        - tidycensus_example.qmd
+        - union_density.qmd
+        - blsR_example.qmd
         - text: "---"
 
       
       - section: "Annotated R examples"
         contents:
-        - code/epi_microdata.qmd
-        - code/inflation_adjusting.qmd
-        - code/weighted_percentiles.qmd
+        - epi_microdata.qmd
+        - inflation_adjusting.qmd
+        - weighted_percentiles.qmd
 
       - section: "Stata code"
         contents:
-        - code/bin_wage_deciles.qmd
+        - bin_wage_deciles.qmd
     
       - section: "EARNCon Resources"
         contents:
-         # - code/bootcamp_preview.qmd
-         - code/viz_workshop.qmd
-         - code/benchmarking_workshop.qmd
-         - code/prev_bootcamps.qmd
+         # - bootcamp_preview.qmd
+         - viz_workshop.qmd
+         - benchmarking_workshop.qmd
+         - prev_bootcamps.qmd
     
 format:
   html:

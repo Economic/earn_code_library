@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>EARNCon data bootcamp files – Code Library</title>
+<title>EPI packages for R – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,28 +20,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../code/benchmarking_workshop.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./stata_binipolate.html" rel="next">
+<link href="./about.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed">
@@ -81,10 +116,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Code Library</span>
     </a>
   </div>
@@ -111,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="../code/viz_workshop.html">EARNCon Resources</a></li><li class="breadcrumb-item"><a href="../code/prev_bootcamps.html">EARNCon data bootcamp files</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="./epi_libraries.html">R packages</a></li><li class="breadcrumb-item"><a href="./epi_libraries.html">EPI packages for R</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -142,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/about.html" class="sidebar-item-text sidebar-link">
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -159,16 +194,16 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">R packages</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_libraries.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_libraries.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">EPI packages for R</span></a>
   </div>
 </li>
@@ -185,7 +220,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/stata_binipolate.html" class="sidebar-item-text sidebar-link">
+  <a href="./stata_binipolate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Binipolate for Stata</span></a>
   </div>
 </li>
@@ -202,19 +237,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/tidycensus_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load Census tables via Tidycensus</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/union_density.html" class="sidebar-item-text sidebar-link">
+  <a href="./union_density.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Historical state union density</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/blsR_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./blsR_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Downloading BLS data via blsR</span></a>
   </div>
 </li>
@@ -232,19 +267,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_microdata.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/inflation_adjusting.html" class="sidebar-item-text sidebar-link">
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/weighted_percentiles.html" class="sidebar-item-text sidebar-link">
+  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
@@ -261,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
+  <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wage deciles by state</span></a>
   </div>
 </li>
@@ -269,28 +304,28 @@ ul.task-list li input[type="checkbox"] {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
  <span class="menu-text">EARNCon Resources</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/viz_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Visualization workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Benchmarking workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/prev_bootcamps.html" class="sidebar-item-text sidebar-link active">
+  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EARNCon data bootcamp files</span></a>
   </div>
 </li>
@@ -308,33 +343,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-bootcamp" id="toc-data-bootcamp" class="nav-link active" data-scroll-target="#data-bootcamp">2023 Data bootcamp</a>
-  <ul class="collapse">
-  <li><a href="#data-analysis-in-r-first-steps" id="toc-data-analysis-in-r-first-steps" class="nav-link" data-scroll-target="#data-analysis-in-r-first-steps">Data analysis in R: First steps</a></li>
-  <li><a href="#using-apis-to-access-data-in-r" id="toc-using-apis-to-access-data-in-r" class="nav-link" data-scroll-target="#using-apis-to-access-data-in-r">Using APIs to access data in R</a></li>
-  </ul></li>
-  <li><a href="#earncon-data-bootcamp" id="toc-earncon-data-bootcamp" class="nav-link" data-scroll-target="#earncon-data-bootcamp">2022 EARNCon Data bootcamp</a>
-  <ul class="collapse">
-  <li><a href="#data-analysis-in-r-video" id="toc-data-analysis-in-r-video" class="nav-link" data-scroll-target="#data-analysis-in-r-video">Data analysis in R (Video)</a></li>
-  <li><a href="#code-library-presentation-video" id="toc-code-library-presentation-video" class="nav-link" data-scroll-target="#code-library-presentation-video">Code Library Presentation (Video)</a></li>
-  <li><a href="#data-analysis-in-stata-video" id="toc-data-analysis-in-stata-video" class="nav-link" data-scroll-target="#data-analysis-in-stata-video">Data analysis in Stata (Video)</a></li>
-  </ul></li>
-  <li><a href="#earncon-data-bootcamp-1" id="toc-earncon-data-bootcamp-1" class="nav-link" data-scroll-target="#earncon-data-bootcamp-1">2021 EARNCon Data Bootcamp</a>
-  <ul class="collapse">
-  <li><a href="#first-steps-in-stata-video" id="toc-first-steps-in-stata-video" class="nav-link" data-scroll-target="#first-steps-in-stata-video">2021 First steps in Stata (Video)</a></li>
-  <li><a href="#using-stata-effectively-video" id="toc-using-stata-effectively-video" class="nav-link" data-scroll-target="#using-stata-effectively-video">2021 Using Stata effectively (Video)</a></li>
-  <li><a href="#first-steps-in-r-video" id="toc-first-steps-in-r-video" class="nav-link" data-scroll-target="#first-steps-in-r-video">2021 First steps in R (Video)</a></li>
-  <li><a href="#using-r-effectively-video" id="toc-using-r-effectively-video" class="nav-link" data-scroll-target="#using-r-effectively-video">2021 Using R effectively (Video)</a></li>
-  </ul></li>
+  <li><a href="#how-to-install-epis-data-tools" id="toc-how-to-install-epis-data-tools" class="nav-link active" data-scroll-target="#how-to-install-epis-data-tools">How to install EPI’s data tools</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="../code/viz_workshop.html">EARNCon Resources</a></li><li class="breadcrumb-item"><a href="../code/prev_bootcamps.html">EARNCon data bootcamp files</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="./epi_libraries.html">R packages</a></li><li class="breadcrumb-item"><a href="./epi_libraries.html">EPI packages for R</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">EARNCon data bootcamp files</h1>
+<h1 class="title">EPI packages for R</h1>
 </div>
 
 
@@ -351,72 +369,32 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="https://economic.github.io/data_bootcamp/">EPI Bootcamp Website</a></p>
-<section id="data-bootcamp" class="level1">
-<h1>2023 Data bootcamp</h1>
-<section id="data-analysis-in-r-first-steps" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-in-r-first-steps">Data analysis in R: First steps</h2>
-<p>First steps to data analysis in R slides (<a href="https://economic.github.io/data_bootcamp/zipperer_firststepsR_slides.pdf">pdf</a>)<br>
-EPI national wage percentiles data (<a href="https://economic.github.io/data_bootcamp/epi_wage_percentiles.csv">csv</a>)<br>
-2022 EPI CPS ORG extracts data (<a href="https://economic.github.io/data_bootcamp/epi_cpsorg_2022.dta.zip">zipped .dta</a>)</p>
-</section>
-<section id="using-apis-to-access-data-in-r" class="level2">
-<h2 class="anchored" data-anchor-id="using-apis-to-access-data-in-r">Using APIs to access data in R</h2>
-<p>Accessing BLS and Census data (<a href="bls_census_api_databootcamp.R">code</a>)</p>
-</section>
-</section>
-<section id="earncon-data-bootcamp" class="level1">
-<h1>2022 EARNCon Data bootcamp</h1>
-<section id="data-analysis-in-r-video" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-in-r-video">Data analysis in R (<a href="https://www.youtube.com/watch?v=PG7T0AoxIY0&amp;list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&amp;index=7">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/zipperer_dataanalysisinR_slides.pdf">Data analysis in R slides</a><br>
-<a href="https://github.com/Economic/data_bootcamp/blob/master/mw_state_annual.xlsx">Historical minimum wage data</a><br>
-<a href="https://economic.github.io/data_bootcamp/r-cpi-u-rs-allitems.xlsx">CPI-U-RS data<br>
-</a><a href="https://github.com/Economic/data_bootcamp/blob/master/epi_cps_org_2022.dta.zip">EPI CPS ORG data</a></p>
-</section>
-<section id="code-library-presentation-video" class="level2">
-<h2 class="anchored" data-anchor-id="code-library-presentation-video">Code Library Presentation (<a href="https://www.youtube.com/watch?v=3owr9nGizYQ&amp;list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&amp;index=6">Video</a>)</h2>
-<p><a href="https://github.com/Economic/data_bootcamp/blob/master/Code%20Library%20Presentation.pptx">Code library powerpoint</a></p>
-</section>
-<section id="data-analysis-in-stata-video" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-in-stata-video">Data analysis in Stata (<a href="https://www.youtube.com/watch?v=L04fzN2uOVE&amp;list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&amp;index=5">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/Data%20analysis%20in%20.pptx">Data analysis in Stata slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/data_bootcamp_2022.do">Stata session do file</a></p>
-</section>
-</section>
-<section id="earncon-data-bootcamp-1" class="level1">
-<h1>2021 EARNCon Data Bootcamp</h1>
-<section id="first-steps-in-stata-video" class="level2">
-<h2 class="anchored" data-anchor-id="first-steps-in-stata-video">2021 First steps in Stata (<a href="https://www.youtube.com/watch?v=t1tKg9A6NaU&amp;list=PLOeWdRZsn2L8geg2kkqcYZniR5TBk98si&amp;index=7">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/stata_session1.pdf">Stata session 1 slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/stata_session1.do">Stata session 1 do file</a><br>
-<a href="https://economic.github.io/data_bootcamp/epi_cpsorg_2020.dta">EPI CPS ORG 2020 stata data file</a></p>
-</section>
-<section id="using-stata-effectively-video" class="level2">
-<h2 class="anchored" data-anchor-id="using-stata-effectively-video">2021 Using Stata effectively (<a href="https://www.youtube.com/watch?v=cl91pM6XuHM&amp;list=PLOeWdRZsn2L8geg2kkqcYZniR5TBk98si&amp;index=8">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/stata_session2.pdf">Stata session 2 slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/earn_data_bootcamp_session2.do">Stata session 2 do file</a><br>
-<a href="https://economic.github.io/data_bootcamp/r-cpi-u-rs-allitems.xlsx">CPI-U-RS data</a><br>
-<a href="https://economic.github.io/data_bootcamp/epi_cpsorg_2020.dta">EPI CPS ORG 2020 stata data file</a><br>
-<a href="https://microdata.epi.org/epi_cpsorg_1979_2021.zip">Full EPI CPS ORG</a> (zipped data files)</p>
-</section>
-<section id="first-steps-in-r-video" class="level2">
-<h2 class="anchored" data-anchor-id="first-steps-in-r-video">2021 First steps in R (<a href="https://www.youtube.com/watch?v=fcHHWTwZZq8&amp;list=PLOeWdRZsn2L8geg2kkqcYZniR5TBk98si&amp;index=7">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/zipperer_firststepsR_slides.pdf">Slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_2019.dta">acs_2019.dta</a><br>
-<a href="https://economic.github.io/data_bootcamp/epi_wage_percentiles.csv">epi_wage_percentiles.csv</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_wage_analysis.R">acs_wage_analysis.R</a></p>
-</section>
-<section id="using-r-effectively-video" class="level2">
-<h2 class="anchored" data-anchor-id="using-r-effectively-video">2021 Using R effectively (<a href="https://www.youtube.com/watch?v=mMc0PGh_W-Y">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/zipperer_usingReffectively_slides.pdf">Slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_2019.dta">acs_2019.dta</a><br>
-<a href="https://economic.github.io/data_bootcamp/geocorr2018.csv">geocorr2018.csv</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_wage_analysis_LAST_TIME.R">acs_wage_analysis_LAST_TIME.R</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_wage_analysis_FINAL.R">acs_wage_analysis_FINAL.R</a></p>
+<p><a href="https://economic.github.io/realtalk/">realtalk</a></p>
+<ul>
+<li>realtalk makes it easy to use common US price indexes in R.</li>
+</ul>
+<p><a href="https://economic.github.io/epidatatools/">epidatatools</a></p>
+<ul>
+<li>epidatatools contains functions we find useful at <a href="https://epi.org/">EPI</a> that don’t have exact analogues elsewhere in the R package ecosystem.</li>
+</ul>
+<p><a href="https://economic.github.io/epiextractr">epiextractr</a></p>
+<ul>
+<li>epiextractr makes it easy to use the <a href="https://microdata.epi.org/">EPI microdata extracts</a> in R.</li>
+</ul>
+<section id="how-to-install-epis-data-tools" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-install-epis-data-tools">How to install EPI’s data tools</h2>
+<p><strong>Note!</strong> EPI’s R packages require users to install <a href="https://www.r-project.org/nosvn/pandoc/devtools.html">devtools</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'devtools'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once you’ve installed devtools, you can install all three EPI packages using the following commands</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"Economic/realtalk"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"economic/epidatatools"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"economic/epiextractr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -986,11 +964,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../code/benchmarking_workshop.html" class="pagination-link" aria-label="Benchmarking workshop 2023">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Benchmarking workshop 2023</span>
+      <a href="./about.html" class="pagination-link" aria-label="About">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">About</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./stata_binipolate.html" class="pagination-link" aria-label="Binipolate for Stata">
+        <span class="nav-page-text">Binipolate for Stata</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

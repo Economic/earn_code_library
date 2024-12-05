@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Load EPI CPS Extracts via epiextractr – Code Library</title>
+<title>EARNCon 2023 Bootcamp Preview – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,62 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../code/inflation_adjusting.html" rel="next">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,7 +70,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed">
@@ -115,10 +80,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Code Library</span>
     </a>
   </div>
@@ -145,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Annotated R examples</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Load EPI CPS Extracts via epiextractr</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EARNCon 2023 Bootcamp Preview</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -176,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/about.html" class="sidebar-item-text sidebar-link">
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -202,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_libraries.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_libraries.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EPI packages for R</span></a>
   </div>
 </li>
@@ -219,7 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/stata_binipolate.html" class="sidebar-item-text sidebar-link">
+  <a href="./stata_binipolate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Binipolate for Stata</span></a>
   </div>
 </li>
@@ -236,19 +201,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/tidycensus_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load Census tables via Tidycensus</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/union_density.html" class="sidebar-item-text sidebar-link">
+  <a href="./union_density.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Historical state union density</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/blsR_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./blsR_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Downloading BLS data via blsR</span></a>
   </div>
 </li>
@@ -257,28 +222,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
  <span class="menu-text">Annotated R examples</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link active">
+  <a href="./epi_microdata.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/inflation_adjusting.html" class="sidebar-item-text sidebar-link">
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/weighted_percentiles.html" class="sidebar-item-text sidebar-link">
+  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
@@ -295,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
+  <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wage deciles by state</span></a>
   </div>
 </li>
@@ -312,19 +277,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/viz_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Visualization workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Benchmarking workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/prev_bootcamps.html" class="sidebar-item-text sidebar-link">
+  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EARNCon data bootcamp files</span></a>
   </div>
 </li>
@@ -342,19 +307,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
-  <li><a href="#download-cps-files" id="toc-download-cps-files" class="nav-link" data-scroll-target="#download-cps-files">Download CPS files</a></li>
-  <li><a href="#load-your-cps-extracts" id="toc-load-your-cps-extracts" class="nav-link" data-scroll-target="#load-your-cps-extracts">Load your CPS extracts!</a></li>
-  <li><a href="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" id="toc-optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="nav-link" data-scroll-target="#optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</a></li>
+  <li><a href="#agenda" id="toc-agenda" class="nav-link active" data-scroll-target="#agenda">Agenda</a>
+  <ul class="collapse">
+  <li><a href="#earn-code-library-preview" id="toc-earn-code-library-preview" class="nav-link" data-scroll-target="#earn-code-library-preview">EARN Code Library preview</a></li>
+  <li><a href="#downloading-and-installing-r-and-rstudio-desktop" id="toc-downloading-and-installing-r-and-rstudio-desktop" class="nav-link" data-scroll-target="#downloading-and-installing-r-and-rstudio-desktop">Downloading and installing R and Rstudio desktop</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Annotated R examples</a></li><li class="breadcrumb-item"><a href="../code/epi_microdata.html">Load EPI CPS Extracts via epiextractr</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Load EPI CPS Extracts via epiextractr</h1>
+<h1 class="title">EARNCon 2023 Bootcamp Preview</h1>
 </div>
 
 
@@ -371,60 +337,79 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Note:</strong> Users will need to install <code>epiextractr</code> for this example. Refer to <a href="../code/epi_libraries.html">EPI packages for R</a> for installation instructions</p>
-<section id="load-required-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>Welcome to the EARNCon 2023 data bootcamp preview page!</p>
+<p>This step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization.<br>
+</p>
+<section id="agenda" class="level2">
+<h2 class="anchored" data-anchor-id="agenda">Agenda</h2>
+<p><strong>Facilitators:</strong> Daniel Perez &amp; Sebastian Hickey</p>
+<p><strong>EARNTalk date:</strong> Thursday, September 21st, 2023. 2-3:00 p.m. ET</p>
+<p><strong>Process:</strong></p>
+<ol type="1">
+<li><p>EARN Code Library preview</p></li>
+<li><p>Downloading and installing R and RStudio Desktop</p></li>
+<li><p>Exploring the RStudio user interface</p>
+<ul>
+<li><p>Demonstrate</p>
+<ul>
+<li><p>Setting a working directory</p></li>
+<li><p>Creating a project</p></li>
+<li><p>Downloading packages that will be used at EARNCon</p></li>
+<li><p>Creating a script</p></li>
+</ul></li>
+</ul></li>
+<li><p>Registering for Tableau Public</p></li>
+</ol>
+<section id="earn-code-library-preview" class="level3">
+<h3 class="anchored" data-anchor-id="earn-code-library-preview">EARN Code Library preview</h3>
+<p>We’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.</p>
 </section>
-<section id="download-cps-files" class="level3">
-<h3 class="anchored" data-anchor-id="download-cps-files">Download CPS files</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS ORG files  </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>( <span class="at">sample =</span> <span class="st">'org'</span>, <span class="at">extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS Basic (4085.3 MB) </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>(<span class="at">sample=</span><span class="st">'basic'</span>, <span class="at">extracts_dir =</span><span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># download CPS May (38.8 MB)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download_cps</span>(<span class="at">sample=</span><span class="st">'may'</span>, <span class="at">extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This will download the latest EPI CPS ORG extracts in .feather format from <a href="https://microdata.epi.org/">https://microdata.epi.org</a> and place them in the directory <code>C:\data\cps</code>.</p>
+<section id="downloading-and-installing-r-and-rstudio-desktop" class="level3">
+<h3 class="anchored" data-anchor-id="downloading-and-installing-r-and-rstudio-desktop">Downloading and installing R and Rstudio desktop</h3>
+<p>Installing R and RStudio on work machines can sometimes be challenging due to a variety of reasons.</p>
+<section id="some-common-issues-and-resolutions" class="level4">
+<h4 class="anchored" data-anchor-id="some-common-issues-and-resolutions">Some common issues (and resolutions):</h4>
+<ol type="1">
+<li><p><strong>Administrative Privileges</strong>: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.</p>
+<ul>
+<li><strong>Resolution:</strong> Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.</li>
+</ul></li>
+<li><p><strong>Firewall and Network Restrictions</strong>: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).</p>
+<ul>
+<li><strong>Resolution:</strong> Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.</li>
+</ul></li>
+<li><p><strong>Dependency Issues</strong>: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.</p>
+<ul>
+<li><strong>Resolution:</strong> Ensure that all required dependencies are installed. You can use the <strong><code>install.packages()</code></strong> function with the <strong><code>dependencies=TRUE</code></strong> argument in R to automatically install package dependencies.</li>
+</ul></li>
+<li><p><strong>Operating System Specific Issues</strong>: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.</p>
+<ul>
+<li><strong>Resolution:</strong> Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like <strong><code>apt-get</code></strong> or <strong><code>yum</code></strong> can be used to install the necessary libraries.</li>
+</ul></li>
+<li><p><strong>Package Binary vs.&nbsp;Source Installation</strong>: On some systems, users might encounter issues when trying to install package binaries.</p>
+<ul>
+<li><strong>Resolution:</strong> Ensure you have the necessary development tools installed (like <strong><code>gcc</code></strong> on Linux or Xcode on macOS). When installing a package in R, you can use the <strong><code>type="source"</code></strong> argument with <strong><code>install.packages()</code></strong> to install from source.</li>
+</ul></li>
+<li><p><strong>Mismatched Versions</strong>: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.</p>
+<ul>
+<li><strong>Resolution:</strong> Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.</li>
+</ul></li>
+<li><p><strong>Rtools Installation (Windows only)</strong>: Rtools is essential for building and installing some R packages from source on Windows.</p>
+<ul>
+<li><strong>Resolution:</strong> Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.</li>
+</ul></li>
+</ol>
 </section>
-<section id="load-your-cps-extracts" class="level3">
-<h3 class="anchored" data-anchor-id="load-your-cps-extracts">Load your CPS extracts!</h3>
-<p>After the data is downloaded, load a selection of CPS data for your analysis:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho, </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">.extracts_dir =</span> <span class="st">'C:/YOUR_PATH/cps'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file" class="level3">
-<h3 class="anchored" data-anchor-id="optional-set-and-forget-cps-data-files-by-creatingediting-an-.renviron-file">(Optional) Set and forget CPS data files by creating/editing an .Renviron file</h3>
-<p>To simplify usage, you can omit the <code>.extracts_dir</code> argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the .Renviron file</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>renviron_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">"HOME"</span>), <span class="st">".Renviron"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the file for editing</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(renviron_path)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the environment variable settings into your .Renviron file,</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># and make sure the paths are set to the location of your CPS files</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSBASIC_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSMAY_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>EPIEXTRACTS_CPSORG_DIR<span class="ot">=</span>C<span class="sc">:</span><span class="er">/</span>YOUR_PATH<span class="sc">/</span>cps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>After editing your <code>.Renviron</code> file, save your changes and restart R to apply them.</p>
-<p>If you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the <code>.extracts_dir()</code> command</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_cps</span>(<span class="st">"org"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>, year, orgwgt, wage, age, statefips, wbho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<section id="enough-talk-time-to-download" class="level4">
+<h4 class="anchored" data-anchor-id="enough-talk-time-to-download">Enough talk, time to download!</h4>
+<ol type="1">
+<li><p>Navigate to <a href="https://posit.co/downloads/" class="uri">https://posit.co/downloads/</a></p></li>
+<li></li>
+</ol>
 
 
+</section>
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -992,15 +977,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../code/inflation_adjusting.html" class="pagination-link" aria-label="Inflation adjusting with Realtalk">
-        <span class="nav-page-text">Inflation adjusting with Realtalk</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 

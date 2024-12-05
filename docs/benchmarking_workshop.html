@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Jori Kandra">
 
-<title>EARNCon 2023 Bootcamp Preview – Code Library</title>
+<title>Benchmarking workshop 2023 – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +21,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./prev_bootcamps.html" rel="next">
+<link href="./viz_workshop.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed">
@@ -80,10 +117,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Code Library</span>
     </a>
   </div>
@@ -110,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EARNCon 2023 Bootcamp Preview</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="./viz_workshop.html">EARNCon Resources</a></li><li class="breadcrumb-item"><a href="./benchmarking_workshop.html">Benchmarking workshop 2023</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -141,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/about.html" class="sidebar-item-text sidebar-link">
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -167,7 +204,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_libraries.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_libraries.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EPI packages for R</span></a>
   </div>
 </li>
@@ -184,7 +221,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/stata_binipolate.html" class="sidebar-item-text sidebar-link">
+  <a href="./stata_binipolate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Binipolate for Stata</span></a>
   </div>
 </li>
@@ -201,19 +238,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/tidycensus_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load Census tables via Tidycensus</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/union_density.html" class="sidebar-item-text sidebar-link">
+  <a href="./union_density.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Historical state union density</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/blsR_example.html" class="sidebar-item-text sidebar-link">
+  <a href="./blsR_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Downloading BLS data via blsR</span></a>
   </div>
 </li>
@@ -231,19 +268,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/epi_microdata.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_microdata.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/inflation_adjusting.html" class="sidebar-item-text sidebar-link">
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/weighted_percentiles.html" class="sidebar-item-text sidebar-link">
+  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
@@ -260,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
+  <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wage deciles by state</span></a>
   </div>
 </li>
@@ -268,28 +305,28 @@ ul.task-list li input[type="checkbox"] {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
  <span class="menu-text">EARNCon Resources</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/viz_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Visualization workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./benchmarking_workshop.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Benchmarking workshop 2023</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../code/prev_bootcamps.html" class="sidebar-item-text sidebar-link">
+  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EARNCon data bootcamp files</span></a>
   </div>
 </li>
@@ -307,26 +344,32 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#agenda" id="toc-agenda" class="nav-link active" data-scroll-target="#agenda">Agenda</a>
-  <ul class="collapse">
-  <li><a href="#earn-code-library-preview" id="toc-earn-code-library-preview" class="nav-link" data-scroll-target="#earn-code-library-preview">EARN Code Library preview</a></li>
-  <li><a href="#downloading-and-installing-r-and-rstudio-desktop" id="toc-downloading-and-installing-r-and-rstudio-desktop" class="nav-link" data-scroll-target="#downloading-and-installing-r-and-rstudio-desktop">Downloading and installing R and Rstudio desktop</a></li>
-  </ul></li>
+  <li><a href="#publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes" id="toc-publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes" class="nav-link active" data-scroll-target="#publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes">Publication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes</a></li>
+  <li><a href="#import-packages" id="toc-import-packages" class="nav-link" data-scroll-target="#import-packages">import packages</a></li>
+  <li><a href="#define-cps-years" id="toc-define-cps-years" class="nav-link" data-scroll-target="#define-cps-years">Define CPS years</a></li>
+  <li><a href="#figure-c-change-in-employment-to-population-ratio-across-age-categories" id="toc-figure-c-change-in-employment-to-population-ratio-across-age-categories" class="nav-link" data-scroll-target="#figure-c-change-in-employment-to-population-ratio-across-age-categories">Figure C: change in employment-to-population ratio across age categories</a></li>
+  <li><a href="#create-mock-of-figure-d-using-ggplot2" id="toc-create-mock-of-figure-d-using-ggplot2" class="nav-link" data-scroll-target="#create-mock-of-figure-d-using-ggplot2">Create mock of Figure D using ggplot2</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EPI-built resources</li><li class="breadcrumb-item"><a href="./viz_workshop.html">EARNCon Resources</a></li><li class="breadcrumb-item"><a href="./benchmarking_workshop.html">Benchmarking workshop 2023</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">EARNCon 2023 Bootcamp Preview</h1>
+<h1 class="title">Benchmarking workshop 2023</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jori Kandra </p>
+          </div>
+  </div>
     
   
     
@@ -337,79 +380,144 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Welcome to the EARNCon 2023 data bootcamp preview page!</p>
-<p>This step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization.<br>
-</p>
-<section id="agenda" class="level2">
-<h2 class="anchored" data-anchor-id="agenda">Agenda</h2>
-<p><strong>Facilitators:</strong> Daniel Perez &amp; Sebastian Hickey</p>
-<p><strong>EARNTalk date:</strong> Thursday, September 21st, 2023. 2-3:00 p.m. ET</p>
-<p><strong>Process:</strong></p>
-<ol type="1">
-<li><p>EARN Code Library preview</p></li>
-<li><p>Downloading and installing R and RStudio Desktop</p></li>
-<li><p>Exploring the RStudio user interface</p>
-<ul>
-<li><p>Demonstrate</p>
-<ul>
-<li><p>Setting a working directory</p></li>
-<li><p>Creating a project</p></li>
-<li><p>Downloading packages that will be used at EARNCon</p></li>
-<li><p>Creating a script</p></li>
-</ul></li>
-</ul></li>
-<li><p>Registering for Tableau Public</p></li>
-</ol>
-<section id="earn-code-library-preview" class="level3">
-<h3 class="anchored" data-anchor-id="earn-code-library-preview">EARN Code Library preview</h3>
-<p>We’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.</p>
+<p><a href="https://github.com/Economic/earn_code_library/blob/main/supp_files/earncon2023_%20benchmarking_workshop.pdf">Benchmarking PowerPoint slides</a></p>
+<section id="publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes" class="level3">
+<h3 class="anchored" data-anchor-id="publication-older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes">Publication: <a href="https://www.epi.org/publication/older-workers-were-devastated-by-the-pandemic-downturn-and-continue-to-face-adverse-employment-outcomes-epi-testimony-for-the-senate-special-committee-on-aging/">Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes</a></h3>
 </section>
-<section id="downloading-and-installing-r-and-rstudio-desktop" class="level3">
-<h3 class="anchored" data-anchor-id="downloading-and-installing-r-and-rstudio-desktop">Downloading and installing R and Rstudio desktop</h3>
-<p>Installing R and RStudio on work machines can sometimes be challenging due to a variety of reasons.</p>
-<section id="some-common-issues-and-resolutions" class="level4">
-<h4 class="anchored" data-anchor-id="some-common-issues-and-resolutions">Some common issues (and resolutions):</h4>
-<ol type="1">
-<li><p><strong>Administrative Privileges</strong>: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.</p>
-<ul>
-<li><strong>Resolution:</strong> Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.</li>
-</ul></li>
-<li><p><strong>Firewall and Network Restrictions</strong>: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).</p>
-<ul>
-<li><strong>Resolution:</strong> Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.</li>
-</ul></li>
-<li><p><strong>Dependency Issues</strong>: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.</p>
-<ul>
-<li><strong>Resolution:</strong> Ensure that all required dependencies are installed. You can use the <strong><code>install.packages()</code></strong> function with the <strong><code>dependencies=TRUE</code></strong> argument in R to automatically install package dependencies.</li>
-</ul></li>
-<li><p><strong>Operating System Specific Issues</strong>: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.</p>
-<ul>
-<li><strong>Resolution:</strong> Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like <strong><code>apt-get</code></strong> or <strong><code>yum</code></strong> can be used to install the necessary libraries.</li>
-</ul></li>
-<li><p><strong>Package Binary vs.&nbsp;Source Installation</strong>: On some systems, users might encounter issues when trying to install package binaries.</p>
-<ul>
-<li><strong>Resolution:</strong> Ensure you have the necessary development tools installed (like <strong><code>gcc</code></strong> on Linux or Xcode on macOS). When installing a package in R, you can use the <strong><code>type="source"</code></strong> argument with <strong><code>install.packages()</code></strong> to install from source.</li>
-</ul></li>
-<li><p><strong>Mismatched Versions</strong>: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.</p>
-<ul>
-<li><strong>Resolution:</strong> Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.</li>
-</ul></li>
-<li><p><strong>Rtools Installation (Windows only)</strong>: Rtools is essential for building and installing some R packages from source on Windows.</p>
-<ul>
-<li><strong>Resolution:</strong> Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.</li>
-</ul></li>
-</ol>
+<section id="import-packages" class="level3">
+<h3 class="anchored" data-anchor-id="import-packages">import packages</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="enough-talk-time-to-download" class="level4">
-<h4 class="anchored" data-anchor-id="enough-talk-time-to-download">Enough talk, time to download!</h4>
-<ol type="1">
-<li><p>Navigate to <a href="https://posit.co/downloads/" class="uri">https://posit.co/downloads/</a></p></li>
-<li></li>
-</ol>
+<section id="define-cps-years" class="level3">
+<h3 class="anchored" data-anchor-id="define-cps-years">Define CPS years</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cps_years <span class="ot">&lt;-</span> <span class="dv">2007</span><span class="sc">:</span><span class="dv">2020</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cps_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"age"</span>, <span class="st">"female"</span>, <span class="st">"emp"</span>, <span class="st">"basicwgt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import basic CPS data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cps_data <span class="ot">&lt;-</span> <span class="fu">load_basic</span>(cps_years, <span class="fu">all_of</span>(cps_vars)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># restrict to 16+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create age categories</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    age <span class="sc">&lt;=</span> <span class="dv">24</span> <span class="sc">~</span> <span class="st">"16–24 years old"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    age <span class="sc">&gt;=</span> <span class="dv">25</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">54</span> <span class="sc">~</span> <span class="st">"25–54 years old"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    age <span class="sc">&gt;=</span> <span class="dv">55</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">64</span> <span class="sc">~</span> <span class="st">"55–64 years old"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    age <span class="sc">&gt;=</span> <span class="dv">65</span> <span class="sc">~</span> <span class="st">"65+ years old"</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># adjust weight</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">wgt =</span> basicwgt<span class="sc">/</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using EPI CPS Basic Monthly Extracts, Version 1.0.58</code></pre>
+</div>
+</div>
+<p><a href="https://www.bls.gov/cps/aa2020/cpsaat18b.htm" class="uri">https://www.bls.gov/cps/aa2020/cpsaat18b.htm</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># restrict to employed</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(emp <span class="sc">==</span> <span class="dv">1</span>, year <span class="sc">==</span> <span class="dv">2020</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># weighted employment count by year</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> <span class="fu">tally</span>(<span class="at">wt =</span> wgt) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">n =</span> n<span class="sc">/</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+   year       n
+  &lt;int&gt;   &lt;dbl&gt;
+1  2020 147795.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># restrict to employed</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(emp <span class="sc">==</span> <span class="dv">1</span>, year <span class="sc">==</span> <span class="dv">2020</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># weighted employment count by year</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, age_group) <span class="sc">%&gt;%</span> <span class="fu">tally</span>(<span class="at">wt =</span> wgt) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">n =</span> n<span class="sc">/</span><span class="dv">1000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># reshape data</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> age_group, <span class="at">values_from =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+# Groups:   year [1]
+   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`
+  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;
+1  2020            17192.            95310.            25469.           9824.</code></pre>
+</div>
+</div>
+</section>
+<section id="figure-c-change-in-employment-to-population-ratio-across-age-categories" class="level3">
+<h3 class="anchored" data-anchor-id="figure-c-change-in-employment-to-population-ratio-across-age-categories">Figure C: change in employment-to-population ratio across age categories</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>emp <span class="ot">&lt;-</span> cps_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># isolate recession beginning and end years</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(emp),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">2011</span>, <span class="dv">2019</span>, <span class="dv">2020</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># weighted employment * population count by year and age group</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, age_group) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">emp =</span> <span class="fu">sum</span>(emp <span class="sc">*</span> wgt), <span class="at">pop =</span> <span class="fu">sum</span>(wgt)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate EPOPs</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">epop =</span> emp<span class="sc">/</span>pop) <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> age_group, <span class="at">names_from =</span> year, <span class="at">values_from =</span> epop) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate percent change in EPOPs</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">age_group =</span> age_group, <span class="st">`</span><span class="at">2007–2011</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">2011</span><span class="st">`</span><span class="sc">-</span><span class="st">`</span><span class="at">2007</span><span class="st">`</span>, <span class="st">`</span><span class="at">2019–2020</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">2020</span><span class="st">`</span><span class="sc">-</span><span class="st">`</span><span class="at">2019</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># output to output folder</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">here</span>(<span class="st">"output/older_worker_epop.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'year'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<p>Figure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>epop_gender <span class="ot">&lt;-</span> cps_data <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># isolate recession beginning and end years</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(emp),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2007</span>, <span class="dv">2011</span>, <span class="dv">2019</span>, <span class="dv">2020</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># assign value of female as character label ("Female" instead of 1 and "Male" instead of 0)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#note: requires the installation of haven</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#note: using double ":" is a way of referencing functions in a package without importing entire package</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">female =</span> <span class="fu">as.character</span>(haven<span class="sc">::</span><span class="fu">as_factor</span>(female))) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># weighted employment * population count by year and age group AND female</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, age_group, female) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">emp =</span> <span class="fu">sum</span>(emp <span class="sc">*</span> wgt), <span class="at">pop =</span> <span class="fu">sum</span>(wgt)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate epops</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">epop =</span> emp<span class="sc">/</span>pop) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># reshape wider to calculate change in EPOPs over recession time perios</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> <span class="fu">c</span>(<span class="st">"age_group"</span>, <span class="st">"female"</span>), <span class="at">names_from =</span> year, <span class="at">values_from =</span> epop) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate percent change in EPOPs</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">age_group =</span> age_group, <span class="at">female =</span> female, </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">2007-2011</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">2011</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">2007</span><span class="st">`</span>, <span class="st">`</span><span class="at">2019-2020</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">2020</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">2019</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># reshape data longer for ggplot2</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#note: change in epop by age group will group bars by recession time period, create panels by gender,</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#       reshape long for each dimension</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">2007-2011</span><span class="st">`</span>, <span class="st">`</span><span class="at">2019-2020</span><span class="st">`</span>), <span class="at">names_to =</span> <span class="st">"recession"</span>, <span class="at">values_to =</span> <span class="st">"epop_change"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'year', 'age_group'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+</div>
+</section>
+<section id="create-mock-of-figure-d-using-ggplot2" class="level3">
+<h3 class="anchored" data-anchor-id="create-mock-of-figure-d-using-ggplot2">Create mock of Figure D using ggplot2</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change in epop by age group and recession time periods</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(epop_gender, <span class="fu">aes</span>(<span class="at">x =</span> age_group, <span class="at">y =</span> epop_change, <span class="at">fill =</span> recession)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use position "dodge" to group bars instead of stacking</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use to create side-by-side panels for easier viewing</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>female)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="benchmarking_workshop_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
-</section>
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -977,6 +1085,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./viz_workshop.html" class="pagination-link" aria-label="Visualization workshop 2023">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Visualization workshop 2023</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./prev_bootcamps.html" class="pagination-link" aria-label="EARNCon data bootcamp files">
+        <span class="nav-page-text">EARNCon data bootcamp files</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

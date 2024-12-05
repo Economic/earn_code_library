@@ -64,5 +64,32 @@
   },
   "code/blsR_example.qmd": {
     "blsR_example.html": "5a3bc095"
+  },
+  "tidycensus_example.qmd": {
+    "tidycensus_example.html": "29f19af5"
+  },
+  "epi_libraries.qmd": {
+    "epi_libraries.html": "0c7ec433"
+  },
+  "benchmarking_workshop.qmd": {
+    "benchmarking_workshop.html": "440c8c5d"
+  },
+  "blsR_example.qmd": {
+    "blsR_example.html": "0b9d6ab8"
+  },
+  "stata_binipolate.qmd": {
+    "stata_binipolate.html": "ddb89474"
+  },
+  "bin_wage_deciles.qmd": {
+    "bin_wage_deciles.html": "597d564f"
+  },
+  "bootcamp_preview.qmd": {
+    "bootcamp_preview.html": "d796f50d"
+  },
+  "union_density.qmd": {
+    "union_density.html": "0e88293e"
+  },
+  "weighted_percentiles.qmd": {
+    "weighted_percentiles.html": "b1046566"
   }
 }
