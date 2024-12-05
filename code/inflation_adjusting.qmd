@@ -72,11 +72,11 @@ Next, calculate median wages in the CPS. and merge the annual CPI index to the d
 
 #Calculate median wages in the CPS ORG
 wage_data <- org %>% 
-  #use spatstat package to calculate a weighted median
+  #use MetricsWeighted package to calculate a weighted median
   #Note: I am pooling 12 months of CPS data, 
   #so I adjust orgwgt—the survey weight— variable, dividing it by 12.
   summarize(nominal_median_wage = 
-              spatstat.geom::weighted.median(wage, w=orgwgt/12, na.rm=TRUE),
+               MetricsWeighted::weighted_median(wage, w=orgwgt/12, na.rm=TRUE),
             .by=year) %>% 
 
 #Merge annual CPI data to dataframe by year.
