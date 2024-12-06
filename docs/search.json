@@ -55,8 +55,31 @@
     ]
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
+    "objectID": "union_density.html",
+    "href": "union_density.html",
+    "title": "Historical state union density",
+    "section": "",
+    "text": "Contact: dperez@epi.org\n\nThis script uses Current Population Survey (CPS) microdata extracts from https://microdata.epi.org/ to calculate union density from 1983-Present.\n\nlibrary(tidyverse)\nlibrary(here)\nlibrary(epiextractr)\n\nLoad CPS data using epiextractr\n\nbasic &lt;- load_basic(1983:2022, year, month, statefips, basicwgt, union, unmem, age, emp, selfemp, selfinc) %&gt;%\n  filter(age&gt;=16, emp==1) %&gt;%\n  #remove self-employed and self-incorporated workers from sample\n  mutate(selfemp0 = ifelse(selfemp==1 & !is.na(selfemp), yes=1, no=0),\n         selfinc0 = ifelse(selfinc==1 & !is.na(selfinc), yes=1, no=0)) %&gt;%\n  filter(selfemp0==0, selfinc0==0)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.58\n\n\nCalculate US union density 1983–2022\n\n#US union members and union represented by year, 1983-2022\n\ndensity_us &lt;- basic %&gt;% \n  group_by(year) %&gt;% \n  summarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),\n            rep_n = sum(union, na.rm=TRUE),\n            member_share = weighted.mean(unmem, w=basicwgt/12, na.rm=TRUE),\n            memb_n = sum(unmem, na.rm=TRUE),\n            wgt_memb = sum(unmem * basicwgt/12, na.rm=TRUE))\n\ndensity_us\n\n# A tibble: 40 × 6\n    year represented_share rep_n member_share memb_n wgt_memb\n   &lt;int&gt;             &lt;dbl&gt; &lt;int&gt;        &lt;dbl&gt;  &lt;int&gt;    &lt;dbl&gt;\n 1  1983           NaN         0        0.201  34258 4422628.\n 2  1984             0.216 38008        0.188  32921 4328307.\n 3  1985             0.205 36788        0.180  32185 4236957.\n 4  1986             0.199 35321        0.175  31013 4230555.\n 5  1987             0.192 34505        0.170  30488 4221013.\n 6  1988             0.190 32242        0.168  28406 4241194.\n 7  1989             0.186 32079        0.164  28261 4235755.\n 8  1990             0.182 34110        0.160  29898 4192916.\n 9  1991             0.181 32920        0.160  29051 4152415.\n10  1992             0.177 31725        0.157  28022 4098902.\n# ℹ 30 more rows\n\n\nCalculate state level union representation, 1983–2022\n\n#Union representation by year and state, 1983–Present\ndensity_state &lt;- basic %&gt;% \nsummarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),\n          .by = c(year, statefips)) %&gt;%\n  \n  #Turn statefips labels into strings\n  mutate(statefips = haven::as_factor(statefips)) %&gt;% \n  #sort by year and state\n  arrange(year, statefips) %&gt;% \n  #reshape data\n  pivot_wider(id_cols = year, names_from = statefips, values_from = represented_share)\n\ndensity_state\n\n# A tibble: 40 × 52\n    year      AL      AK       AZ      AR      CA      CO      CT      DE\n   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n 1  1983 NaN     NaN     NaN      NaN     NaN     NaN     NaN     NaN    \n 2  1984   0.179   0.279   0.120    0.120   0.248   0.146   0.222   0.193\n 3  1985   0.177   0.280   0.121    0.133   0.239   0.137   0.222   0.185\n 4  1986   0.181   0.267   0.109    0.123   0.231   0.148   0.207   0.190\n 5  1987   0.155   0.256   0.0825   0.133   0.223   0.138   0.200   0.180\n 6  1988   0.161   0.268   0.0863   0.117   0.216   0.124   0.205   0.167\n 7  1989   0.157   0.249   0.0877   0.121   0.218   0.113   0.193   0.173\n 8  1990   0.145   0.258   0.0941   0.121   0.209   0.120   0.196   0.168\n 9  1991   0.155   0.239   0.0979   0.125   0.206   0.118   0.200   0.185\n10  1992   0.162   0.221   0.0952   0.110   0.209   0.120   0.189   0.184\n# ℹ 30 more rows\n# ℹ 43 more variables: DC &lt;dbl&gt;, FL &lt;dbl&gt;, GA &lt;dbl&gt;, HI &lt;dbl&gt;, ID &lt;dbl&gt;,\n#   IL &lt;dbl&gt;, IN &lt;dbl&gt;, IA &lt;dbl&gt;, KS &lt;dbl&gt;, KY &lt;dbl&gt;, LA &lt;dbl&gt;, ME &lt;dbl&gt;,\n#   MD &lt;dbl&gt;, MA &lt;dbl&gt;, MI &lt;dbl&gt;, MN &lt;dbl&gt;, MS &lt;dbl&gt;, MO &lt;dbl&gt;, MT &lt;dbl&gt;,\n#   NE &lt;dbl&gt;, NV &lt;dbl&gt;, NH &lt;dbl&gt;, NJ &lt;dbl&gt;, NM &lt;dbl&gt;, NY &lt;dbl&gt;, NC &lt;dbl&gt;,\n#   ND &lt;dbl&gt;, OH &lt;dbl&gt;, OK &lt;dbl&gt;, OR &lt;dbl&gt;, PA &lt;dbl&gt;, RI &lt;dbl&gt;, SC &lt;dbl&gt;,\n#   SD &lt;dbl&gt;, TN &lt;dbl&gt;, TX &lt;dbl&gt;, UT &lt;dbl&gt;, VT &lt;dbl&gt;, VA &lt;dbl&gt;, WA &lt;dbl&gt;, …\n\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "Historical state union density"
+    ]
+  },
+  {
+    "objectID": "epi_microdata.html",
+    "href": "epi_microdata.html",
+    "title": "Load EPI CPS Extracts via epiextractr",
+    "section": "",
+    "text": "Note: Users will need to install epiextractr for this example. Refer to EPI packages for R for installation instructions\n\nLoad required libraries\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\n\n\nDownload CPS files\n\n# download CPS ORG files  \ndownload_cps( sample = 'org', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS Basic (4085.3 MB) \ndownload_cps(sample='basic', extracts_dir ='C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS May (38.8 MB)\ndownload_cps(sample='may', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\nThis will download the latest EPI CPS ORG extracts in .feather format from https://microdata.epi.org and place them in the directory C:\\data\\cps.\n\n\nLoad your CPS extracts!\nAfter the data is downloaded, load a selection of CPS data for your analysis:\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho, \n                .extracts_dir = 'C:/YOUR_PATH/cps')\n\n\n\n(Optional) Set and forget CPS data files by creating/editing an .Renviron file\nTo simplify usage, you can omit the .extracts_dir argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.\n\n# Find the .Renviron file\nrenviron_path &lt;- file.path(Sys.getenv(\"HOME\"), \".Renviron\")\n\n# Open the file for editing\nfile.edit(renviron_path)\n\n# Paste the environment variable settings into your .Renviron file,\n# and make sure the paths are set to the location of your CPS files\n\nEPIEXTRACTS_CPSBASIC_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSMAY_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSORG_DIR=C:/YOUR_PATH/cps\n\nAfter editing your .Renviron file, save your changes and restart R to apply them.\nIf you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the .extracts_dir() command\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho)\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "R code",
+      "Load EPI CPS Extracts via epiextractr"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
     "title": "About",
     "section": "",
     "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!",
@@ -65,8 +88,8 @@
     ]
   },
   {
-    "objectID": "about.html#about-this-site",
-    "href": "about.html#about-this-site",
+    "objectID": "index.html#about-this-site",
+    "href": "index.html#about-this-site",
     "title": "About",
     "section": "",
     "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!",
@@ -75,8 +98,8 @@
     ]
   },
   {
-    "objectID": "about.html#user-code-submissions",
-    "href": "about.html#user-code-submissions",
+    "objectID": "index.html#user-code-submissions",
+    "href": "index.html#user-code-submissions",
     "title": "About",
     "section": "User code submissions",
     "text": "User code submissions\nHave a coding sample you would like to submit to the EARN code library? Contact dperez@epi.org\nComponents of a code library submission are:\n\nDescription​\nCode file(s)​\nSupplementary data​\nOutput example\nAuthor contact information",
@@ -85,135 +108,13 @@
     ]
   },
   {
-    "objectID": "about.html#happy-coding",
-    "href": "about.html#happy-coding",
+    "objectID": "index.html#happy-coding",
+    "href": "index.html#happy-coding",
     "title": "About",
     "section": "Happy coding!",
     "text": "Happy coding!\n\n\n# A heart-shaped scatterplot\n\n# Load highcharter library\nlibrary(highcharter)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2 * pi, by = 0.01)\nx &lt;- 16 * sin(t)^3\ny &lt;- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)\n\n# Create our data frame\ndf &lt;- data.frame(x, y)\n\n# Create highcharter plot\nhighchart(type = \"chart\") %&gt;% \n  hc_add_series(data = df, type = \"scatter\", color = \"red\", marker = list(radius = 2)) %&gt;% \n  hc_xAxis(min = -20, max = 20) %&gt;% \n  hc_yAxis(min = -20, max = 15) %&gt;% \n  hc_chart(backgroundColor = \"transparent\") %&gt;% \n  hc_legend(enabled = FALSE)",
     "crumbs": [
       "About"
-    ]
-  },
-  {
-    "objectID": "bootcamp_preview.html",
-    "href": "bootcamp_preview.html",
-    "title": "EARNCon 2023 Bootcamp Preview",
-    "section": "",
-    "text": "Welcome to the EARNCon 2023 data bootcamp preview page!\nThis step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization."
-  },
-  {
-    "objectID": "bootcamp_preview.html#agenda",
-    "href": "bootcamp_preview.html#agenda",
-    "title": "EARNCon 2023 Bootcamp Preview",
-    "section": "Agenda",
-    "text": "Agenda\nFacilitators: Daniel Perez & Sebastian Hickey\nEARNTalk date: Thursday, September 21st, 2023. 2-3:00 p.m. ET\nProcess:\n\nEARN Code Library preview\nDownloading and installing R and RStudio Desktop\nExploring the RStudio user interface\n\nDemonstrate\n\nSetting a working directory\nCreating a project\nDownloading packages that will be used at EARNCon\nCreating a script\n\n\nRegistering for Tableau Public\n\n\nEARN Code Library preview\nWe’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.\n\n\nDownloading and installing R and Rstudio desktop\nInstalling R and RStudio on work machines can sometimes be challenging due to a variety of reasons.\n\nSome common issues (and resolutions):\n\nAdministrative Privileges: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.\n\nResolution: Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.\n\nFirewall and Network Restrictions: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).\n\nResolution: Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.\n\nDependency Issues: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.\n\nResolution: Ensure that all required dependencies are installed. You can use the install.packages() function with the dependencies=TRUE argument in R to automatically install package dependencies.\n\nOperating System Specific Issues: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.\n\nResolution: Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like apt-get or yum can be used to install the necessary libraries.\n\nPackage Binary vs. Source Installation: On some systems, users might encounter issues when trying to install package binaries.\n\nResolution: Ensure you have the necessary development tools installed (like gcc on Linux or Xcode on macOS). When installing a package in R, you can use the type=\"source\" argument with install.packages() to install from source.\n\nMismatched Versions: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.\n\nResolution: Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.\n\nRtools Installation (Windows only): Rtools is essential for building and installing some R packages from source on Windows.\n\nResolution: Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.\n\n\n\n\nEnough talk, time to download!\n\nNavigate to https://posit.co/downloads/"
-  },
-  {
-    "objectID": "viz_workshop.html",
-    "href": "viz_workshop.html",
-    "title": "Visualizing Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#welcome-to-the-visualizing-data-training",
-    "href": "viz_workshop.html#welcome-to-the-visualizing-data-training",
-    "title": "Visualizing Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#introduction",
-    "href": "viz_workshop.html#introduction",
-    "title": "Visualizing Data",
-    "section": "1. Introduction",
-    "text": "1. Introduction\n\n\n\n1.1 Brief overview of ggplot2\n\n\nggplot2 is a data visualization package for R that allows users to create complex plots in a structured manner. It’s based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.\n\n\n1.2 Philosophy behind ggplot2\n\n\nAt the core of ggplot2 is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#basic-chart-creation",
-    "href": "viz_workshop.html#basic-chart-creation",
-    "title": "Visualizing Data",
-    "section": "2. Basic chart creation",
-    "text": "2. Basic chart creation\n\n2.1. Basic syntax: The Big Three\n\n\n\nggplot()\naes()\ngeom_point()\n\nThe foundation of any ggplot2 visualization starts with the ggplot() function. Within ggplot(), we call aes() to designate aesthetic mappings, and then append geometries like geom_point() to visually represent data points.\n\n\n2.2. Practical example\n\n\nUsing the mtcars dataset, we’ll illustrate the relationship between a car’s horsepower (hp) and its fuel efficiency (mpg).\n\n#First thing first, install Tidyverse using\n\n# install.packages('tidyverse')\n# install.packages('highcharter')\n\n#Load tidyverse library\nlibrary(tidyverse)\nlibrary(here)\n\nmtcars &lt;- mtcars\n\nA simple scatter plot:\n\n# A simple scatter\nggplot(data = mtcars, aes(x=mpg, y=hp)) +\n  geom_point()\n\n\n\n\n\n\n\n\nA simple histogram using geom_histogram()\n\nggplot(mtcars, aes(x=mpg)) + \n  geom_histogram(binwidth=3)",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#adding-layers-and-customizations",
-    "href": "viz_workshop.html#adding-layers-and-customizations",
-    "title": "Visualizing Data",
-    "section": "3. Adding layers and customizations",
-    "text": "3. Adding layers and customizations\n\n\n\n# Load some data from Github. \n# Major industries, union density, real median wages, and employment. 2000 to 2022\nind_data &lt;- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))\n\n# ind_data &lt;- read_csv(file = here('data/industry_union_wage_emp.csv'), col_names = TRUE)\n\n#Keep 2022 data\nind_data2022 &lt;- ind_data %&gt;%  \n  filter(year==2022)\n\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\n3.1 Adding geometries\n\n\nAn insightful visualization often arises from combining various layers and customizing aesthetics.\nBuilding on our scatter plot from earlier, let’s include a smoothed line to better discern the relationship between mpg and hp:\n\nggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point() +\n  # Add a smoothed line with customized aesthetics\n  geom_smooth(method = 'lm', se = FALSE, col = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\nThe geom_smooth() with method=“lm” adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we’ve chosen a distinct red color for the line.\n\n\n3.2 Customizing Aesthetics\n\n\nA major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.\nFor instance, modifying the scatter plot by adjusting point properties:\n\n#Bar chart with colors\nggplot(data=ind_data2022, aes(x=mind16, y=real_med_wage, fill=mind16))+\n  geom_col()\n\n\n\n\n\n\n\n#Bubble scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, size=(total_emp/1000))) +\n  geom_point()\n\n\n\n\n\n\n\n#Bubble color scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + \n  geom_point()\n\n\n\n\n\n\n\n\nLayering and customization in ggplot2 ensures your visualizations are both visually appealing and insightful.",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#customizing-plots-with-labels-and-themes",
-    "href": "viz_workshop.html#customizing-plots-with-labels-and-themes",
-    "title": "Visualizing Data",
-    "section": "4. Customizing Plots with labels and themes",
-    "text": "4. Customizing Plots with labels and themes\n\n4.1. Labeling and Titling\n\n\nLabeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.\nHere’s how to add a title, x-axis label, and y-axis label to our scatter plot with the labs() function:\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who \\n are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.')\n\n\n\n\n\n\n\n\n\n\n4.2. Adjusting Text Elements\n\n\nText elements such as titles, axis labels, and annotations can be modified to better fit your plot’s aesthetic or to match specific publication requirements.\nHere’s an example of adjusting the legend’s size and position\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  # labs() function to add labels\n\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\n\n\n4.3. Themes in ggplot2\n\n\nggplot2 offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.\nFor instance, let’s take the line chart we’ve been working with and apply a black and white theme:\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Note: Every subsequent theme() will supersede the previous. So be mindful!\n  theme_bw() +\n  # theme_dark() + \n  # theme_light() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\nNow, let’s try using pre-made theme. ThemePark by Matthew B. Jane\n\ninstall.packages(\"remotes\")\n\nInstalling package into '/home/ecohn/R/x86_64-pc-linux-gnu-library/4.4'\n(as 'lib' is unspecified)\n\nremotes::install_github(\"MatthewBJane/ThemePark\")\n\nSkipping install of 'ThemePark' from a github remote, the SHA1 (30989dac) has not changed since last install.\n  Use `force = TRUE` to force installation\n\nlibrary(ThemePark)\n\nthemepark_themes\n\n              theme                     creator\n1            barbie             Matthew B. Jané\n2       oppenheimer Matthew B. Jané & Toki Liam\n3          starwars             Matthew B. Jané\n4             zelda               Alex Slavenko\n5        terminator               Alex Slavenko\n6         spiderman           Velu P.K. Immonen\n7            avatar           Velu P.K. Immonen\n8        gryffindor                Begum Ozemek\n9        hufflepuff                Begum Ozemek\n10        ravenclaw                Begum Ozemek\n11        slytherin                Begum Ozemek\n12         futurama             Tylor J. Harlow\n13         simpsons             Tylor J. Harlow\n14   lordoftherings                 Ethan Milne\n15    gameofthrones              Brennan Antone\n16        godfather      Francisco Garre-Frutos\n17             nemo        Christopher T. Kenny\n18          friends         Alexis van STRAATEN\n19            alien                Luke Pilling\n20   grand_budapest               Katya Kustova\n21    asteroid_city               Katya Kustova\n22  french_dispatch               Katya Kustova\n23 moonrise_kingdom               Katya Kustova\n24              elf        Christopher T. Kenny\n\n\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Theme\n  theme_minimal()+\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))+\n  \n  theme_barbie()\n\n\n\n\n\n\n\n\n[Insert EARN/EPI/CGI example]?\nMastering these customization techniques will make your plots informative, engaging, and tailored for their intended audience!",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#exporting-your-plot",
-    "href": "viz_workshop.html#exporting-your-plot",
-    "title": "Visualizing Data",
-    "section": "5. Exporting your plot",
-    "text": "5. Exporting your plot\n\n\nNow to export your ggplot for the refrigerator\n\nfinal_plot &lt;- ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  theme_minimal() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n5.1 Saving your ggplot\n\n# Our chart object\nfinal_plot\n\n\n\n\n\n\n\nggsave(plot = final_plot,\n       #name of our chart\n       filename = 'final_union_industry_scatter.png',\n       # Save location for our chart\n       path = here('output/'), \n       # Dots per inch (300+ is considered high-res)\n       dpi = 300)\n\nSaving 7 x 5 in image",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#advanced-plot-types",
-    "href": "viz_workshop.html#advanced-plot-types",
-    "title": "Visualizing Data",
-    "section": "6. Advanced Plot Types",
-    "text": "6. Advanced Plot Types\n\n6.1. Faceting and Multi-panel Plots\n\n\nFaceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.\nLet’s view scatter plots of mpg vs. hp but facet them by the number of cylinders:\n\nggplot(mtcars, aes(y=hp, x=mpg))+\n  geom_point()+\n  facet_wrap(~cyl)\n\n\n\n\n\n\n\nind_data_years &lt;- ind_data %&gt;% \n  filter(year %in% c(2000, 2008, 2022))\n\nggplot(ind_data_years, aes(x=union_density, y=real_med_wage)) + \n  geom_point() + \n  facet_wrap(~year) +\n  theme_bw()\n\n\n\n\n\n\n\n\n\n\n6.3. Interactive charts\n\n#install.packages('highcharter')\nlibrary(highcharter)\n\n\n#Line chart with colors\n\nlinechart &lt;- highchart() %&gt;%\n  \n  hc_add_series(data = ind_data, hcaes(x = year, y = union_density, group = mind16), \n                type = 'line')\n\nlinechart\n\n\n\n\n\nAdvanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#resources-for-layer-based-chart-visualization",
-    "href": "viz_workshop.html#resources-for-layer-based-chart-visualization",
-    "title": "Visualizing Data",
-    "section": "7.0 Resources for layer-based chart visualization!",
-    "text": "7.0 Resources for layer-based chart visualization!\n\nOfficial Tidyverse page for ggplot2 https://ggplot2.tidyverse.org/index.html\nR Graphics Cookbook\nHighcharter package for interactive charts",
-    "crumbs": [
-      "Learn R",
-      "Getting Started with R",
-      "Visualizing Data"
     ]
   },
   {
@@ -503,27 +404,126 @@
     ]
   },
   {
-    "objectID": "epi_microdata.html",
-    "href": "epi_microdata.html",
-    "title": "Load EPI CPS Extracts via epiextractr",
+    "objectID": "viz_workshop.html",
+    "href": "viz_workshop.html",
+    "title": "Visualizing Data",
     "section": "",
-    "text": "Note: Users will need to install epiextractr for this example. Refer to EPI packages for R for installation instructions\n\nLoad required libraries\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\n\n\nDownload CPS files\n\n# download CPS ORG files  \ndownload_cps( sample = 'org', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS Basic (4085.3 MB) \ndownload_cps(sample='basic', extracts_dir ='C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS May (38.8 MB)\ndownload_cps(sample='may', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\nThis will download the latest EPI CPS ORG extracts in .feather format from https://microdata.epi.org and place them in the directory C:\\data\\cps.\n\n\nLoad your CPS extracts!\nAfter the data is downloaded, load a selection of CPS data for your analysis:\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho, \n                .extracts_dir = 'C:/YOUR_PATH/cps')\n\n\n\n(Optional) Set and forget CPS data files by creating/editing an .Renviron file\nTo simplify usage, you can omit the .extracts_dir argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.\n\n# Find the .Renviron file\nrenviron_path &lt;- file.path(Sys.getenv(\"HOME\"), \".Renviron\")\n\n# Open the file for editing\nfile.edit(renviron_path)\n\n# Paste the environment variable settings into your .Renviron file,\n# and make sure the paths are set to the location of your CPS files\n\nEPIEXTRACTS_CPSBASIC_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSMAY_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSORG_DIR=C:/YOUR_PATH/cps\n\nAfter editing your .Renviron file, save your changes and restart R to apply them.\nIf you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the .extracts_dir() command\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho)\n\n\n\n\n\n Back to top",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
     "crumbs": [
-      "R code",
-      "Load EPI CPS Extracts via epiextractr"
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
     ]
   },
   {
-    "objectID": "union_density.html",
-    "href": "union_density.html",
-    "title": "Historical state union density",
+    "objectID": "viz_workshop.html#welcome-to-the-visualizing-data-training",
+    "href": "viz_workshop.html#welcome-to-the-visualizing-data-training",
+    "title": "Visualizing Data",
     "section": "",
-    "text": "Contact: dperez@epi.org\n\nThis script uses Current Population Survey (CPS) microdata extracts from https://microdata.epi.org/ to calculate union density from 1983-Present.\n\nlibrary(tidyverse)\nlibrary(here)\nlibrary(epiextractr)\n\nLoad CPS data using epiextractr\n\nbasic &lt;- load_basic(1983:2022, year, month, statefips, basicwgt, union, unmem, age, emp, selfemp, selfinc) %&gt;%\n  filter(age&gt;=16, emp==1) %&gt;%\n  #remove self-employed and self-incorporated workers from sample\n  mutate(selfemp0 = ifelse(selfemp==1 & !is.na(selfemp), yes=1, no=0),\n         selfinc0 = ifelse(selfinc==1 & !is.na(selfinc), yes=1, no=0)) %&gt;%\n  filter(selfemp0==0, selfinc0==0)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.58\n\n\nCalculate US union density 1983–2022\n\n#US union members and union represented by year, 1983-2022\n\ndensity_us &lt;- basic %&gt;% \n  group_by(year) %&gt;% \n  summarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),\n            rep_n = sum(union, na.rm=TRUE),\n            member_share = weighted.mean(unmem, w=basicwgt/12, na.rm=TRUE),\n            memb_n = sum(unmem, na.rm=TRUE),\n            wgt_memb = sum(unmem * basicwgt/12, na.rm=TRUE))\n\ndensity_us\n\n# A tibble: 40 × 6\n    year represented_share rep_n member_share memb_n wgt_memb\n   &lt;int&gt;             &lt;dbl&gt; &lt;int&gt;        &lt;dbl&gt;  &lt;int&gt;    &lt;dbl&gt;\n 1  1983           NaN         0        0.201  34258 4422628.\n 2  1984             0.216 38008        0.188  32921 4328307.\n 3  1985             0.205 36788        0.180  32185 4236957.\n 4  1986             0.199 35321        0.175  31013 4230555.\n 5  1987             0.192 34505        0.170  30488 4221013.\n 6  1988             0.190 32242        0.168  28406 4241194.\n 7  1989             0.186 32079        0.164  28261 4235755.\n 8  1990             0.182 34110        0.160  29898 4192916.\n 9  1991             0.181 32920        0.160  29051 4152415.\n10  1992             0.177 31725        0.157  28022 4098902.\n# ℹ 30 more rows\n\n\nCalculate state level union representation, 1983–2022\n\n#Union representation by year and state, 1983–Present\ndensity_state &lt;- basic %&gt;% \nsummarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),\n          .by = c(year, statefips)) %&gt;%\n  \n  #Turn statefips labels into strings\n  mutate(statefips = haven::as_factor(statefips)) %&gt;% \n  #sort by year and state\n  arrange(year, statefips) %&gt;% \n  #reshape data\n  pivot_wider(id_cols = year, names_from = statefips, values_from = represented_share)\n\ndensity_state\n\n# A tibble: 40 × 52\n    year      AL      AK       AZ      AR      CA      CO      CT      DE\n   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n 1  1983 NaN     NaN     NaN      NaN     NaN     NaN     NaN     NaN    \n 2  1984   0.179   0.279   0.120    0.120   0.248   0.146   0.222   0.193\n 3  1985   0.177   0.280   0.121    0.133   0.239   0.137   0.222   0.185\n 4  1986   0.181   0.267   0.109    0.123   0.231   0.148   0.207   0.190\n 5  1987   0.155   0.256   0.0825   0.133   0.223   0.138   0.200   0.180\n 6  1988   0.161   0.268   0.0863   0.117   0.216   0.124   0.205   0.167\n 7  1989   0.157   0.249   0.0877   0.121   0.218   0.113   0.193   0.173\n 8  1990   0.145   0.258   0.0941   0.121   0.209   0.120   0.196   0.168\n 9  1991   0.155   0.239   0.0979   0.125   0.206   0.118   0.200   0.185\n10  1992   0.162   0.221   0.0952   0.110   0.209   0.120   0.189   0.184\n# ℹ 30 more rows\n# ℹ 43 more variables: DC &lt;dbl&gt;, FL &lt;dbl&gt;, GA &lt;dbl&gt;, HI &lt;dbl&gt;, ID &lt;dbl&gt;,\n#   IL &lt;dbl&gt;, IN &lt;dbl&gt;, IA &lt;dbl&gt;, KS &lt;dbl&gt;, KY &lt;dbl&gt;, LA &lt;dbl&gt;, ME &lt;dbl&gt;,\n#   MD &lt;dbl&gt;, MA &lt;dbl&gt;, MI &lt;dbl&gt;, MN &lt;dbl&gt;, MS &lt;dbl&gt;, MO &lt;dbl&gt;, MT &lt;dbl&gt;,\n#   NE &lt;dbl&gt;, NV &lt;dbl&gt;, NH &lt;dbl&gt;, NJ &lt;dbl&gt;, NM &lt;dbl&gt;, NY &lt;dbl&gt;, NC &lt;dbl&gt;,\n#   ND &lt;dbl&gt;, OH &lt;dbl&gt;, OK &lt;dbl&gt;, OR &lt;dbl&gt;, PA &lt;dbl&gt;, RI &lt;dbl&gt;, SC &lt;dbl&gt;,\n#   SD &lt;dbl&gt;, TN &lt;dbl&gt;, TX &lt;dbl&gt;, UT &lt;dbl&gt;, VT &lt;dbl&gt;, VA &lt;dbl&gt;, WA &lt;dbl&gt;, …\n\n\n\n\n\n\n Back to top",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "Historical state union density"
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
     ]
+  },
+  {
+    "objectID": "viz_workshop.html#introduction",
+    "href": "viz_workshop.html#introduction",
+    "title": "Visualizing Data",
+    "section": "1. Introduction",
+    "text": "1. Introduction\n\n\n\n1.1 Brief overview of ggplot2\n\n\nggplot2 is a data visualization package for R that allows users to create complex plots in a structured manner. It’s based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.\n\n\n1.2 Philosophy behind ggplot2\n\n\nAt the core of ggplot2 is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#basic-chart-creation",
+    "href": "viz_workshop.html#basic-chart-creation",
+    "title": "Visualizing Data",
+    "section": "2. Basic chart creation",
+    "text": "2. Basic chart creation\n\n2.1. Basic syntax: The Big Three\n\n\n\nggplot()\naes()\ngeom_point()\n\nThe foundation of any ggplot2 visualization starts with the ggplot() function. Within ggplot(), we call aes() to designate aesthetic mappings, and then append geometries like geom_point() to visually represent data points.\n\n\n2.2. Practical example\n\n\nUsing the mtcars dataset, we’ll illustrate the relationship between a car’s horsepower (hp) and its fuel efficiency (mpg).\n\n#First thing first, install Tidyverse using\n\n# install.packages('tidyverse')\n# install.packages('highcharter')\n\n#Load tidyverse library\nlibrary(tidyverse)\nlibrary(here)\n\nmtcars &lt;- mtcars\n\nA simple scatter plot:\n\n# A simple scatter\nggplot(data = mtcars, aes(x=mpg, y=hp)) +\n  geom_point()\n\n\n\n\n\n\n\n\nA simple histogram using geom_histogram()\n\nggplot(mtcars, aes(x=mpg)) + \n  geom_histogram(binwidth=3)",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#adding-layers-and-customizations",
+    "href": "viz_workshop.html#adding-layers-and-customizations",
+    "title": "Visualizing Data",
+    "section": "3. Adding layers and customizations",
+    "text": "3. Adding layers and customizations\n\n\n\n# Load some data from Github. \n# Major industries, union density, real median wages, and employment. 2000 to 2022\nind_data &lt;- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))\n\n# ind_data &lt;- read_csv(file = here('data/industry_union_wage_emp.csv'), col_names = TRUE)\n\n#Keep 2022 data\nind_data2022 &lt;- ind_data %&gt;%  \n  filter(year==2022)\n\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\n3.1 Adding geometries\n\n\nAn insightful visualization often arises from combining various layers and customizing aesthetics.\nBuilding on our scatter plot from earlier, let’s include a smoothed line to better discern the relationship between mpg and hp:\n\nggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point() +\n  # Add a smoothed line with customized aesthetics\n  geom_smooth(method = 'lm', se = FALSE, col = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\nThe geom_smooth() with method=“lm” adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we’ve chosen a distinct red color for the line.\n\n\n3.2 Customizing Aesthetics\n\n\nA major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.\nFor instance, modifying the scatter plot by adjusting point properties:\n\n#Bar chart with colors\nggplot(data=ind_data2022, aes(x=mind16, y=real_med_wage, fill=mind16))+\n  geom_col()\n\n\n\n\n\n\n\n#Bubble scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, size=(total_emp/1000))) +\n  geom_point()\n\n\n\n\n\n\n\n#Bubble color scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + \n  geom_point()\n\n\n\n\n\n\n\n\nLayering and customization in ggplot2 ensures your visualizations are both visually appealing and insightful.",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#customizing-plots-with-labels-and-themes",
+    "href": "viz_workshop.html#customizing-plots-with-labels-and-themes",
+    "title": "Visualizing Data",
+    "section": "4. Customizing Plots with labels and themes",
+    "text": "4. Customizing Plots with labels and themes\n\n4.1. Labeling and Titling\n\n\nLabeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.\nHere’s how to add a title, x-axis label, and y-axis label to our scatter plot with the labs() function:\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who \\n are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.')\n\n\n\n\n\n\n\n\n\n\n4.2. Adjusting Text Elements\n\n\nText elements such as titles, axis labels, and annotations can be modified to better fit your plot’s aesthetic or to match specific publication requirements.\nHere’s an example of adjusting the legend’s size and position\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  # labs() function to add labels\n\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\n\n\n4.3. Themes in ggplot2\n\n\nggplot2 offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.\nFor instance, let’s take the line chart we’ve been working with and apply a black and white theme:\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Note: Every subsequent theme() will supersede the previous. So be mindful!\n  theme_bw() +\n  # theme_dark() + \n  # theme_light() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\nNow, let’s try using pre-made theme. ThemePark by Matthew B. Jane\n\ninstall.packages(\"remotes\")\n\nInstalling package into '/home/ecohn/R/x86_64-pc-linux-gnu-library/4.4'\n(as 'lib' is unspecified)\n\nremotes::install_github(\"MatthewBJane/ThemePark\")\n\nSkipping install of 'ThemePark' from a github remote, the SHA1 (30989dac) has not changed since last install.\n  Use `force = TRUE` to force installation\n\nlibrary(ThemePark)\n\nthemepark_themes\n\n              theme                     creator\n1            barbie             Matthew B. Jané\n2       oppenheimer Matthew B. Jané & Toki Liam\n3          starwars             Matthew B. Jané\n4             zelda               Alex Slavenko\n5        terminator               Alex Slavenko\n6         spiderman           Velu P.K. Immonen\n7            avatar           Velu P.K. Immonen\n8        gryffindor                Begum Ozemek\n9        hufflepuff                Begum Ozemek\n10        ravenclaw                Begum Ozemek\n11        slytherin                Begum Ozemek\n12         futurama             Tylor J. Harlow\n13         simpsons             Tylor J. Harlow\n14   lordoftherings                 Ethan Milne\n15    gameofthrones              Brennan Antone\n16        godfather      Francisco Garre-Frutos\n17             nemo        Christopher T. Kenny\n18          friends         Alexis van STRAATEN\n19            alien                Luke Pilling\n20   grand_budapest               Katya Kustova\n21    asteroid_city               Katya Kustova\n22  french_dispatch               Katya Kustova\n23 moonrise_kingdom               Katya Kustova\n24              elf        Christopher T. Kenny\n\n\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Theme\n  theme_minimal()+\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))+\n  \n  theme_barbie()\n\n\n\n\n\n\n\n\n[Insert EARN/EPI/CGI example]?\nMastering these customization techniques will make your plots informative, engaging, and tailored for their intended audience!",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#exporting-your-plot",
+    "href": "viz_workshop.html#exporting-your-plot",
+    "title": "Visualizing Data",
+    "section": "5. Exporting your plot",
+    "text": "5. Exporting your plot\n\n\nNow to export your ggplot for the refrigerator\n\nfinal_plot &lt;- ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  theme_minimal() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n5.1 Saving your ggplot\n\n# Our chart object\nfinal_plot\n\n\n\n\n\n\n\nggsave(plot = final_plot,\n       #name of our chart\n       filename = 'final_union_industry_scatter.png',\n       # Save location for our chart\n       path = here('output/'), \n       # Dots per inch (300+ is considered high-res)\n       dpi = 300)\n\nSaving 7 x 5 in image",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#advanced-plot-types",
+    "href": "viz_workshop.html#advanced-plot-types",
+    "title": "Visualizing Data",
+    "section": "6. Advanced Plot Types",
+    "text": "6. Advanced Plot Types\n\n6.1. Faceting and Multi-panel Plots\n\n\nFaceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.\nLet’s view scatter plots of mpg vs. hp but facet them by the number of cylinders:\n\nggplot(mtcars, aes(y=hp, x=mpg))+\n  geom_point()+\n  facet_wrap(~cyl)\n\n\n\n\n\n\n\nind_data_years &lt;- ind_data %&gt;% \n  filter(year %in% c(2000, 2008, 2022))\n\nggplot(ind_data_years, aes(x=union_density, y=real_med_wage)) + \n  geom_point() + \n  facet_wrap(~year) +\n  theme_bw()\n\n\n\n\n\n\n\n\n\n\n6.3. Interactive charts\n\n#install.packages('highcharter')\nlibrary(highcharter)\n\n\n#Line chart with colors\n\nlinechart &lt;- highchart() %&gt;%\n  \n  hc_add_series(data = ind_data, hcaes(x = year, y = union_density, group = mind16), \n                type = 'line')\n\nlinechart\n\n\n\n\n\nAdvanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#resources-for-layer-based-chart-visualization",
+    "href": "viz_workshop.html#resources-for-layer-based-chart-visualization",
+    "title": "Visualizing Data",
+    "section": "7.0 Resources for layer-based chart visualization!",
+    "text": "7.0 Resources for layer-based chart visualization!\n\nOfficial Tidyverse page for ggplot2 https://ggplot2.tidyverse.org/index.html\nR Graphics Cookbook\nHighcharter package for interactive charts",
+    "crumbs": [
+      "Learn R",
+      "Getting Started with R",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "bootcamp_preview.html",
+    "href": "bootcamp_preview.html",
+    "title": "EARNCon 2023 Bootcamp Preview",
+    "section": "",
+    "text": "Welcome to the EARNCon 2023 data bootcamp preview page!\nThis step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization."
+  },
+  {
+    "objectID": "bootcamp_preview.html#agenda",
+    "href": "bootcamp_preview.html#agenda",
+    "title": "EARNCon 2023 Bootcamp Preview",
+    "section": "Agenda",
+    "text": "Agenda\nFacilitators: Daniel Perez & Sebastian Hickey\nEARNTalk date: Thursday, September 21st, 2023. 2-3:00 p.m. ET\nProcess:\n\nEARN Code Library preview\nDownloading and installing R and RStudio Desktop\nExploring the RStudio user interface\n\nDemonstrate\n\nSetting a working directory\nCreating a project\nDownloading packages that will be used at EARNCon\nCreating a script\n\n\nRegistering for Tableau Public\n\n\nEARN Code Library preview\nWe’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.\n\n\nDownloading and installing R and Rstudio desktop\nInstalling R and RStudio on work machines can sometimes be challenging due to a variety of reasons.\n\nSome common issues (and resolutions):\n\nAdministrative Privileges: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.\n\nResolution: Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.\n\nFirewall and Network Restrictions: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).\n\nResolution: Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.\n\nDependency Issues: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.\n\nResolution: Ensure that all required dependencies are installed. You can use the install.packages() function with the dependencies=TRUE argument in R to automatically install package dependencies.\n\nOperating System Specific Issues: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.\n\nResolution: Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like apt-get or yum can be used to install the necessary libraries.\n\nPackage Binary vs. Source Installation: On some systems, users might encounter issues when trying to install package binaries.\n\nResolution: Ensure you have the necessary development tools installed (like gcc on Linux or Xcode on macOS). When installing a package in R, you can use the type=\"source\" argument with install.packages() to install from source.\n\nMismatched Versions: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.\n\nResolution: Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.\n\nRtools Installation (Windows only): Rtools is essential for building and installing some R packages from source on Windows.\n\nResolution: Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.\n\n\n\n\nEnough talk, time to download!\n\nNavigate to https://posit.co/downloads/"
   },
   {
     "objectID": "inflation_adjusting.html",

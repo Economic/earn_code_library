@@ -25,7 +25,7 @@ website:
     contents:
 
     - text: "About"
-      href: about.qmd
+      href: index.qmd
 
     - section: "Learn R"
       contents:
