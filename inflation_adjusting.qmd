@@ -2,7 +2,7 @@
 title: 'Inflation adjusting with Realtalk'
 ---
 
-**Note:** Users will need to install realtalk and epiextractr for this example. Refer to [EPI built libraries](epi-libraries.qmd) for installation instructions
+**Note:** Users will need to install realtalk and epiextractr for this example. Refer to [EPI packages for R](epi_libraries.qmd) for installation instructions.
 
 ## Loading CPI Indices using the [realtalk](https://economic.github.io/realtalk/) library
 
