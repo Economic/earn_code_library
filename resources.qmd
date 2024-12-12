@@ -4,7 +4,7 @@ title: "Other Resources"
 
 If you can't find the answers you're looking for in our tutorials or elsewhere on our site, check out these external resources. If you're still stuck, feel free to reach out to [dperez\@epi.org](mailto:dperez@epi.org).
 
-[R\@Urban](https://github.com/ujjwalkarn/DataScienceR)
+[R\@Urban](https://urbaninstitute.github.io/r-at-urban/)
 
 -   R\@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.
 
