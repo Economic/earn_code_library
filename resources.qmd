@@ -1,0 +1,25 @@
+---
+title: "Other Resources"
+---
+
+If you can't find the answers you're looking for in our tutorials or elsewhere on our site, check out these external resources. If you're still stuck, feel free to reach out to [dperez\@epi.org](mailto:dperez@epi.org).
+
+[R\@Urban](https://github.com/ujjwalkarn/DataScienceR)
+
+-   R\@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.
+
+[R for Data Science](https://r4ds.had.co.nz/) by Garrett Grolemund and Hadley Wickham
+
+-   *R for Data Science* is a popular book that covers many basic concepts in R, aimed specifically at beginners.
+
+[DataScienceR Github](https://github.com/ujjwalkarn/DataScienceR/blob/master/README.md)
+
+-   This Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).
+
+[Causal Inference: The Mixtape](https://mixtape.scunning.com/)
+
+-   This ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.
+
+[Causal Inference in R](https://www.r-causal.org/)
+
+-   This book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.

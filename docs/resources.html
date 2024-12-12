@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Inflation adjusting with Realtalk – Code Library</title>
+<title>Other Resources – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,7 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./epi_microdata.html" rel="prev">
+<link href="./epi_libraries.html" rel="next">
+<link href="./prev_bootcamps.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,35 +71,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -174,7 +112,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./inflation_adjusting.html">Inflation adjusting with Realtalk</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./resources.html">Other Resources</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -202,13 +140,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Learn R</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
@@ -240,7 +178,7 @@ window.Quarto = {
   </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./resources.html" class="sidebar-item-text sidebar-link">
+  <a href="./resources.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Other Resources</span></a>
   </div>
 </li>
@@ -271,13 +209,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">R code</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
@@ -304,7 +242,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link active">
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
@@ -350,23 +288,15 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#loading-cpi-indices-using-the-realtalk-library" id="toc-loading-cpi-indices-using-the-realtalk-library" class="nav-link active" data-scroll-target="#loading-cpi-indices-using-the-realtalk-library">Loading CPI Indices using the realtalk library</a></li>
-  <li><a href="#a-refresher-on-inflation-adjustment" id="toc-a-refresher-on-inflation-adjustment" class="nav-link" data-scroll-target="#a-refresher-on-inflation-adjustment">A refresher on inflation adjustment</a></li>
-  <li><a href="#applying-inflation-adjustment-to-cps-org-wage-data" id="toc-applying-inflation-adjustment-to-cps-org-wage-data" class="nav-link" data-scroll-target="#applying-inflation-adjustment-to-cps-org-wage-data">Applying inflation adjustment to CPS ORG wage data</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./inflation_adjusting.html">Inflation adjusting with Realtalk</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./resources.html">Other Resources</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Inflation adjusting with Realtalk</h1>
+<h1 class="title">Other Resources</h1>
 </div>
 
 
@@ -383,142 +313,29 @@ window.Quarto = {
 </header>
 
 
-<p><strong>Note:</strong> Users will need to install realtalk and epiextractr for this example. Refer to <a href="./epi_libraries.html">EPI packages for R</a> for installation instructions.</p>
-<section id="loading-cpi-indices-using-the-realtalk-library" class="level2">
-<h2 class="anchored" data-anchor-id="loading-cpi-indices-using-the-realtalk-library">Loading CPI Indices using the <a href="https://economic.github.io/realtalk/">realtalk</a> library</h2>
-<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(realtalk)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#list available cpi series</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>realtalk<span class="sc">::</span>available_price_indexes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 20 × 6
-   index_name        frequency seasonal min_date max_date package_data_name     
-   &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                 
- 1 C-CPI-U           annual    &lt;NA&gt;     2000     2023     c_cpi_u_annual        
- 2 C-CPI-U           monthly   NSA      Dec 1999 Aug 2024 c_cpi_u_monthly_nsa   
- 3 C-CPI-U           quarterly NSA      2000q1   2024q2   c_cpi_u_quarterly_nsa 
- 4 C-CPI-U, extended annual    &lt;NA&gt;     1937     2023     c_cpi_u_extended_annu…
- 5 C-CPI-U, extended monthly   NSA      Jan 1937 Aug 2024 c_cpi_u_extended_mont…
- 6 C-CPI-U, extended monthly   SA       Jan 1947 Aug 2024 c_cpi_u_extended_mont…
- 7 C-CPI-U, extended quarterly NSA      1937q1   2024q2   c_cpi_u_extended_quar…
- 8 C-CPI-U, extended quarterly SA       1947q1   2024q2   c_cpi_u_extended_quar…
- 9 CPI-U             annual    &lt;NA&gt;     1937     2023     cpi_u_annual          
-10 CPI-U             monthly   NSA      Jan 1937 Aug 2024 cpi_u_monthly_nsa     
-11 CPI-U             monthly   SA       Jan 1947 Aug 2024 cpi_u_monthly_sa      
-12 CPI-U             quarterly NSA      1937q1   2024q2   cpi_u_quarterly_nsa   
-13 CPI-U             quarterly SA       1947q1   2024q2   cpi_u_quarterly_sa    
-14 CPI-U-RS          annual    &lt;NA&gt;     1978     2023     cpi_u_rs_annual       
-15 CPI-U-RS          monthly   NSA      Dec 1977 Dec 2023 cpi_u_rs_monthly_nsa  
-16 CPI-U-X1          annual    &lt;NA&gt;     1967     1982     cpi_u_x1_annual       
-17 CPI-U-X1          monthly   NSA      Jan 1967 Dec 1982 cpi_u_x1_monthly_nsa  
-18 PCE               annual    &lt;NA&gt;     1929     2023     pce_annual            
-19 PCE               monthly   SA       Jan 1959 Jul 2024 pce_monthly_sa        
-20 PCE               quarterly SA       1947q1   2024q2   pce_quarterly_sa      </code></pre>
-</div>
-</div>
-<p>EPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#this creates a dataframe with the annual CPI-U-RS index from 1937-2022</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>cpi_u_rs_annual</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Set base year to 2022</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>cpi2022 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>cpi_u_rs[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2022</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="a-refresher-on-inflation-adjustment" class="level2">
-<h2 class="anchored" data-anchor-id="a-refresher-on-inflation-adjustment">A refresher on inflation adjustment</h2>
-<p>Before jumping into the full code. Let’s refresh on how to calculate inflation using the Consumer Price Index.</p>
-<p>Inflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:</p>
-<p><span class="math display">\[
-\frac{\text{Given year}}{\text{Base year}} * 100
-\]</span></p>
-<p>For example, let’s calculate how much the CPI-U-RS index has increased from 1978 to 2022.</p>
-<p><span class="math display">\[
-\frac{\text{CPI}_{2022}}{\text{CPI}_{1978}} = \frac{431.5}{104} \approx 4.149038 \text{ or } 414.9\%
-\]</span></p>
-<p>And voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.</p>
-</section>
-<section id="applying-inflation-adjustment-to-cps-org-wage-data" class="level2">
-<h2 class="anchored" data-anchor-id="applying-inflation-adjustment-to-cps-org-wage-data">Applying inflation adjustment to CPS ORG wage data</h2>
-<p>This section uses <a href="https://economic.github.io/epiextractr">epiextractr</a> to load Current Population Survey data. Refer to the <a href="./epi_microdata.html">Using EPI’s CPS Extracts</a> to learn how to use this library.</p>
-<p>Below, I load CPS ORG data and define my sample:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_org</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2022</span>, year, month, orgwgt, wage, age, lfstat) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">#define sample universe</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(age<span class="sc">&gt;=</span><span class="dv">16</span>, lfstat <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Next, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate median wages in the CPS ORG</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>wage_data <span class="ot">&lt;-</span> org <span class="sc">%&gt;%</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#use MetricsWeighted package to calculate a weighted median</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: I am pooling 12 months of CPS data, </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#so I adjust orgwgt—the survey weight— variable, dividing it by 12.</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">nominal_median_wage =</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>               MetricsWeighted<span class="sc">::</span><span class="fu">weighted_median</span>(wage, <span class="at">w=</span>orgwgt<span class="sc">/</span><span class="dv">12</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span>year) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Merge annual CPI data to dataframe by year.</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cpi_data, <span class="at">by=</span><span class="st">'year'</span>) </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>wage_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 11 × 3
-    year nominal_median_wage cpi_u_rs
-   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;
- 1  2012                16       337.
- 2  2013                16.4     342 
- 3  2014                16.8     348.
- 4  2015                17       348.
- 5  2016                17.5     353.
- 6  2017                18       360.
- 7  2018                18.8     369.
- 8  2019                19.2     376.
- 9  2020                21       381.
-10  2021                21.4     399.
-11  2022                22.9     432.</code></pre>
-</div>
-</div>
-<p>Finally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>adjusted_data <span class="ot">&lt;-</span> wage_data <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#This mutate command calculates inflation in a given year, relative to 2022</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#and multiplies nominal median wages by the inflation quotient</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">infl_rel_to_2022 =</span> <span class="fu">signif</span>(<span class="at">x =</span> ((cpi2022<span class="sc">/</span>cpi_u_rs)<span class="sc">-</span><span class="dv">1</span>), <span class="at">digits=</span><span class="dv">2</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">real_wage_2022 =</span> nominal_median_wage<span class="sc">*</span>(cpi2022<span class="sc">/</span>cpi_u_rs)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(infl_rel_to_2022, nominal_median_wage, <span class="at">.after=</span>cpi_u_rs)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>adjusted_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 11 × 5
-    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022
-   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;
- 1  2012     337.            0.28                 16             20.5
- 2  2013     342             0.26                 16.4           20.7
- 3  2014     348.            0.24                 16.8           20.8
- 4  2015     348.            0.24                 17             21.1
- 5  2016     353.            0.22                 17.5           21.4
- 6  2017     360.            0.2                  18             21.6
- 7  2018     369.            0.17                 18.8           21.9
- 8  2019     376.            0.15                 19.2           22.1
- 9  2020     381.            0.13                 21             23.8
-10  2021     399.            0.081                21.4           23.1
-11  2022     432.            0                    22.9           22.9</code></pre>
-</div>
-</div>
+<p>If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to <a href="mailto:dperez@epi.org">dperez@epi.org</a>.</p>
+<p><a href="https://github.com/ujjwalkarn/DataScienceR">R@Urban</a></p>
+<ul>
+<li>R@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.</li>
+</ul>
+<p><a href="https://r4ds.had.co.nz/">R for Data Science</a> by Garrett Grolemund and Hadley Wickham</p>
+<ul>
+<li><em>R for Data Science</em> is a popular book that covers many basic concepts in R, aimed specifically at beginners.</li>
+</ul>
+<p><a href="https://github.com/ujjwalkarn/DataScienceR/blob/master/README.md">DataScienceR Github</a></p>
+<ul>
+<li>This Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).</li>
+</ul>
+<p><a href="https://mixtape.scunning.com/">Causal Inference: The Mixtape</a></p>
+<ul>
+<li>This ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.</li>
+</ul>
+<p><a href="https://www.r-causal.org/">Causal Inference in R</a></p>
+<ul>
+<li>This book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.</li>
+</ul>
 
 
-</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1087,11 +904,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./epi_microdata.html" class="pagination-link" aria-label="Load EPI CPS Extracts via epiextractr">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Load EPI CPS Extracts via epiextractr</span>
+      <a href="./prev_bootcamps.html" class="pagination-link" aria-label="EARNCon data bootcamp files">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">EARNCon data bootcamp files</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./epi_libraries.html" class="pagination-link" aria-label="R Packages">
+        <span class="nav-page-text">R Packages</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

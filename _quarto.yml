@@ -17,11 +17,13 @@ website:
     right: 
       - icon: fab fa-github
         href: https://github.com/Economic/earn_code_library
-
+        
+#make sure all .qmd files are listed somewhere below
 
   sidebar: 
     style: 'docked'
     search: true
+    collapse-level: 1
     contents:
 
     - text: "About"
@@ -30,11 +32,14 @@ website:
     - section: "Learn R"
       contents:
       
-      - section: "Getting Started with R"
+      - section: "Tutorials"
         contents:
         - viz_workshop.qmd
         - benchmarking_workshop.qmd
         - prev_bootcamps.qmd
+      
+      - text: "Other Resources"
+        href: resources.qmd
         
     - section: "Code Packages"
       contents:
