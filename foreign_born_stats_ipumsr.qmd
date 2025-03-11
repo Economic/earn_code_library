@@ -1,0 +1,145 @@
+---
+title: "Using ipumsr to load immigrant statistics"
+author: "Daniel Perez and Emma Cohn"
+format: html
+editor: visual
+---
+
+```{r Libraries}
+
+library(tidyverse)
+library(ipumsr)
+library(janitor)
+library(labelled)
+library(fs)
+
+```
+
+## Create and clean an extract using IPUMSR.
+
+*You must set up an IPUMS API key before using the ipumsr package. For instructions on how to set up the IPUMS API, see "[Introduction to the IPUMS API for R Users](http://cran.r-project.org/web/packages/ipumsr/vignettes/ipums-api.html)."*
+
+For guidance on how to define an extract, see "[Microdata API Requests](https://cran.r-project.org/web/packages/ipumsr/vignettes/ipums-api-micro.html)." You can view the list available IPUMS ACS samples and their IDs on the [IPUMS sample IDs page](https://usa.ipums.org/usa-action/samples/sample_ids).
+
+**Note:** You only need to run `define_extract_micro()` once, unless your extract parameters (e.g., years or variables) change. This command triggers an IPUMS API call, which may take several minutes depending on the extract size. If running this as part of a larger script, comment out this command to avoid repeated downloads.
+
+```{r, Create an extract via IPUMSR, eval=FALSE}
+
+# Load samples
+acs_samps <- ipumsr::get_sample_info('usa')
+
+# Create a vector of sample IDs to load
+years <- c('us2000a', 'us2001a', 'us2002a', 'us2003a', 'us2004a', 'us2005a',
+           'us2006a', 'us2007a', 'us2008a', 'us2009a', 'us2010a', 'us2011a',
+           'us2012a', 'us2013a', 'us2014a', 'us2015a', 'us2016a', 'us2017a',
+           'us2018a', 'us2019a', 'us2020a', 'us2021a', 'us2022a', 'us2023a')
+
+acs_extr <- define_extract_micro(
+  "usa",
+  description = 'ACS extract for Immigration statistics',
+  samples = years,
+  # Select the variables to load
+  variables = list('STATEFIP','COUNTYFIP', 'SEX', 'AGE', 'RACE', 'HISPAN',
+                   'BPL', 'CITIZEN', 'YRNATUR', 'YRIMMIG', 'YRSUSA1',
+                   'LANGUAGE', 'EMPSTAT', 'LABFORCE', 'OCC', 'IND')) |> 
+  submit_extract() |> 
+  wait_for_extract()
+
+# Download extract to input folder
+dl_extr <- download_extract(extract = acs_extr,
+                                      download_dir = 'input/',
+                                      overwrite = TRUE)
+```
+
+Load the extract (the xml file) and clean it up before conducting analysis.
+
+**Note:** Your extract will likely have a different file name, double-check this and update the script accordingly before running the following chunk.
+
+```{r Clean data}
+
+# NOTE: Your project directory and xml file may look different!
+acs_raw <- read_ipums_micro(ddi = 'input/usa_00009.xml')
+
+acs <- acs_raw |> 
+  # Use the janitor library to clean up names
+  janitor::clean_names() |> 
+  # Use labelled library to create custom value labels
+  # relabel citizen=0 to "Not foreign born" per https://usa.ipums.org/usa-action/variables/CITIZEN#comparability_section
+  labelled::set_value_labels(citizen = c('Not foreign born'=0, 'Born abroad of American parents'=1, 'Naturalized citizen'=2, 'Not a citizen'=3)) |> 
+  mutate(nativity = case_when(citizen %in% c(0,1) ~ 1,
+                              citizen %in% c(2,3) ~ 2)) |> 
+  add_value_labels(nativity = c('Native' = 1, 'Foreign-born'=2))
+```
+
+## Benchmark your data
+
+Run a US population benchmark using the Census ACS table statistics to check your data before continuing.
+
+```{r Preliminaries}
+# Do your US population estimates benchmark with the Census ACS table statistics?
+#   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates
+
+us_pop <- acs |> 
+summarize(pop = sum(perwt, na.rm=TRUE),
+          .by=year)
+
+us_pop
+```
+
+## Run your analysis!
+
+Here you will run your analysis to find three statistics:
+
+1.  Population by citizenship status and year
+2.  Population count and share by nativity and year
+3.  Employment counts and shares of immigrant workers by industry (See a list of industry codes and their associated titles [here](https://usa.ipums.org/usa/volii/ind2022.shtml))
+
+Don't forget to update the code to match your selection of years.
+
+This code can also be easily altered to filter for specific groups. For example, you can filter by state, specific industry, or for prime-age workers. See the commented-out commands for examples. Be sure to check for viable sample sizes when using a smaller data set.
+
+```{r Analysis}
+
+# Population by citizenship status and year 2000–2023
+foreign_born_total <- acs |> 
+  ## filter to just North Carolina
+  # filter(statefip == 37) |>
+  mutate(citizen = to_factor(citizen)) |> 
+  summarize(pop = sum(perwt, na.rm=TRUE),
+            .by=c(year, citizen)) |> 
+  pivot_wider(id_cols = year, names_from = citizen, values_from = pop)
+
+foreign_born_total
+
+# Population by nativity and year 2000–2023
+nativity <- acs |> 
+  mutate(nativity = to_factor(nativity)) |> 
+  summarize(pop = sum(perwt, na.rm=TRUE),
+            .by=c(year, nativity)) |>
+  mutate(share = pop/sum(pop), .by=year) |> 
+  pivot_wider(id_cols = year, names_from = nativity, values_from = c(pop, share))
+
+nativity
+
+
+# Industries and occupations of immigrant workers
+# This analysis pools 5 years of data
+nativity_ind <- acs |> 
+  filter(year %in% c(2019:2023), age>=16, empstat==1) |> 
+  ## filter for prime-age EPOP
+  # filter(age >= 25 & age <= 54) |>
+  mutate(nativity = to_factor(nativity)) |> 
+  # Adjust perwt, dividing it by 5.
+  summarize(total_emp = sum(empstat * perwt/5, na.rm=TRUE),
+            n=n(),
+            .by=c(nativity, ind)) |>
+  mutate(share = total_emp/sum(total_emp), .by=nativity) |> 
+  pivot_wider(id_cols = ind, names_from = nativity, values_from = c(total_emp, share, n))
+
+nativity_ind
+
+# See a list of industry codes and their associated titles here: https://usa.ipums.org/usa/volii/ind2022.shtml
+
+```
+
+Happy coding!

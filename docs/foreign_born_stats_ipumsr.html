@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Daniel Perez and Emma Cohn">
 
-<title>Inflation adjusting with Realtalk – Code Library</title>
+<title>Using ipumsr to load immigrant statistics – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./epi_microdata.html" rel="prev">
+<link href="./bin_wage_deciles.html" rel="next">
+<link href="./union_density.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,35 +106,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -174,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./inflation_adjusting.html">Inflation adjusting with Realtalk</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./foreign_born_stats_ipumsr.html">Using ipumsr to load immigrant statistics</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -304,20 +277,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link active">
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inflation adjusting with Realtalk</span></a>
   </div>
 </li>
           <li class="px-0"><hr class="sidebar-divider hi "></li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Code Repository</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./union_density.html" class="sidebar-item-text sidebar-link">
@@ -326,7 +299,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./foreign_born_stats_ipumsr.html" class="sidebar-item-text sidebar-link">
+  <a href="./foreign_born_stats_ipumsr.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Using ipumsr to load immigrant statistics</span></a>
   </div>
 </li>
@@ -361,24 +334,30 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-cpi-indices-using-the-realtalk-library" id="toc-loading-cpi-indices-using-the-realtalk-library" class="nav-link active" data-scroll-target="#loading-cpi-indices-using-the-realtalk-library">Loading CPI Indices using the realtalk library</a></li>
-  <li><a href="#a-refresher-on-inflation-adjustment" id="toc-a-refresher-on-inflation-adjustment" class="nav-link" data-scroll-target="#a-refresher-on-inflation-adjustment">A refresher on inflation adjustment</a></li>
-  <li><a href="#applying-inflation-adjustment-to-cps-org-wage-data" id="toc-applying-inflation-adjustment-to-cps-org-wage-data" class="nav-link" data-scroll-target="#applying-inflation-adjustment-to-cps-org-wage-data">Applying inflation adjustment to CPS ORG wage data</a></li>
+  <li><a href="#create-and-clean-an-extract-using-ipumsr." id="toc-create-and-clean-an-extract-using-ipumsr." class="nav-link active" data-scroll-target="#create-and-clean-an-extract-using-ipumsr.">Create and clean an extract using IPUMSR.</a></li>
+  <li><a href="#benchmark-your-data" id="toc-benchmark-your-data" class="nav-link" data-scroll-target="#benchmark-your-data">Benchmark your data</a></li>
+  <li><a href="#run-your-analysis" id="toc-run-your-analysis" class="nav-link" data-scroll-target="#run-your-analysis">Run your analysis!</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./inflation_adjusting.html">Inflation adjusting with Realtalk</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./foreign_born_stats_ipumsr.html">Using ipumsr to load immigrant statistics</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Inflation adjusting with Realtalk</h1>
+<h1 class="title">Using ipumsr to load immigrant statistics</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Daniel Perez and Emma Cohn </p>
+          </div>
+  </div>
     
   
     
@@ -389,139 +368,212 @@ window.Quarto = {
 </header>
 
 
-<p><strong>Note:</strong> Users will need to install realtalk and epiextractr for this example. Refer to <a href="./epi_libraries.html">EPI packages for R</a> for installation instructions.</p>
-<section id="loading-cpi-indices-using-the-realtalk-library" class="level2">
-<h2 class="anchored" data-anchor-id="loading-cpi-indices-using-the-realtalk-library">Loading CPI Indices using the <a href="https://economic.github.io/realtalk/">realtalk</a> library</h2>
-<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(realtalk)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<p>The RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.</p>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ipumsr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="create-and-clean-an-extract-using-ipumsr." class="level2">
+<h2 class="anchored" data-anchor-id="create-and-clean-an-extract-using-ipumsr.">Create and clean an extract using IPUMSR.</h2>
+<p><em>You must set up an IPUMS API key before using the ipumsr package. For instructions on how to set up the IPUMS API, see “<a href="http://cran.r-project.org/web/packages/ipumsr/vignettes/ipums-api.html">Introduction to the IPUMS API for R Users</a>.”</em></p>
+<p>For guidance on how to define an extract, see “<a href="https://cran.r-project.org/web/packages/ipumsr/vignettes/ipums-api-micro.html">Microdata API Requests</a>.” You can view the list available IPUMS ACS samples and their IDs on the <a href="https://usa.ipums.org/usa-action/samples/sample_ids">IPUMS sample IDs page</a>.</p>
+<p><strong>Note:</strong> You only need to run <code>define_extract_micro()</code> once, unless your extract parameters (e.g., years or variables) change. This command triggers an IPUMS API call, which may take several minutes depending on the extract size. If running this as part of a larger script, comment out this command to avoid repeated downloads.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#list available cpi series</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>realtalk<span class="sc">::</span>available_price_indexes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 20 × 6
-   index_name        frequency seasonal min_date max_date package_data_name     
-   &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                 
- 1 C-CPI-U           annual    &lt;NA&gt;     2000     2023     c_cpi_u_annual        
- 2 C-CPI-U           monthly   NSA      Dec 1999 Nov 2024 c_cpi_u_monthly_nsa   
- 3 C-CPI-U           quarterly NSA      2000q1   2024q3   c_cpi_u_quarterly_nsa 
- 4 C-CPI-U, extended annual    &lt;NA&gt;     1937     2023     c_cpi_u_extended_annu…
- 5 C-CPI-U, extended monthly   NSA      Jan 1937 Nov 2024 c_cpi_u_extended_mont…
- 6 C-CPI-U, extended monthly   SA       Jan 1947 Nov 2024 c_cpi_u_extended_mont…
- 7 C-CPI-U, extended quarterly NSA      1937q1   2024q3   c_cpi_u_extended_quar…
- 8 C-CPI-U, extended quarterly SA       1947q1   2024q3   c_cpi_u_extended_quar…
- 9 CPI-U             annual    &lt;NA&gt;     1937     2023     cpi_u_annual          
-10 CPI-U             monthly   NSA      Jan 1937 Nov 2024 cpi_u_monthly_nsa     
-11 CPI-U             monthly   SA       Jan 1947 Nov 2024 cpi_u_monthly_sa      
-12 CPI-U             quarterly NSA      1937q1   2024q3   cpi_u_quarterly_nsa   
-13 CPI-U             quarterly SA       1947q1   2024q3   cpi_u_quarterly_sa    
-14 CPI-U-RS          annual    &lt;NA&gt;     1978     2023     cpi_u_rs_annual       
-15 CPI-U-RS          monthly   NSA      Dec 1977 Dec 2023 cpi_u_rs_monthly_nsa  
-16 CPI-U-X1          annual    &lt;NA&gt;     1967     1982     cpi_u_x1_annual       
-17 CPI-U-X1          monthly   NSA      Jan 1967 Dec 1982 cpi_u_x1_monthly_nsa  
-18 PCE               annual    &lt;NA&gt;     1929     2023     pce_annual            
-19 PCE               monthly   SA       Jan 1959 Oct 2024 pce_monthly_sa        
-20 PCE               quarterly SA       1947q1   2024q3   pce_quarterly_sa      </code></pre>
-</div>
-</div>
-<p>EPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#this creates a dataframe with the annual CPI-U-RS index from 1937-2022</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>cpi_u_rs_annual</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Set base year to 2022</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>cpi2022 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>cpi_u_rs[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2022</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="a-refresher-on-inflation-adjustment" class="level2">
-<h2 class="anchored" data-anchor-id="a-refresher-on-inflation-adjustment">A refresher on inflation adjustment</h2>
-<p>Before jumping into the full code. Let’s refresh on how to calculate inflation using the Consumer Price Index.</p>
-<p>Inflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:</p>
-<p><span class="math display">\[
-\frac{\text{Given year}}{\text{Base year}} * 100
-\]</span></p>
-<p>For example, let’s calculate how much the CPI-U-RS index has increased from 1978 to 2022.</p>
-<p><span class="math display">\[
-\frac{\text{CPI}_{2022}}{\text{CPI}_{1978}} = \frac{431.5}{104} \approx 4.149038 \text{ or } 414.9\%
-\]</span></p>
-<p>And voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.</p>
-</section>
-<section id="applying-inflation-adjustment-to-cps-org-wage-data" class="level2">
-<h2 class="anchored" data-anchor-id="applying-inflation-adjustment-to-cps-org-wage-data">Applying inflation adjustment to CPS ORG wage data</h2>
-<p>This section uses <a href="https://economic.github.io/epiextractr">epiextractr</a> to load Current Population Survey data. Refer to the <a href="./epi_microdata.html">Using EPI’s CPS Extracts</a> to learn how to use this library.</p>
-<p>Below, I load CPS ORG data and define my sample:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>org <span class="ot">&lt;-</span> <span class="fu">load_org</span>(<span class="dv">2012</span><span class="sc">:</span><span class="dv">2022</span>, year, month, orgwgt, wage, age, lfstat) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">#define sample universe</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(age<span class="sc">&gt;=</span><span class="dv">16</span>, lfstat <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Next, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate median wages in the CPS ORG</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>wage_data <span class="ot">&lt;-</span> org <span class="sc">%&gt;%</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#use MetricsWeighted package to calculate a weighted median</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Note: I am pooling 12 months of CPS data, </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#so I adjust orgwgt—the survey weight— variable, dividing it by 12.</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">nominal_median_wage =</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>               MetricsWeighted<span class="sc">::</span><span class="fu">weighted_median</span>(wage, <span class="at">w=</span>orgwgt<span class="sc">/</span><span class="dv">12</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span>year) <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load samples</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>acs_samps <span class="ot">&lt;-</span> ipumsr<span class="sc">::</span><span class="fu">get_sample_info</span>(<span class="st">'usa'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of sample IDs to load</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'us2000a'</span>, <span class="st">'us2001a'</span>, <span class="st">'us2002a'</span>, <span class="st">'us2003a'</span>, <span class="st">'us2004a'</span>, <span class="st">'us2005a'</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2006a'</span>, <span class="st">'us2007a'</span>, <span class="st">'us2008a'</span>, <span class="st">'us2009a'</span>, <span class="st">'us2010a'</span>, <span class="st">'us2011a'</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2012a'</span>, <span class="st">'us2013a'</span>, <span class="st">'us2014a'</span>, <span class="st">'us2015a'</span>, <span class="st">'us2016a'</span>, <span class="st">'us2017a'</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2018a'</span>, <span class="st">'us2019a'</span>, <span class="st">'us2020a'</span>, <span class="st">'us2021a'</span>, <span class="st">'us2022a'</span>, <span class="st">'us2023a'</span>)</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Merge annual CPI data to dataframe by year.</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cpi_data, <span class="at">by=</span><span class="st">'year'</span>) </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>wage_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 11 × 3
-    year nominal_median_wage cpi_u_rs
-   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;
- 1  2012                16       337.
- 2  2013                16.4     342 
- 3  2014                16.8     348.
- 4  2015                17       348.
- 5  2016                17.5     353.
- 6  2017                18       360.
- 7  2018                18.8     369.
- 8  2019                19.2     376.
- 9  2020                21       381.
-10  2021                21.4     399.
-11  2022                22.9     432.</code></pre>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>acs_extr <span class="ot">&lt;-</span> <span class="fu">define_extract_micro</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"usa"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">description =</span> <span class="st">'ACS extract for Immigration statistics'</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">samples =</span> years,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the variables to load</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">'STATEFIP'</span>,<span class="st">'COUNTYFIP'</span>, <span class="st">'SEX'</span>, <span class="st">'AGE'</span>, <span class="st">'RACE'</span>, <span class="st">'HISPAN'</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'BPL'</span>, <span class="st">'CITIZEN'</span>, <span class="st">'YRNATUR'</span>, <span class="st">'YRIMMIG'</span>, <span class="st">'YRSUSA1'</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'LANGUAGE'</span>, <span class="st">'EMPSTAT'</span>, <span class="st">'LABFORCE'</span>, <span class="st">'OCC'</span>, <span class="st">'IND'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">submit_extract</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wait_for_extract</span>()</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Download extract to input folder</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>dl_extr <span class="ot">&lt;-</span> <span class="fu">download_extract</span>(<span class="at">extract =</span> acs_extr,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">download_dir =</span> <span class="st">'input/'</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>Finally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:</p>
+<p>Load the extract (the xml file) and clean it up before conducting analysis.</p>
+<p><strong>Note:</strong> Your extract will likely have a different file name, double-check this and update the script accordingly before running the following chunk.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>adjusted_data <span class="ot">&lt;-</span> wage_data <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#This mutate command calculates inflation in a given year, relative to 2022</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#and multiplies nominal median wages by the inflation quotient</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">infl_rel_to_2022 =</span> <span class="fu">signif</span>(<span class="at">x =</span> ((cpi2022<span class="sc">/</span>cpi_u_rs)<span class="sc">-</span><span class="dv">1</span>), <span class="at">digits=</span><span class="dv">2</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">real_wage_2022 =</span> nominal_median_wage<span class="sc">*</span>(cpi2022<span class="sc">/</span>cpi_u_rs)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(infl_rel_to_2022, nominal_median_wage, <span class="at">.after=</span>cpi_u_rs)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>adjusted_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: Your project directory and xml file may look different!</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>acs_raw <span class="ot">&lt;-</span> <span class="fu">read_ipums_micro</span>(<span class="at">ddi =</span> <span class="st">'input/usa_00009.xml'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Use of data from IPUMS USA is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>acs <span class="ot">&lt;-</span> acs_raw <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use the janitor library to clean up names</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use labelled library to create custom value labels</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># relabel citizen=0 to "Not foreign born" per https://usa.ipums.org/usa-action/variables/CITIZEN#comparability_section</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">set_value_labels</span>(<span class="at">citizen =</span> <span class="fu">c</span>(<span class="st">'Not foreign born'</span><span class="ot">=</span><span class="dv">0</span>, <span class="st">'Born abroad of American parents'</span><span class="ot">=</span><span class="dv">1</span>, <span class="st">'Naturalized citizen'</span><span class="ot">=</span><span class="dv">2</span>, <span class="st">'Not a citizen'</span><span class="ot">=</span><span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">case_when</span>(citizen <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                              citizen <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>) <span class="sc">~</span> <span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_value_labels</span>(<span class="at">nativity =</span> <span class="fu">c</span>(<span class="st">'Native'</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">'Foreign-born'</span><span class="ot">=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="benchmark-your-data" class="level2">
+<h2 class="anchored" data-anchor-id="benchmark-your-data">Benchmark your data</h2>
+<p>Run a US population benchmark using the Census ACS table statistics to check your data before continuing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do your US population estimates benchmark with the Census ACS table statistics?</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>us_pop <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">.by=</span>year)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>us_pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 11 × 5
-    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022
-   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;
- 1  2012     337.            0.28                 16             20.5
- 2  2013     342             0.26                 16.4           20.7
- 3  2014     348.            0.24                 16.8           20.8
- 4  2015     348.            0.24                 17             21.1
- 5  2016     353.            0.22                 17.5           21.4
- 6  2017     360.            0.2                  18             21.6
- 7  2018     369.            0.17                 18.8           21.9
- 8  2019     376.            0.15                 19.2           22.1
- 9  2020     381.            0.13                 21             23.8
-10  2021     399.            0.081                21.4           23.1
-11  2022     432.            0                    22.9           22.9</code></pre>
+<pre><code># A tibble: 24 × 2
+    year       pop
+   &lt;int&gt;     &lt;dbl&gt;
+ 1  2000 281421906
+ 2  2001 277075792
+ 3  2002 280717370
+ 4  2003 283051379
+ 5  2004 285674993
+ 6  2005 288398819
+ 7  2006 299398485
+ 8  2007 301621159
+ 9  2008 304059728
+10  2009 307006556
+# ℹ 14 more rows</code></pre>
 </div>
 </div>
+</section>
+<section id="run-your-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="run-your-analysis">Run your analysis!</h2>
+<p>Here you will run your analysis to find three statistics:</p>
+<ol type="1">
+<li>Population by citizenship status and year</li>
+<li>Population count and share by nativity and year</li>
+<li>Employment counts and shares of immigrant workers by industry (See a list of industry codes and their associated titles <a href="https://usa.ipums.org/usa/volii/ind2022.shtml">here</a>)</li>
+</ol>
+<p>Don’t forget to update the code to match your selection of years.</p>
+<p>This code can also be easily altered to filter for specific groups. For example, you can filter by state, specific industry, or for prime-age workers. See the commented-out commands for examples. Be sure to check for viable sample sizes when using a smaller data set.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population by citizenship status and year 2000–2023</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>foreign_born_total <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## filter to just North Carolina</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(statefip == 37) |&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">citizen =</span> <span class="fu">to_factor</span>(citizen)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(year, citizen)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> citizen, <span class="at">values_from =</span> pop)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>foreign_born_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 5
+    year `Not foreign born` `Not a citizen` `Naturalized citizen`
+   &lt;int&gt;              &lt;dbl&gt;           &lt;dbl&gt;                 &lt;dbl&gt;
+ 1  2000          248371297        18599549              12533932
+ 2  2001          243578016        18804708              12743420
+ 3  2002          245639288        19565399              13530751
+ 4  2003          247351604        19749916              13917762
+ 5  2004          249429239        19857656              14400045
+ 6  2005          250569155        20836032              14933571
+ 7  2006          259759423        21696303              15773084
+ 8  2007          261446898        21843559              16204897
+ 9  2008          263619759        21685745              16330357
+10  2009          266132797        21640993              16811829
+# ℹ 14 more rows
+# ℹ 1 more variable: `Born abroad of American parents` &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population by nativity and year 2000–2023</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>nativity <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">to_factor</span>(nativity)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(year, nativity)) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> pop<span class="sc">/</span><span class="fu">sum</span>(pop), <span class="at">.by=</span>year) <span class="sc">|&gt;</span> </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> nativity, <span class="at">values_from =</span> <span class="fu">c</span>(pop, share))</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>nativity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 5
+    year pop_Native `pop_Foreign-born` share_Native `share_Foreign-born`
+   &lt;int&gt;      &lt;dbl&gt;              &lt;dbl&gt;        &lt;dbl&gt;                &lt;dbl&gt;
+ 1  2000  250288425           31133481        0.889                0.111
+ 2  2001  245527664           31548128        0.886                0.114
+ 3  2002  247621220           33096150        0.882                0.118
+ 4  2003  249383701           33667678        0.881                0.119
+ 5  2004  251417292           34257701        0.880                0.120
+ 6  2005  252629216           35769603        0.876                0.124
+ 7  2006  261929098           37469387        0.875                0.125
+ 8  2007  263572703           38048456        0.874                0.126
+ 9  2008  266043626           38016102        0.875                0.125
+10  2009  268553734           38452822        0.875                0.125
+# ℹ 14 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Industries and occupations of immigrant workers</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This analysis pools 5 years of data</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>nativity_ind <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2019</span><span class="sc">:</span><span class="dv">2023</span>), age<span class="sc">&gt;=</span><span class="dv">16</span>, empstat<span class="sc">==</span><span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="do">## filter for prime-age EPOP</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(age &gt;= 25 &amp; age &lt;= 54) |&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">to_factor</span>(nativity)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust perwt, dividing it by 5.</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_emp =</span> <span class="fu">sum</span>(empstat <span class="sc">*</span> perwt<span class="sc">/</span><span class="dv">5</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(nativity, ind)) <span class="sc">|&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> total_emp<span class="sc">/</span><span class="fu">sum</span>(total_emp), <span class="at">.by=</span>nativity) <span class="sc">|&gt;</span> </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> ind, <span class="at">names_from =</span> nativity, <span class="at">values_from =</span> <span class="fu">c</span>(total_emp, share, n))</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>nativity_ind</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 302 × 7
+   ind       total_emp_Native `total_emp_Foreign-born` share_Native
+   &lt;int+lbl&gt;            &lt;dbl&gt;                    &lt;dbl&gt;        &lt;dbl&gt;
+ 1 9160              1018174.                  128856.     0.00767 
+ 2 5170               682919                   139648.     0.00514 
+ 3 7870              3681723.                  803696.     0.0277  
+ 4 5570               100653                    15650.     0.000758
+ 5 6480               135431                    17229.     0.00102 
+ 6 3291               667545                   118284      0.00503 
+ 7 8680              7329304.                 1796732.     0.0552  
+ 8 9670               401908                    34028.     0.00303 
+ 9 5391              1614827.                  217887.     0.0122  
+10 5490               176175                    27847      0.00133 
+# ℹ 292 more rows
+# ℹ 3 more variables: `share_Foreign-born` &lt;dbl&gt;, n_Native &lt;int&gt;,
+#   `n_Foreign-born` &lt;int&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># See a list of industry codes and their associated titles here: https://usa.ipums.org/usa/volii/ind2022.shtml</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Happy coding!</p>
 
 
 </section>
@@ -1093,11 +1145,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./epi_microdata.html" class="pagination-link" aria-label="Load EPI CPS Extracts via epiextractr">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Load EPI CPS Extracts via epiextractr</span>
+      <a href="./union_density.html" class="pagination-link" aria-label="Historical state union density">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Historical state union density</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./bin_wage_deciles.html" class="pagination-link" aria-label="Wage deciles by state">
+        <span class="nav-page-text">Wage deciles by state</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

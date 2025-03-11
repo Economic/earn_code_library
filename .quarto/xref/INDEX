@@ -94,5 +94,8 @@
   },
   "resources.qmd": {
     "resources.html": "60d656ae"
+  },
+  "foreign_born_stats_ipumsr.qmd": {
+    "foreign_born_stats_ipumsr.html": "d3ade41c"
   }
 }

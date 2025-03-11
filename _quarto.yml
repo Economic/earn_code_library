@@ -61,6 +61,7 @@ website:
       - section: "Code Repository"
         contents:
         - union_density.qmd
+        - foreign_born_stats_ipumsr.qmd
 
     - section: "Stata code"
       contents:
