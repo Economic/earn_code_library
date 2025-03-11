@@ -1,8 +1,8 @@
 project:
   type: website
   output-dir: docs
-  
-  # render:
+  render:
+  - foreign_born_stats_ipumsr.qmd
   
 website:
   title: "Code Library"

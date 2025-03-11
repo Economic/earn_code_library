@@ -5,8 +5,11 @@ format: html
 editor: visual
 ---
 
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.
+
 ```{r, Libraries, message=FALSE}
 
+#Load necessary libraries
 library(tidyverse)
 library(ipumsr)
 library(janitor)
