@@ -5,7 +5,7 @@ format: html
 editor: visual
 ---
 
-```{r Libraries}
+```{r, Libraries, echo=FALSE}
 
 library(tidyverse)
 library(ipumsr)
@@ -55,10 +55,10 @@ Load the extract (the xml file) and clean it up before conducting analysis.
 
 **Note:** Your extract will likely have a different file name, double-check this and update the script accordingly before running the following chunk.
 
-```{r Clean data}
+```{r, Clean data, echo=FALSE}
 
 # NOTE: Your project directory and xml file may look different!
-acs_raw <- read_ipums_micro(ddi = 'input/usa_00009.xml')
+acs_raw <- read_ipums_micro(ddi = 'input/usa_00010.xml')
 
 acs <- acs_raw |> 
   # Use the janitor library to clean up names

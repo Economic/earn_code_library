@@ -369,7 +369,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -380,20 +379,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ipumsr)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+
 Attaching package: 'janitor'
+
 
 The following objects are masked from 'package:stats':
 
     chisq.test, fisher.test</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="create-and-clean-an-extract-using-ipumsr." class="level2">
 <h2 class="anchored" data-anchor-id="create-and-clean-an-extract-using-ipumsr.">Create and clean an extract using IPUMSR.</h2>
@@ -401,62 +395,51 @@ The following objects are masked from 'package:stats':
 <p>For guidance on how to define an extract, see “<a href="https://cran.r-project.org/web/packages/ipumsr/vignettes/ipums-api-micro.html">Microdata API Requests</a>.” You can view the list available IPUMS ACS samples and their IDs on the <a href="https://usa.ipums.org/usa-action/samples/sample_ids">IPUMS sample IDs page</a>.</p>
 <p><strong>Note:</strong> You only need to run <code>define_extract_micro()</code> once, unless your extract parameters (e.g., years or variables) change. This command triggers an IPUMS API call, which may take several minutes depending on the extract size. If running this as part of a larger script, comment out this command to avoid repeated downloads.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load samples</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>acs_samps <span class="ot">&lt;-</span> ipumsr<span class="sc">::</span><span class="fu">get_sample_info</span>(<span class="st">'usa'</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of sample IDs to load</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'us2000a'</span>, <span class="st">'us2001a'</span>, <span class="st">'us2002a'</span>, <span class="st">'us2003a'</span>, <span class="st">'us2004a'</span>, <span class="st">'us2005a'</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2006a'</span>, <span class="st">'us2007a'</span>, <span class="st">'us2008a'</span>, <span class="st">'us2009a'</span>, <span class="st">'us2010a'</span>, <span class="st">'us2011a'</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2012a'</span>, <span class="st">'us2013a'</span>, <span class="st">'us2014a'</span>, <span class="st">'us2015a'</span>, <span class="st">'us2016a'</span>, <span class="st">'us2017a'</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2018a'</span>, <span class="st">'us2019a'</span>, <span class="st">'us2020a'</span>, <span class="st">'us2021a'</span>, <span class="st">'us2022a'</span>, <span class="st">'us2023a'</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>acs_extr <span class="ot">&lt;-</span> <span class="fu">define_extract_micro</span>(</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"usa"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">description =</span> <span class="st">'ACS extract for Immigration statistics'</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">samples =</span> years,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the variables to load</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">'STATEFIP'</span>,<span class="st">'COUNTYFIP'</span>, <span class="st">'SEX'</span>, <span class="st">'AGE'</span>, <span class="st">'RACE'</span>, <span class="st">'HISPAN'</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'BPL'</span>, <span class="st">'CITIZEN'</span>, <span class="st">'YRNATUR'</span>, <span class="st">'YRIMMIG'</span>, <span class="st">'YRSUSA1'</span>,</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'LANGUAGE'</span>, <span class="st">'EMPSTAT'</span>, <span class="st">'LABFORCE'</span>, <span class="st">'OCC'</span>, <span class="st">'IND'</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">submit_extract</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wait_for_extract</span>()</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Download extract to input folder</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>dl_extr <span class="ot">&lt;-</span> <span class="fu">download_extract</span>(<span class="at">extract =</span> acs_extr,</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">download_dir =</span> <span class="st">'input/'</span>,</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load samples</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>acs_samps <span class="ot">&lt;-</span> ipumsr<span class="sc">::</span><span class="fu">get_sample_info</span>(<span class="st">'usa'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of sample IDs to load</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'us2000a'</span>, <span class="st">'us2001a'</span>, <span class="st">'us2002a'</span>, <span class="st">'us2003a'</span>, <span class="st">'us2004a'</span>, <span class="st">'us2005a'</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2006a'</span>, <span class="st">'us2007a'</span>, <span class="st">'us2008a'</span>, <span class="st">'us2009a'</span>, <span class="st">'us2010a'</span>, <span class="st">'us2011a'</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2012a'</span>, <span class="st">'us2013a'</span>, <span class="st">'us2014a'</span>, <span class="st">'us2015a'</span>, <span class="st">'us2016a'</span>, <span class="st">'us2017a'</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">'us2018a'</span>, <span class="st">'us2019a'</span>, <span class="st">'us2020a'</span>, <span class="st">'us2021a'</span>, <span class="st">'us2022a'</span>, <span class="st">'us2023a'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>acs_extr <span class="ot">&lt;-</span> <span class="fu">define_extract_micro</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"usa"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">description =</span> <span class="st">'ACS extract for Immigration statistics'</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">samples =</span> years,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the variables to load</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">'STATEFIP'</span>,<span class="st">'COUNTYFIP'</span>, <span class="st">'SEX'</span>, <span class="st">'AGE'</span>, <span class="st">'RACE'</span>, <span class="st">'HISPAN'</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'BPL'</span>, <span class="st">'CITIZEN'</span>, <span class="st">'YRNATUR'</span>, <span class="st">'YRIMMIG'</span>, <span class="st">'YRSUSA1'</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'LANGUAGE'</span>, <span class="st">'EMPSTAT'</span>, <span class="st">'LABFORCE'</span>, <span class="st">'OCC'</span>, <span class="st">'IND'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">submit_extract</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wait_for_extract</span>()</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Download extract to input folder</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>dl_extr <span class="ot">&lt;-</span> <span class="fu">download_extract</span>(<span class="at">extract =</span> acs_extr,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">download_dir =</span> <span class="st">'input/'</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Load the extract (the xml file) and clean it up before conducting analysis.</p>
 <p><strong>Note:</strong> Your extract will likely have a different file name, double-check this and update the script accordingly before running the following chunk.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: Your project directory and xml file may look different!</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>acs_raw <span class="ot">&lt;-</span> <span class="fu">read_ipums_micro</span>(<span class="at">ddi =</span> <span class="st">'input/usa_00009.xml'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Use of data from IPUMS USA is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>acs <span class="ot">&lt;-</span> acs_raw <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use the janitor library to clean up names</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use labelled library to create custom value labels</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># relabel citizen=0 to "Not foreign born" per https://usa.ipums.org/usa-action/variables/CITIZEN#comparability_section</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">set_value_labels</span>(<span class="at">citizen =</span> <span class="fu">c</span>(<span class="st">'Not foreign born'</span><span class="ot">=</span><span class="dv">0</span>, <span class="st">'Born abroad of American parents'</span><span class="ot">=</span><span class="dv">1</span>, <span class="st">'Naturalized citizen'</span><span class="ot">=</span><span class="dv">2</span>, <span class="st">'Not a citizen'</span><span class="ot">=</span><span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">case_when</span>(citizen <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                              citizen <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>) <span class="sc">~</span> <span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_value_labels</span>(<span class="at">nativity =</span> <span class="fu">c</span>(<span class="st">'Native'</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">'Foreign-born'</span><span class="ot">=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="benchmark-your-data" class="level2">
 <h2 class="anchored" data-anchor-id="benchmark-your-data">Benchmark your data</h2>
 <p>Run a US population benchmark using the Census ACS table statistics to check your data before continuing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do your US population estimates benchmark with the Census ACS table statistics?</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>us_pop <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">.by=</span>year)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>us_pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do your US population estimates benchmark with the Census ACS table statistics?</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>us_pop <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">.by=</span>year)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>us_pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 24 × 2
     year       pop
@@ -486,16 +469,16 @@ The following objects are masked from 'package:stats':
 <p>Don’t forget to update the code to match your selection of years.</p>
 <p>This code can also be easily altered to filter for specific groups. For example, you can filter by state, specific industry, or for prime-age workers. See the commented-out commands for examples. Be sure to check for viable sample sizes when using a smaller data set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population by citizenship status and year 2000–2023</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>foreign_born_total <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## filter to just North Carolina</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(statefip == 37) |&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">citizen =</span> <span class="fu">to_factor</span>(citizen)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(year, citizen)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> citizen, <span class="at">values_from =</span> pop)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>foreign_born_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population by citizenship status and year 2000–2023</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>foreign_born_total <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## filter to just North Carolina</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(statefip == 37) |&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">citizen =</span> <span class="fu">to_factor</span>(citizen)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(year, citizen)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> citizen, <span class="at">values_from =</span> pop)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>foreign_born_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 24 × 5
     year `Not foreign born` `Not a citizen` `Naturalized citizen`
@@ -513,15 +496,15 @@ The following objects are masked from 'package:stats':
 # ℹ 14 more rows
 # ℹ 1 more variable: `Born abroad of American parents` &lt;dbl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population by nativity and year 2000–2023</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>nativity <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">to_factor</span>(nativity)) <span class="sc">|&gt;</span> </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(year, nativity)) <span class="sc">|&gt;</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> pop<span class="sc">/</span><span class="fu">sum</span>(pop), <span class="at">.by=</span>year) <span class="sc">|&gt;</span> </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> nativity, <span class="at">values_from =</span> <span class="fu">c</span>(pop, share))</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>nativity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population by nativity and year 2000–2023</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>nativity <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">to_factor</span>(nativity)) <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pop =</span> <span class="fu">sum</span>(perwt, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(year, nativity)) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> pop<span class="sc">/</span><span class="fu">sum</span>(pop), <span class="at">.by=</span>year) <span class="sc">|&gt;</span> </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> nativity, <span class="at">values_from =</span> <span class="fu">c</span>(pop, share))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>nativity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 24 × 5
     year pop_Native `pop_Foreign-born` share_Native `share_Foreign-born`
@@ -538,21 +521,21 @@ The following objects are masked from 'package:stats':
 10  2009  268553734           38452822        0.875                0.125
 # ℹ 14 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Industries and occupations of immigrant workers</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This analysis pools 5 years of data</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>nativity_ind <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2019</span><span class="sc">:</span><span class="dv">2023</span>), age<span class="sc">&gt;=</span><span class="dv">16</span>, empstat<span class="sc">==</span><span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="do">## filter for prime-age EPOP</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(age &gt;= 25 &amp; age &lt;= 54) |&gt;</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">to_factor</span>(nativity)) <span class="sc">|&gt;</span> </span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust perwt, dividing it by 5.</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_emp =</span> <span class="fu">sum</span>(empstat <span class="sc">*</span> perwt<span class="sc">/</span><span class="dv">5</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(nativity, ind)) <span class="sc">|&gt;</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> total_emp<span class="sc">/</span><span class="fu">sum</span>(total_emp), <span class="at">.by=</span>nativity) <span class="sc">|&gt;</span> </span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> ind, <span class="at">names_from =</span> nativity, <span class="at">values_from =</span> <span class="fu">c</span>(total_emp, share, n))</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>nativity_ind</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Industries and occupations of immigrant workers</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This analysis pools 5 years of data</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>nativity_ind <span class="ot">&lt;-</span> acs <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2019</span><span class="sc">:</span><span class="dv">2023</span>), age<span class="sc">&gt;=</span><span class="dv">16</span>, empstat<span class="sc">==</span><span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="do">## filter for prime-age EPOP</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(age &gt;= 25 &amp; age &lt;= 54) |&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nativity =</span> <span class="fu">to_factor</span>(nativity)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust perwt, dividing it by 5.</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_emp =</span> <span class="fu">sum</span>(empstat <span class="sc">*</span> perwt<span class="sc">/</span><span class="dv">5</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(nativity, ind)) <span class="sc">|&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> total_emp<span class="sc">/</span><span class="fu">sum</span>(total_emp), <span class="at">.by=</span>nativity) <span class="sc">|&gt;</span> </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> ind, <span class="at">names_from =</span> nativity, <span class="at">values_from =</span> <span class="fu">c</span>(total_emp, share, n))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>nativity_ind</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 302 × 7
    ind       total_emp_Native `total_emp_Foreign-born` share_Native
@@ -571,7 +554,7 @@ The following objects are masked from 'package:stats':
 # ℹ 3 more variables: `share_Foreign-born` &lt;dbl&gt;, n_Native &lt;int&gt;,
 #   `n_Foreign-born` &lt;int&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># See a list of industry codes and their associated titles here: https://usa.ipums.org/usa/volii/ind2022.shtml</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># See a list of industry codes and their associated titles here: https://usa.ipums.org/usa/volii/ind2022.shtml</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Happy coding!</p>
 
