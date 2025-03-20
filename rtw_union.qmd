@@ -1,0 +1,122 @@
+---
+title: "Comparing union density rates in right-to-work versus non-right-to-work states"
+author: "Jori Kandra and Emma Cohn"
+format: html
+editor: visual
+---
+
+Use this code to find union density rates for right-to-work versus non-right-to-work states using the [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html).
+
+**Note:** This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file [here](https://s3.amazonaws.com/media.earn.us/files/geo_rtw_labels.csv) and save to your project before running code.
+
+You can edit this file (and the relevant code below) to change how states are grouped (e.g., by region).
+
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.
+
+```{r, Libraries, message=FALSE}
+
+#Load necessary libraries
+library(tidyverse)
+library(here)
+library(epiextractr)
+library(epidatatools)
+library(openxlsx)
+
+```
+
+## Set up your workbook
+
+**Note:** Don't forget to **update years, file names,** and **file paths** to match your setup before running the script.
+
+In this chunk, you'll define the sheet function for the generated workbook and apply some formatting. This helps with readability and condenses the code.
+
+```{r, Create and format output workbook, message=FALSE}
+
+
+# Define sheet function
+sheet_fun <- function(data, wb, s, format = NULL) {
+  # Add a worksheet to workbook object
+  # Note: The sheet name and wb object are anonymized
+  addWorksheet(wb, sheetName = paste0(s))
+  
+  # Write data to sheet
+  # Note: anonymize data for use in a piped method call
+  writeData(wb, sheet = paste0(s), x = data)
+  
+  # Format based on the value of format
+  if (!is.null(format)) {
+    lapply(format, function(f) {
+      switch(f,
+             "PERCENTAGE" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '0.0%'), cols = 2:ncol(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE),
+             "NUMBER" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '#,##0'), cols = 2:length(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE)
+      )
+    })
+  }
+  
+  # This line allows the output to return to the data.frame
+  # Note: removing this specification changes output to a list of attributes that are used to write to the wb object  
+  return(data)
+  
+}
+```
+
+## Download and clean data
+
+**Note:** Don't forget to **update years, file names,** and **file paths** to match your setup before running the script.
+
+Running this script chunk will call the BLS Current Population Survey ORG data required to calculate union density. It will also use the **geo_rtw_labels.csv** file you downloaded to label each state as "RTW" or "Non-RTW."
+
+```{r, Download and clean data, message=FALSE}
+
+# Set objects to download
+var_list <- c("year", "month", "age", "statefips", 
+              "wage", "union", "lfstat")
+
+# Load supplemental RTW label data
+geo_rtw_labels <- read.csv(here("input/geo_rtw_labels.csv")) %>% 
+  select(statefips, rtw, rtw_timeline_lab)
+
+# Import CPS ORG data
+# Note: make sure the years reflect your desired window!
+cps_org <- load_org(1983:2024, all_of(c(var_list, "orgwgt"))) %>%
+  # Filter out workers under 16 and self-employed workers. 
+  filter(age >= 16, lfstat == 1) %>% 
+  # Merge RTW status labels to states
+  left_join(geo_rtw_labels, by = "statefips")
+```
+
+## Run analysis and download your output
+
+**Here you'll run the analysis and produce the resulting Excel workbook output.**
+
+```{r, Run analysis and create Excel, message=FALSE}
+# set wb object to bind to 
+union_wb <- createWorkbook()
+
+union <- cps_org %>% 
+  # union membership rates by RTW
+  summarise(union = weighted.mean(union, w = orgwgt/12, na.rm = TRUE), .by = c(year, rtw_timeline_lab)) %>% 
+  # reshape wide by RTW label
+  pivot_wider(id_cols = year, names_from = rtw_timeline_lab, values_from = union) %>% 
+  # write to wb object
+  sheet_fun(union_wb, s = "union_rtw", format = "PERCENTAGE")
+
+# save workbooks; make sure to edit the file path!
+saveWorkbook(union_wb, here("output/rtw_union.xlsx"), overwrite = TRUE)
+```
+
+## Bonus: generate median wages
+
+Use this chunk to generate median wages across all workers and compare to median wages in RTW vs non-RTW states.
+
+**Note:** This wage does not factor in any controls (e.g., demographics, occupation, education), so is best used for a relative comparison.
+
+```{r, Generate median wages, message=FALSE}
+# median wage for 2023 and 2024
+binipolate(cps_org %>% filter(year >= 2023), wage, bin_size = 0.25, .by = year, w = orgwgt/12)
+
+# median wage by RTW status for 2024
+binipolate(cps_org %>% filter(year == 2024), wage, bin_size = 0.25, .by = c(year, rtw_timeline_lab), w = orgwgt/12)
+```
+
+Happy coding!

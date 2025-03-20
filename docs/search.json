@@ -151,6 +151,188 @@
     ]
   },
   {
+    "objectID": "rtw_union.html",
+    "href": "rtw_union.html",
+    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "section": "",
+    "text": "Use this code to find union density rates for right-to-work versus non-right-to-work states using the EPI CPS microdata extracts.\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nYou can edit this file (and the relevant code below) to change how states are grouped (e.g., by region).\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(here)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(openxlsx)",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "Comparing union density rates in right-to-work versus non-right-to-work states"
+    ]
+  },
+  {
+    "objectID": "rtw_union.html#set-up-your-workbook",
+    "href": "rtw_union.html#set-up-your-workbook",
+    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "section": "Set up your workbook",
+    "text": "Set up your workbook\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll define the sheet function for the generated workbook and apply some formatting. This helps with readability and condenses the code.\n\n# Define sheet function\nsheet_fun &lt;- function(data, wb, s, format = NULL) {\n  # Add a worksheet to workbook object\n  # Note: The sheet name and wb object are anonymized\n  addWorksheet(wb, sheetName = paste0(s))\n  \n  # Write data to sheet\n  # Note: anonymize data for use in a piped method call\n  writeData(wb, sheet = paste0(s), x = data)\n  \n  # Format based on the value of format\n  if (!is.null(format)) {\n    lapply(format, function(f) {\n      switch(f,\n             \"PERCENTAGE\" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '0.0%'), cols = 2:ncol(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE),\n             \"NUMBER\" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '#,##0'), cols = 2:length(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE)\n      )\n    })\n  }\n  \n  # This line allows the output to return to the data.frame\n  # Note: removing this specification changes output to a list of attributes that are used to write to the wb object  \n  return(data)\n  \n}",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "Comparing union density rates in right-to-work versus non-right-to-work states"
+    ]
+  },
+  {
+    "objectID": "rtw_union.html#download-and-clean-data",
+    "href": "rtw_union.html#download-and-clean-data",
+    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "section": "Download and clean data",
+    "text": "Download and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union density. It will also use the geo_rtw_labels.csv file you downloaded to label each state as “RTW” or “Non-RTW.”\n\n# Set objects to download\nvar_list &lt;- c(\"year\", \"month\", \"age\", \"statefips\", \n              \"wage\", \"union\", \"lfstat\")\n\n# Load supplemental RTW label data\ngeo_rtw_labels &lt;- read.csv(here(\"input/geo_rtw_labels.csv\")) %&gt;% \n  select(statefips, rtw, rtw_timeline_lab)\n\n# Import CPS ORG data\n# Note: make sure the years reflect your desired window!\ncps_org &lt;- load_org(1983:2024, all_of(c(var_list, \"orgwgt\"))) %&gt;%\n  # Filter out workers under 16 and self-employed workers. \n  filter(age &gt;= 16, lfstat == 1) %&gt;% \n  # Merge RTW status labels to states\n  left_join(geo_rtw_labels, by = \"statefips\")",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "Comparing union density rates in right-to-work versus non-right-to-work states"
+    ]
+  },
+  {
+    "objectID": "rtw_union.html#run-analysis-and-download-your-output",
+    "href": "rtw_union.html#run-analysis-and-download-your-output",
+    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "section": "Run analysis and download your output",
+    "text": "Run analysis and download your output\nHere you’ll run the analysis and produce the resulting Excel workbook output.\n\n# set wb object to bind to \nunion_wb &lt;- createWorkbook()\n\nunion &lt;- cps_org %&gt;% \n  # union membership rates by RTW\n  summarise(union = weighted.mean(union, w = orgwgt/12, na.rm = TRUE), .by = c(year, rtw_timeline_lab)) %&gt;% \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_timeline_lab, values_from = union) %&gt;% \n  # write to wb object\n  sheet_fun(union_wb, s = \"union_rtw\", format = \"PERCENTAGE\")\n\n# save workbooks; make sure to edit the file path!\nsaveWorkbook(union_wb, here(\"output/rtw_union.xlsx\"), overwrite = TRUE)",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "Comparing union density rates in right-to-work versus non-right-to-work states"
+    ]
+  },
+  {
+    "objectID": "rtw_union.html#bonus-generate-median-wages",
+    "href": "rtw_union.html#bonus-generate-median-wages",
+    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "section": "Bonus: generate median wages",
+    "text": "Bonus: generate median wages\nUse this chunk to generate median wages across all workers and compare to median wages in RTW vs non-RTW states.\nNote: This wage does not factor in any controls (e.g., demographics, occupation, education), so is best used for a relative comparison.\n\n# median wage for 2023 and 2024\nbinipolate(cps_org %&gt;% filter(year &gt;= 2023), wage, bin_size = 0.25, .by = year, w = orgwgt/12)\n\n# A tibble: 2 × 3\n   year probs value\n  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;\n1  2023   0.5  24.0\n2  2024   0.5  25.0\n\n# median wage by RTW status for 2024\nbinipolate(cps_org %&gt;% filter(year == 2024), wage, bin_size = 0.25, .by = c(year, rtw_timeline_lab), w = orgwgt/12)\n\n# A tibble: 2 × 4\n   year rtw_timeline_lab probs value\n  &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;\n1  2024 Non-RTW            0.5  26.4\n2  2024 RTW                0.5  23.2\n\n\nHappy coding!",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "Comparing union density rates in right-to-work versus non-right-to-work states"
+    ]
+  },
+  {
+    "objectID": "blsR_example.html",
+    "href": "blsR_example.html",
+    "title": "Downloading BLS data via blsR",
+    "section": "",
+    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
+    "crumbs": [
+      "R code",
+      "Downloading BLS data via blsR"
+    ]
+  },
+  {
+    "objectID": "blsR_example.html#loading-blsr-and-setting-api-key",
+    "href": "blsR_example.html#loading-blsr-and-setting-api-key",
+    "title": "Downloading BLS data via blsR",
+    "section": "",
+    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
+    "crumbs": [
+      "R code",
+      "Downloading BLS data via blsR"
+    ]
+  },
+  {
+    "objectID": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
+    "href": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
+    "title": "Downloading BLS data via blsR",
+    "section": "Nominal average hourly earnings of production and non-supervisory employees",
+    "text": "Nominal average hourly earnings of production and non-supervisory employees\nYou can import a single table using the blsR::get_n_series_table() function:\n\n## use blsR to pull in nominal wages\nnominal_wages &lt;- get_n_series_table(series = \"CEU0500000008\", api_key = bls_key, \n                                    start_year = 1965, end_year = 2023, \n                                    tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter for annual data\n  filter(month == 13)",
+    "crumbs": [
+      "R code",
+      "Downloading BLS data via blsR"
+    ]
+  },
+  {
+    "objectID": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
+    "href": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
+    "title": "Downloading BLS data via blsR",
+    "section": "Real average hourly earnings of production and non-supervsory employees",
+    "text": "Real average hourly earnings of production and non-supervsory employees\nYou can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.\n\n# set cpi codes\ncpi_codes &lt;- c(\"CUUR0000SA0\",\n               \"CEU0500000008\")\n\n# set cpi base\n#note: used to set base year for inflation-adjustment\ncpi_base &lt;- get_n_series_table(series_ids = \"CUUR0000SA0\", start_year = 2023, end_year = 2023, \n                               api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual 2023 data and pull CPI value as base\n  filter(month == 13) %&gt;% pull(CUUR0000SA0)\n\n# use blsR to pull CPI data\ncpi_output &lt;- get_n_series_table(series_ids = cpi_codes, start_year = 1947, end_year = 2023, \n                                 api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual data\n  filter(month == 13) %&gt;%\n  # rename for easier handling\n  rename(ahe = CEU0500000008, cpi = CUUR0000SA0) %&gt;% \n  # calculate real wages\n  mutate(ahe_real = ahe * (cpi_base/cpi)) %&gt;% \n  # export to delimited file\n  write.csv(here(\"ahe_real.csv\"))",
+    "crumbs": [
+      "R code",
+      "Downloading BLS data via blsR"
+    ]
+  },
+  {
+    "objectID": "blsR_example.html#pulling-more-than-50-series",
+    "href": "blsR_example.html#pulling-more-than-50-series",
+    "title": "Downloading BLS data via blsR",
+    "section": "Pulling more than 50 series",
+    "text": "Pulling more than 50 series\nThe BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:\n\n# read in bls series codes\n#note: this is a random selection of codes used in our Jobs and Unemployment figures\nbls_codes &lt;- read.csv(here(\"bls_codes.csv\"))\n# remove any blanks\nbls_codes &lt;- bls_codes$series_id[bls_codes$series_id != \"\"]\n\n\n# use map to iteratively call blsR api at max number of series id\n#note: BLS restricts to max 50 series in a single call\njobs_day_df &lt;- map(split(bls_codes, ceiling(seq_along(bls_codes) / 50)), # split codes into groups of 50\n             # call blsR using series ids sliced into groups of 50\n             ~ get_n_series_table(series_ids = .x, start_year = 1939, end_year = 2023, \n                                  api_key = bls_key, tidy = TRUE)) %&gt;% \n  # map returns list, flatten by joining data\n  reduce(., function(df1, df2) full_join(df1, df2, by = c(\"year\", \"month\"))) %&gt;%\n  # define date\n  mutate(date = as.POSIXct(paste(year,month,1, sep = \"-\")),\n         date = as.Date(date)) %&gt;% \n  write_csv(here(\"jobs_day_example.csv\"))",
+    "crumbs": [
+      "R code",
+      "Downloading BLS data via blsR"
+    ]
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Other Resources",
+    "section": "",
+    "text": "If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to dperez@epi.org.\nR@Urban\n\nR@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.\n\nR for Data Science by Garrett Grolemund and Hadley Wickham\n\nR for Data Science is a popular book that covers many basic concepts in R, aimed specifically at beginners.\n\nDataScienceR Github\n\nThis Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).\n\nCausal Inference: The Mixtape\n\nThis ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.\n\nCausal Inference in R\n\nThis book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Learn R",
+      "Other Resources"
+    ]
+  },
+  {
+    "objectID": "tidycensus_example.html",
+    "href": "tidycensus_example.html",
+    "title": "Load Census tables via Tidycensus",
+    "section": "",
+    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the bls_set_key() function.\n#sets bls API key (optional but encouraged)\nbls_set_key(\"YOUR BLS API KEY HERE\")",
+    "crumbs": [
+      "R code",
+      "Load Census tables via Tidycensus"
+    ]
+  },
+  {
+    "objectID": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
+    "href": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
+    "title": "Load Census tables via Tidycensus",
+    "section": "Explore available variables in the ACS 5-year sample",
+    "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
+    "crumbs": [
+      "R code",
+      "Load Census tables via Tidycensus"
+    ]
+  },
+  {
+    "objectID": "tidycensus_example.html#examples",
+    "href": "tidycensus_example.html#examples",
+    "title": "Load Census tables via Tidycensus",
+    "section": "Examples",
+    "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
+    "crumbs": [
+      "R code",
+      "Load Census tables via Tidycensus"
+    ]
+  },
+  {
+    "objectID": "epi_libraries.html",
+    "href": "epi_libraries.html",
+    "title": "EPI packages for R",
+    "section": "",
+    "text": "Installation instructions are available on each package’s Github page.\nrealtalk\n\nrealtalk makes it easy to use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nuse epiextractr to download CPS data from the EPI microdata site.\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Code Packages",
+      "R Packages"
+    ]
+  },
+  {
+    "objectID": "benchmarking_workshop.html",
+    "href": "benchmarking_workshop.html",
+    "title": "Benchmarking Data",
+    "section": "",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nBenchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars)) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.61\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Benchmarking Data"
+    ]
+  },
+  {
     "objectID": "prev_bootcamps.html",
     "href": "prev_bootcamps.html",
     "title": "EARNCon data bootcamp files",
@@ -268,128 +450,6 @@
       "Learn R",
       "Tutorials",
       "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "benchmarking_workshop.html",
-    "href": "benchmarking_workshop.html",
-    "title": "Benchmarking Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nBenchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars)) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.61\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Benchmarking Data"
-    ]
-  },
-  {
-    "objectID": "epi_libraries.html",
-    "href": "epi_libraries.html",
-    "title": "EPI packages for R",
-    "section": "",
-    "text": "Installation instructions are available on each package’s Github page.\nrealtalk\n\nrealtalk makes it easy to use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nuse epiextractr to download CPS data from the EPI microdata site.\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Code Packages",
-      "R Packages"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html",
-    "href": "tidycensus_example.html",
-    "title": "Load Census tables via Tidycensus",
-    "section": "",
-    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the bls_set_key() function.\n#sets bls API key (optional but encouraged)\nbls_set_key(\"YOUR BLS API KEY HERE\")",
-    "crumbs": [
-      "R code",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
-    "href": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
-    "title": "Load Census tables via Tidycensus",
-    "section": "Explore available variables in the ACS 5-year sample",
-    "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
-    "crumbs": [
-      "R code",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html#examples",
-    "href": "tidycensus_example.html#examples",
-    "title": "Load Census tables via Tidycensus",
-    "section": "Examples",
-    "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
-    "crumbs": [
-      "R code",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "resources.html",
-    "href": "resources.html",
-    "title": "Other Resources",
-    "section": "",
-    "text": "If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to dperez@epi.org.\nR@Urban\n\nR@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.\n\nR for Data Science by Garrett Grolemund and Hadley Wickham\n\nR for Data Science is a popular book that covers many basic concepts in R, aimed specifically at beginners.\n\nDataScienceR Github\n\nThis Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).\n\nCausal Inference: The Mixtape\n\nThis ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.\n\nCausal Inference in R\n\nThis book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Learn R",
-      "Other Resources"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html",
-    "href": "blsR_example.html",
-    "title": "Downloading BLS data via blsR",
-    "section": "",
-    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
-    "crumbs": [
-      "R code",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#loading-blsr-and-setting-api-key",
-    "href": "blsR_example.html#loading-blsr-and-setting-api-key",
-    "title": "Downloading BLS data via blsR",
-    "section": "",
-    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
-    "crumbs": [
-      "R code",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
-    "href": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
-    "title": "Downloading BLS data via blsR",
-    "section": "Nominal average hourly earnings of production and non-supervisory employees",
-    "text": "Nominal average hourly earnings of production and non-supervisory employees\nYou can import a single table using the blsR::get_n_series_table() function:\n\n## use blsR to pull in nominal wages\nnominal_wages &lt;- get_n_series_table(series = \"CEU0500000008\", api_key = bls_key, \n                                    start_year = 1965, end_year = 2023, \n                                    tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter for annual data\n  filter(month == 13)",
-    "crumbs": [
-      "R code",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
-    "href": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
-    "title": "Downloading BLS data via blsR",
-    "section": "Real average hourly earnings of production and non-supervsory employees",
-    "text": "Real average hourly earnings of production and non-supervsory employees\nYou can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.\n\n# set cpi codes\ncpi_codes &lt;- c(\"CUUR0000SA0\",\n               \"CEU0500000008\")\n\n# set cpi base\n#note: used to set base year for inflation-adjustment\ncpi_base &lt;- get_n_series_table(series_ids = \"CUUR0000SA0\", start_year = 2023, end_year = 2023, \n                               api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual 2023 data and pull CPI value as base\n  filter(month == 13) %&gt;% pull(CUUR0000SA0)\n\n# use blsR to pull CPI data\ncpi_output &lt;- get_n_series_table(series_ids = cpi_codes, start_year = 1947, end_year = 2023, \n                                 api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual data\n  filter(month == 13) %&gt;%\n  # rename for easier handling\n  rename(ahe = CEU0500000008, cpi = CUUR0000SA0) %&gt;% \n  # calculate real wages\n  mutate(ahe_real = ahe * (cpi_base/cpi)) %&gt;% \n  # export to delimited file\n  write.csv(here(\"ahe_real.csv\"))",
-    "crumbs": [
-      "R code",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#pulling-more-than-50-series",
-    "href": "blsR_example.html#pulling-more-than-50-series",
-    "title": "Downloading BLS data via blsR",
-    "section": "Pulling more than 50 series",
-    "text": "Pulling more than 50 series\nThe BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:\n\n# read in bls series codes\n#note: this is a random selection of codes used in our Jobs and Unemployment figures\nbls_codes &lt;- read.csv(here(\"bls_codes.csv\"))\n# remove any blanks\nbls_codes &lt;- bls_codes$series_id[bls_codes$series_id != \"\"]\n\n\n# use map to iteratively call blsR api at max number of series id\n#note: BLS restricts to max 50 series in a single call\njobs_day_df &lt;- map(split(bls_codes, ceiling(seq_along(bls_codes) / 50)), # split codes into groups of 50\n             # call blsR using series ids sliced into groups of 50\n             ~ get_n_series_table(series_ids = .x, start_year = 1939, end_year = 2023, \n                                  api_key = bls_key, tidy = TRUE)) %&gt;% \n  # map returns list, flatten by joining data\n  reduce(., function(df1, df2) full_join(df1, df2, by = c(\"year\", \"month\"))) %&gt;%\n  # define date\n  mutate(date = as.POSIXct(paste(year,month,1, sep = \"-\")),\n         date = as.Date(date)) %&gt;% \n  write_csv(here(\"jobs_day_example.csv\"))",
-    "crumbs": [
-      "R code",
-      "Downloading BLS data via blsR"
     ]
   },
   {
