@@ -60,7 +60,7 @@ sheet_fun <- function(data, wb, s, format = NULL) {
 }
 ```
 
-## Download and clean data
+## Import and clean data
 
 **Note:** Don't forget to **update years, file names,** and **file paths** to match your setup before running the script.
 

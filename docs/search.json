@@ -175,11 +175,11 @@
     ]
   },
   {
-    "objectID": "rtw_union.html#download-and-clean-data",
-    "href": "rtw_union.html#download-and-clean-data",
+    "objectID": "rtw_union.html#import-and-clean-data",
+    "href": "rtw_union.html#import-and-clean-data",
     "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
-    "section": "Download and clean data",
-    "text": "Download and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union density. It will also use the geo_rtw_labels.csv file you downloaded to label each state as “RTW” or “Non-RTW.”\n\n# Set objects to download\nvar_list &lt;- c(\"year\", \"month\", \"age\", \"statefips\", \n              \"wage\", \"union\", \"lfstat\")\n\n# Load supplemental RTW label data\ngeo_rtw_labels &lt;- read.csv(here(\"input/geo_rtw_labels.csv\")) %&gt;% \n  select(statefips, rtw, rtw_timeline_lab)\n\n# Import CPS ORG data\n# Note: make sure the years reflect your desired window!\ncps_org &lt;- load_org(1983:2024, all_of(c(var_list, \"orgwgt\"))) %&gt;%\n  # Filter out workers under 16 and self-employed workers. \n  filter(age &gt;= 16, lfstat == 1) %&gt;% \n  # Merge RTW status labels to states\n  left_join(geo_rtw_labels, by = \"statefips\")",
+    "section": "Import and clean data",
+    "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union density. It will also use the geo_rtw_labels.csv file you downloaded to label each state as “RTW” or “Non-RTW.”\n\n# Set objects to download\nvar_list &lt;- c(\"year\", \"month\", \"age\", \"statefips\", \n              \"wage\", \"union\", \"lfstat\")\n\n# Load supplemental RTW label data\ngeo_rtw_labels &lt;- read.csv(here(\"input/geo_rtw_labels.csv\")) %&gt;% \n  select(statefips, rtw, rtw_timeline_lab)\n\n# Import CPS ORG data\n# Note: make sure the years reflect your desired window!\ncps_org &lt;- load_org(1983:2024, all_of(c(var_list, \"orgwgt\"))) %&gt;%\n  # Filter out workers under 16 and self-employed workers. \n  filter(age &gt;= 16, lfstat == 1) %&gt;% \n  # Merge RTW status labels to states\n  left_join(geo_rtw_labels, by = \"statefips\")",
     "crumbs": [
       "R code",
       "Code Repository",
