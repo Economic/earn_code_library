@@ -281,7 +281,7 @@
     "href": "tidycensus_example.html",
     "title": "Load Census tables via Tidycensus",
     "section": "",
-    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# When adding a Census API key to your .Renviron file for the time, reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
+    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# Reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
     "crumbs": [
       "R code",
       "Load Census tables via Tidycensus"
