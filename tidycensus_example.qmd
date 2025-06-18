@@ -10,12 +10,18 @@ library(tidycensus)
 library(tidyverse)
 ```
 
-**Note:** A census API key is required to use `tidycensus`. Register for a Census API key at <https://api.census.gov/data/key_signup.html>. Once you've obtained a key, you can copy it to your .Renviron file by using the `bls_set_key()` function.
+**Note:** A census API key is required to use `tidycensus`. Register for a Census API key at <https://api.census.gov/data/key_signup.html>. Once you've obtained a key, you can copy it to your .Renviron file by using the `census_api_key()` function.
 
 ```{r API key, eval=FALSE}
 
-#sets bls API key (optional but encouraged)
-bls_set_key("YOUR BLS API KEY HERE")
+#sets Census API key (optional but encouraged)
+census_api_key("YOUR CENSUS API KEY HERE", install = TRUE)
+
+# When adding a Census API key to your .Renviron file for the time, reload your environment so you can use the key without restarting R.
+readRenviron("~/.Renviron")
+
+# You can check it with:
+Sys.getenv("CENSUS_API_KEY")
 ```
 
 ## Explore available variables in the ACS 5-year sample
