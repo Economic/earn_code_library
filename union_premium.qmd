@@ -1,0 +1,132 @@
+---
+title: "Calculate union wage premiums by state and year"
+author: "Emma Cohn"
+format: html
+editor: visual
+---
+
+Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html).
+
+Note: **sample sizes vary widely** over time, state, and union vs nonunion groups. Keep a close eye on this, and remember that some states may not have large enough sample sizes to produce strong data. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.
+
+It may not be possible to find accurate union wage premium data for your state.
+
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.
+
+```{r, Libraries, message=FALSE}
+#Load necessary libraries
+library(tidyverse)
+library(epiextractr)
+library(epidatatools)
+library(labelled)
+library(realtalk)
+```
+
+## Import and clean data
+
+**Note:** Don't forget to **update years** to match your setup before running the script.
+
+Running this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.
+
+```{r, Download and clean data, message=FALSE}
+# Import CPS ORG data
+# Note: load as many years necessary to get sufficient sample sizes or desired time series.
+cps_org <- load_org(2020:2024, "year", "age", "statefips", "wage", "union", "orgwgt", "a_earnhour", "cow1") %>%
+  # Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.
+  filter(age >= 16, cow1 <= 5, a_earnhour != 1, !is.na(wage))
+```
+
+## Method 1: Point-in-time comparisons
+
+This method produces union wage premiums for all fifty states, pooling five years of data to get sufficient sample sizes.
+
+Note: some of the sample sizes are still quite small, even with five years of data. E.g., South Carolina's union-represented sample. Consider expanding the number of years pooled, but keep in mind that this will also alter what you can say about the results.
+
+### Create wage data
+
+This code chunk uses EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per state.
+
+```{r, Create wage data, message=FALSE}
+# Note: divide orgwgt by as many months are in your pool.
+wage_single <- cps_org |>
+  mutate(union = to_factor(union)) |>
+  summarise(
+      wage_median = averaged_median(
+        x = wage, 
+        w = orgwgt/60,  
+        quantiles_n = 9L, 
+        quantiles_w = c(1:4, 5, 4:1)),
+        n=n(),
+        .by=c(union, statefips))
+```
+
+### Calculate union wage premium
+
+This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.
+
+```{r, Calculate wage premium, message=FALSE}
+wage_dif_single <- wage_single |>
+  mutate(union_stat = case_when(union == "Not union represented" ~ "nonunion", union == "Union represented" ~ "union")) |>
+  pivot_wider(id_cols = statefips, names_from = union_stat, values_from = wage_median) |>
+  mutate(diff = ((union-nonunion)/nonunion))|>
+mutate(state = to_factor(statefips)) |>
+select(statefips, state, everything())
+```
+
+## Method 2: Time series
+
+This method produces inflation-adjusted union wage premiums for one state over time.
+
+Note: Because you can't combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.
+
+You can check sample sizes by running the code through line X and checking the `n` column of `wage_series`.
+
+### Set up inflation adjustment
+
+For more information on inflation adjusting wages, see [Inflation adjusting with Realtalk](https://economic.github.io/earn_code_library/inflation_adjusting.html).
+
+```{r, Set up inflation adjustment, message=FALSE}
+# Calculate real wage over time: load CPI data from realtalk
+cpi_data <- realtalk::c_cpi_u_annual
+
+# Set base year to 2024
+cpi2024 <- cpi_data$c_cpi_u[cpi_data$year==2024]
+```
+
+### Create wage data
+
+This code chunk calculates median wages and adjusts them for inflation.
+
+```{r, Create and adjust wages, message=FALSE}
+# Note: change statefips to whichever state you prefer.
+wage_series <- cps_org |>
+  filter(statefips == 36) |>
+  mutate(union = to_factor(union)) |>
+  summarise(
+     wage_median = averaged_median(
+     x = wage, 
+     w = orgwgt/12,  
+     quantiles_n = 9L, 
+     quantiles_w = c(1:4, 5, 4:1)),
+     n=n(),
+     .by = c(year, union)) |>
+  # Merge annual CPI data to data frame by year
+  left_join(cpi_data, by='year') |>
+  # Inflation adjust wages
+ mutate(real_wage = wage_median * (cpi2024/c_cpi_u)) |>
+select(year, union, real_wage)
+```
+
+### Calculate union wage premium
+
+This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.
+
+```{r, Calculate wage premium, message=FALSE}
+wage_dif_series <- wage_series |>
+  mutate(union_stat = case_when(union == "Not union represented" ~ "nonunion", union == "Union represented" ~ "union")) |>
+  pivot_wider(id_cols = year, names_from = union_stat, values_from = real_wage) |>
+  mutate(diff = ((union-nonunion)/nonunion)) |>
+  select(year, nonunion, union, diff)
+```
+
+Happy coding!
