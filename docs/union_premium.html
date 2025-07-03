@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Emma Cohn">
 
-<title>Other Resources – Code Library</title>
+<title>Calculate union wage premiums by state and year – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./epi_libraries.html" rel="next">
-<link href="./prev_bootcamps.html" rel="prev">
+<link href="./bin_wage_deciles.html" rel="next">
+<link href="./rtw_union.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -112,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./resources.html">Other Resources</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./union_premium.html">Calculate union wage premiums by state and year</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -140,13 +175,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Learn R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
@@ -178,7 +213,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./resources.html" class="sidebar-item-text sidebar-link active">
+  <a href="./resources.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Other Resources</span></a>
   </div>
 </li>
@@ -209,13 +244,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">R code</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
@@ -249,13 +284,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="px-0"><hr class="sidebar-divider hi "></li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Code Repository</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./union_density.html" class="sidebar-item-text sidebar-link">
@@ -276,7 +311,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./union_premium.html" class="sidebar-item-text sidebar-link">
+  <a href="./union_premium.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Calculate union wage premiums by state and year</span></a>
   </div>
 </li>
@@ -306,21 +341,44 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link active" data-scroll-target="#import-and-clean-data">Import and clean data</a></li>
+  <li><a href="#method-1-point-in-time-comparisons" id="toc-method-1-point-in-time-comparisons" class="nav-link" data-scroll-target="#method-1-point-in-time-comparisons">Method 1: Point-in-time comparisons</a>
+  <ul class="collapse">
+  <li><a href="#create-wage-data" id="toc-create-wage-data" class="nav-link" data-scroll-target="#create-wage-data">Create wage data</a></li>
+  <li><a href="#calculate-union-wage-premium" id="toc-calculate-union-wage-premium" class="nav-link" data-scroll-target="#calculate-union-wage-premium">Calculate union wage premium</a></li>
+  </ul></li>
+  <li><a href="#method-2-time-series" id="toc-method-2-time-series" class="nav-link" data-scroll-target="#method-2-time-series">Method 2: Time series</a>
+  <ul class="collapse">
+  <li><a href="#set-up-inflation-adjustment" id="toc-set-up-inflation-adjustment" class="nav-link" data-scroll-target="#set-up-inflation-adjustment">Set up inflation adjustment</a></li>
+  <li><a href="#create-wage-data-1" id="toc-create-wage-data-1" class="nav-link" data-scroll-target="#create-wage-data-1">Create wage data</a></li>
+  <li><a href="#calculate-union-wage-premium-1" id="toc-calculate-union-wage-premium-1" class="nav-link" data-scroll-target="#calculate-union-wage-premium-1">Calculate union wage premium</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./resources.html">Other Resources</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./union_premium.html">Calculate union wage premiums by state and year</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Other Resources</h1>
+<h1 class="title">Calculate union wage premiums by state and year</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Emma Cohn </p>
+          </div>
+  </div>
     
   
     
@@ -331,29 +389,118 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to <a href="mailto:dperez@epi.org">dperez@epi.org</a>.</p>
-<p><a href="https://urbaninstitute.github.io/r-at-urban/">R@Urban</a></p>
-<ul>
-<li>R@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.</li>
-</ul>
-<p><a href="https://r4ds.had.co.nz/">R for Data Science</a> by Garrett Grolemund and Hadley Wickham</p>
-<ul>
-<li><em>R for Data Science</em> is a popular book that covers many basic concepts in R, aimed specifically at beginners.</li>
-</ul>
-<p><a href="https://github.com/ujjwalkarn/DataScienceR/blob/master/README.md">DataScienceR Github</a></p>
-<ul>
-<li>This Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).</li>
-</ul>
-<p><a href="https://mixtape.scunning.com/">Causal Inference: The Mixtape</a></p>
-<ul>
-<li>This ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.</li>
-</ul>
-<p><a href="https://www.r-causal.org/">Causal Inference in R</a></p>
-<ul>
-<li>This book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.</li>
-</ul>
+<p>Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>.</p>
+<p>Note: <strong>sample sizes vary widely</strong> over time, state, and union vs nonunion groups. Keep a close eye on this, and remember that some states may not have large enough sample sizes to produce strong data. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.</p>
+<p>It may not be possible to find accurate union wage premium data for your state.</p>
+<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epidatatools)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(realtalk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="import-and-clean-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-and-clean-data">Import and clean data</h2>
+<p><strong>Note:</strong> Don’t forget to <strong>update years</strong> to match your setup before running the script.</p>
+<p>Running this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import CPS ORG data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: load as many years necessary to get sufficient sample sizes or desired time series.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>cps_org <span class="ot">&lt;-</span> <span class="fu">load_org</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, <span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"statefips"</span>, <span class="st">"wage"</span>, <span class="st">"union"</span>, <span class="st">"orgwgt"</span>, <span class="st">"a_earnhour"</span>, <span class="st">"cow1"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, cow1 <span class="sc">&lt;=</span> <span class="dv">5</span>, a_earnhour <span class="sc">!=</span> <span class="dv">1</span>, <span class="sc">!</span><span class="fu">is.na</span>(wage))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="method-1-point-in-time-comparisons" class="level2">
+<h2 class="anchored" data-anchor-id="method-1-point-in-time-comparisons">Method 1: Point-in-time comparisons</h2>
+<p>This method produces union wage premiums for all fifty states, pooling five years of data to get sufficient sample sizes.</p>
+<p>Note: some of the sample sizes are still quite small, even with five years of data. E.g., South Carolina’s union-represented sample. Consider expanding the number of years pooled, but keep in mind that this will also alter what you can say about the results.</p>
+<section id="create-wage-data" class="level3">
+<h3 class="anchored" data-anchor-id="create-wage-data">Create wage data</h3>
+<p>This code chunk uses EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per state.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: divide orgwgt by as many months are in your pool.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>wage_single <span class="ot">&lt;-</span> cps_org <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union =</span> <span class="fu">to_factor</span>(union)) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">wage_median =</span> <span class="fu">averaged_median</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> wage, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">60</span>,  </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">quantiles_n =</span> <span class="dv">9</span>L, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">quantiles_w =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">1</span>)),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">n=</span><span class="fu">n</span>(),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">.by=</span><span class="fu">c</span>(union, statefips))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculate-union-wage-premium" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-union-wage-premium">Calculate union wage premium</h3>
+<p>This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wage_dif_single <span class="ot">&lt;-</span> wage_single <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union_stat =</span> <span class="fu">case_when</span>(union <span class="sc">==</span> <span class="st">"Not union represented"</span> <span class="sc">~</span> <span class="st">"nonunion"</span>, union <span class="sc">==</span> <span class="st">"Union represented"</span> <span class="sc">~</span> <span class="st">"union"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> statefips, <span class="at">names_from =</span> union_stat, <span class="at">values_from =</span> wage_median) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> ((union<span class="sc">-</span>nonunion)<span class="sc">/</span>nonunion))<span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">to_factor</span>(statefips)) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(statefips, state, <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="method-2-time-series" class="level2">
+<h2 class="anchored" data-anchor-id="method-2-time-series">Method 2: Time series</h2>
+<p>This method produces inflation-adjusted union wage premiums for one state over time.</p>
+<p>Note: Because you can’t combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.</p>
+<p>You can check sample sizes by running the code through line X and checking the <code>n</code> column of <code>wage_series</code>.</p>
+<section id="set-up-inflation-adjustment" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-inflation-adjustment">Set up inflation adjustment</h3>
+<p>For more information on inflation adjusting wages, see <a href="https://economic.github.io/earn_code_library/inflation_adjusting.html">Inflation adjusting with Realtalk</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate real wage over time: load CPI data from realtalk</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>c_cpi_u_annual</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set base year to 2024</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>cpi2024 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>c_cpi_u[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2024</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-wage-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="create-wage-data-1">Create wage data</h3>
+<p>This code chunk calculates median wages and adjusts them for inflation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: change statefips to whichever state you prefer.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>wage_series <span class="ot">&lt;-</span> cps_org <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(statefips <span class="sc">==</span> <span class="dv">36</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union =</span> <span class="fu">to_factor</span>(union)) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">wage_median =</span> <span class="fu">averaged_median</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">x =</span> wage, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>,  </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">quantiles_n =</span> <span class="dv">9</span>L, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">quantiles_w =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">1</span>)),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">n=</span><span class="fu">n</span>(),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">.by =</span> <span class="fu">c</span>(year, union)) <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge annual CPI data to data frame by year</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cpi_data, <span class="at">by=</span><span class="st">'year'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inflation adjust wages</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">real_wage =</span> wage_median <span class="sc">*</span> (cpi2024<span class="sc">/</span>c_cpi_u)) <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(year, union, real_wage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculate-union-wage-premium-1" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-union-wage-premium-1">Calculate union wage premium</h3>
+<p>This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>wage_dif_series <span class="ot">&lt;-</span> wage_series <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union_stat =</span> <span class="fu">case_when</span>(union <span class="sc">==</span> <span class="st">"Not union represented"</span> <span class="sc">~</span> <span class="st">"nonunion"</span>, union <span class="sc">==</span> <span class="st">"Union represented"</span> <span class="sc">~</span> <span class="st">"union"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> union_stat, <span class="at">values_from =</span> real_wage) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> ((union<span class="sc">-</span>nonunion)<span class="sc">/</span>nonunion)) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, nonunion, union, diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Happy coding!</p>
 
 
+</section>
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -922,13 +1069,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./prev_bootcamps.html" class="pagination-link" aria-label="EARNCon data bootcamp files">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">EARNCon data bootcamp files</span>
+      <a href="./rtw_union.html" class="pagination-link" aria-label="Comparing union density rates in right-to-work versus non-right-to-work states">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Comparing union density rates in right-to-work versus non-right-to-work states</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./epi_libraries.html" class="pagination-link" aria-label="R Packages">
-        <span class="nav-page-text">R Packages</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./bin_wage_deciles.html" class="pagination-link" aria-label="Wage deciles by state">
+        <span class="nav-page-text">Wage deciles by state</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

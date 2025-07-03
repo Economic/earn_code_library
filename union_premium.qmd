@@ -121,7 +121,7 @@ select(year, union, real_wage)
 
 This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.
 
-```{r, Calculate wage premium, message=FALSE}
+```{r, Calculate time series wage premium, message=FALSE}
 wage_dif_series <- wage_series |>
   mutate(union_stat = case_when(union == "Not union represented" ~ "nonunion", union == "Union represented" ~ "union")) |>
   pivot_wider(id_cols = year, names_from = union_stat, values_from = real_wage) |>

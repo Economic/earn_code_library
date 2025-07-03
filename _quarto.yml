@@ -64,6 +64,7 @@ website:
         - union_density.qmd
         - foreign_born_stats_ipumsr.qmd
         - rtw_union.qmd
+        - union_premium.qmd
 
     - section: "Stata code"
       contents:
