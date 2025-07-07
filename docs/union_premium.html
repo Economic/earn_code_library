@@ -390,8 +390,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>.</p>
-<p>Note: <strong>sample sizes vary widely</strong> over time, state, and union vs nonunion groups. Keep a close eye on this, and remember that some states may not have large enough sample sizes to produce strong data. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.</p>
-<p>It may not be possible to find accurate union wage premium data for your state.</p>
+<p>Some utility notes:</p>
+<ol type="1">
+<li>Unlike the regression-based national union wage premium on the <a href="https://data.epi.org/unions/union_wage_gaps/line/year/national/percent_union_premium/overall?timeStart=2003-01-01&amp;timeEnd=2024-01-01&amp;dateString=2024-01-01&amp;highlightedLines=overall">State of Working America Data Library</a>, this simple code <strong>does not control for confounding variables such as education, job type, or demographic.</strong> That means while it may accurately reflect that union jobs often carry with them a wage premium, it does not take into account the fact that low-wage jobs, for instance, tend to be non-unionized. The actual wage premium across comparable positions may be different. Exercise caution when making specific claims with these data.</li>
+<li><strong>Sample sizes vary widely</strong> over time, state, and union vs nonunion groups. Keep a close eye on this, and remember that some states may not have large enough sample sizes to produce strong data. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data. <strong>It may not be possible to produce usable union wage premium data for your state.</strong></li>
+</ol>
+<p>Please reach out to <a href="mailto:ecohn@epi.org">ecohn@epi.org</a> with any questions. Now let’s get coding!</p>
 <p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>

@@ -505,7 +505,7 @@
     "href": "union_premium.html",
     "title": "Calculate union wage premiums by state and year",
     "section": "",
-    "text": "Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the EPI CPS microdata extracts.\nNote: sample sizes vary widely over time, state, and union vs nonunion groups. Keep a close eye on this, and remember that some states may not have large enough sample sizes to produce strong data. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.\nIt may not be possible to find accurate union wage premium data for your state.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)",
+    "text": "Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the EPI CPS microdata extracts.\nSome utility notes:\nPlease reach out to ecohn@epi.org with any questions. Now let’s get coding!\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)",
     "crumbs": [
       "R code",
       "Code Repository",
