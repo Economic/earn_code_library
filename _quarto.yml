@@ -35,6 +35,7 @@ website:
       
       - section: "Tutorials"
         contents:
+        - Intro_to_R.qmd
         - viz_workshop.qmd
         - benchmarking_workshop.qmd
         - prev_bootcamps.qmd

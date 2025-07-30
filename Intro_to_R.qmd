@@ -1,0 +1,199 @@
+---
+title: "R Installation Webinar"
+format: html
+author: "Emma Cohn & Daniel Perez"
+---
+
+## Welcome to the R Installation Webinar landing page!
+
+This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.
+
+Missed this talk? See the recording here: [Preparing for Analysis with R: A guided tutorial for installing R and RStudio](https://us06web.zoom.us/rec/share/NfQbs0nb4BWsxZQw8NoKzJV3fhowtRXxKwc_UqjYFYgCRkgmywnCw4uw9lESnBL7.Xk7du8aT4P-K7YLB).
+
+**Passcode:**
+
+[Presentation slides](https://github.com/Economic/earn_code_library/blob/main/supp_files/R_prep_webinar_slides.pdf)
+
+## Workflow example
+
+This example demonstrates a simple data analysis workflow.
+
+In short, we will use the Tidyverse package to load a dataset from a .csv file, describe and analyze the dataset, and export a final analysis to a new .csv file.
+
+## Load a library
+
+Recall, you can install R packages using the `install.packages()` command.
+
+```{r, eval=FALSE}
+install.packages('tidyverse')
+```
+
+After installing a package, you can load it using the `library()` command.
+
+```{r Load libraries, message=FALSE}
+# Loading a library 
+library(tidyverse)
+```
+
+## Read data from a csv file
+
+1.  Download the dataset at this link: [counties_per_capita_income.csv](https://github.com/Economic/earn_code_library/blob/main/data/counties_per_capita_income.csv)
+
+2.  Place the dataset in your root directory In this case, our data lives in a folder named "data" within this root directory. You can name your folder whatever you'd like!
+
+3.  Use the `read.csv()` function to load the data into R.
+
+```{r read CSV}
+counties_income <- read.csv("data/counties_per_capita_income.csv")
+```
+
+## Descriptive analysis
+
+Some useful commands to describe your dataset
+
+```{r descriptive commands}
+# Print the number of rows and columns in your table 
+dim(counties_income)
+
+# View the top 5 rows of your dataset
+head(counties_income)
+
+# List the variable names of your dataset
+names(counties_income)
+
+# View a transposed table of your data
+glimpse(counties_income)
+
+# Generate summaries for each of your variables
+summary(counties_income)
+
+# Generate a summary of one variable in your datset using the $ operator
+summary(counties_income$household_income)
+
+```
+
+## Simple summary statistics
+
+Now that we've loaded our dataset, let's run a simple analysis.
+
+The following code block uses the `summarize()` function to "collapse" variables from the `counties_income` dataset into a smaller table with summary statistics. Specifically, we calculate the median household income and a count of counties for each state.
+
+In this example
+
+-   `median(household_income)` calculates the median income.
+
+-   `n()` is a function that counts the number of observations in our sample.
+
+```{r Summary stats}
+
+summarize(counties_income,
+            med_hhinc = median(household_income),
+            n=n())
+
+```
+
+We can also create summary statistics by specific groupings. For example, if we want to calculate the median household income for each state, we can use the `.by=` argument inside `summarize()`
+
+```{r groupings}
+
+summarize(counties_income, 
+          med_hhinc = median(household_income), 
+          n = n(), 
+          .by = states)
+  
+```
+
+This tells R to calculate the summary statistics separately for each unique value in the `states` column
+
+## Creating new variables with mutate
+
+The `mutate()` function adds new variables to a dataset without collapsing it, unlike `summarize()` which reduces the dataset to summary rows.
+
+In the example below, we use `mutate()` to create a new column called `rank`, which ranks counties from highest to lowest based on their per capita income (pci).
+
+-   rank(-pci) ranks the values of pci in descending order (the minus sign indicates descending).
+
+-   The result is a new dataset `ranked_income` where each county keeps its original data, now with an added rank column.
+
+```{r Summarize by groups}
+
+ranked_income <- mutate(counties_income, rank = rank(-pci))
+
+# Print the top 5 rows of our new dataframe/table
+head(ranked_income)
+
+```
+
+## How to look up a function's arguments
+
+Not sure what a function does or what arguments it accepts? You can use the help command in R to look it up!
+
+Type a question mark (?) followed by the function name in your console or code chunk:
+
+```{r seeking help}
+
+?mutate
+
+?summarize
+
+# alternatively, you can type
+help(summarize)
+
+```
+
+This opens the help file for the function, which includes a short description of what the function does, a list of arguments you can use, and examples showing how to apply it. This is a great habit to adopt when trying new functions!
+
+## Using pipes to create multi-line commands
+
+In R, the pipe operator `|>` allows you to chain together multiple steps of a data transformation in a readable, top-to-bottom format. Each step passes its result to the next command. This makes your code easier to read and avoids creating lots of intermediate objects.
+
+Here's an example using the \|\> pipe to filter and summarize data across multiple lines:
+
+```{r Multi-line commands}
+
+# Executing a multi-line command using pipes 
+cleaned_data <- counties_income |>
+    # Here we use the filter() command to restrict our sample to a few states
+    filter(states %in% c('New York', 'California', 'North Carolina' )) |>
+    # Use summarise (Note, summarize() and summarise() are interchangeable. British spelling fans, rejoice!)
+    summarise(mean_hhinc = mean(household_income), 
+              n = n(), 
+              .by = states)
+
+```
+
+What this code does:
+
+1.  Starts with the `counties_income` dataset
+
+2.  Filters it to only include counties in New York, California, and North Carolina
+
+3.  Summarizes the data by state, calculating:
+
+    1.  The mean household income
+
+    2.  The number of counties
+
+## Exporting your results
+
+Once you've created a cleaned or summarized dataset, you may want to save it to a file. The `write.csv()` function lets you export your data to a `.csv` file that you can open in Excel or share with others.
+
+```{r Write to csv}
+
+# Writing a csv to a path
+write.csv(cleaned_data, "output/state_incomes.csv")
+```
+
+This line:
+
+-   Writes the `cleaned_data` dataset to a file called `state_incomes.csv`
+
+-   Saves it in the `output/` folder within your project directory
+
+**Note**: Make sure the `"output"` folder already exists in your project. R will return an error if the folder doesn’t exist.
+
+## Additional resources
+
+As you embark on your R journey, check out the [Other Resources](resources.qmd) page for additional materials!
+
+Happy coding!
