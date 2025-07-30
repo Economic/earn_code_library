@@ -1,5 +1,5 @@
 ---
-title: "R Installation Webinar"
+title: "Installing R & RStudio EARN Talk"
 format: html
 author: "Emma Cohn & Daniel Perez"
 ---

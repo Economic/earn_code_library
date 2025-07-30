@@ -872,7 +872,7 @@
   {
     "objectID": "Intro_to_R.html",
     "href": "Intro_to_R.html",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "",
     "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode: Prep4R2025!\nPresentation slides"
   },
@@ -886,77 +886,77 @@
   {
     "objectID": "Intro_to_R.html#workflow-example",
     "href": "Intro_to_R.html#workflow-example",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Workflow example",
     "text": "Workflow example\nThis example demonstrates a simple data analysis workflow.\nIn short, we will use the Tidyverse package to load a dataset from a .csv file, describe and analyze the dataset, and export a final analysis to a new .csv file."
   },
   {
     "objectID": "Intro_to_R.html#load-a-library",
     "href": "Intro_to_R.html#load-a-library",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Load a library",
     "text": "Load a library\nRecall, you can install R packages using the install.packages() command.\n\ninstall.packages('tidyverse')\n\nAfter installing a package, you can load it using the library() command.\n\n# Loading a library \nlibrary(tidyverse)"
   },
   {
     "objectID": "Intro_to_R.html#read-data-from-a-csv-file",
     "href": "Intro_to_R.html#read-data-from-a-csv-file",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Read data from a csv file",
     "text": "Read data from a csv file\n\nDownload the dataset at this link: counties_per_capita_income.csv\nPlace the dataset in your root directory In this case, our data lives in a folder named “data” within this root directory. You can name your folder whatever you’d like!\nUse the read.csv() function to load the data into R.\n\n\ncounties_income &lt;- read.csv(\"data/counties_per_capita_income.csv\")"
   },
   {
     "objectID": "Intro_to_R.html#descriptive-analysis",
     "href": "Intro_to_R.html#descriptive-analysis",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Descriptive analysis",
     "text": "Descriptive analysis\nSome useful commands to describe your dataset\n\n# Print the number of rows and columns in your table \ndim(counties_income)\n\n[1] 3231    8\n\n# View the top 5 rows of your dataset\nhead(counties_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households\n1    1628706            759460\n2     214861             94454\n3      12731              5020\n4     254643            102912\n5    1927852            640215\n6     143684             65369\n\n# List the variable names of your dataset\nnames(counties_income)\n\n[1] \"county\"            \"states\"            \"statefips\"        \n[4] \"pci\"               \"household_income\"  \"family_income\"    \n[7] \"population\"        \"num_of_households\"\n\n# View a transposed table of your data\nglimpse(counties_income)\n\nRows: 3,231\nColumns: 8\n$ county            &lt;chr&gt; \"New York County\", \"Arlington\", \"Falls Church City\",…\n$ states            &lt;chr&gt; \"New York\", \"Virginia\", \"Virginia\", \"California\", \"C…\n$ statefips         &lt;chr&gt; \"36\", \"51\", \"51\", \"6\", \"6\", \"51\", \"8\", \"35\", \"51\", \"…\n$ pci               &lt;int&gt; 76592, 62018, 59088, 56791, 56248, 54608, 51814, 510…\n$ household_income  &lt;int&gt; 69659, 103208, 120000, 90839, 124055, 85706, 72745, …\n$ family_income     &lt;int&gt; 86553, 139244, 152857, 117357, 124055, 107511, 93981…\n$ population        &lt;int&gt; 1628706, 214861, 12731, 254643, 1927852, 143684, 171…\n$ num_of_households &lt;int&gt; 759460, 94454, 5020, 102912, 640215, 65369, 7507, 75…\n\n# Generate summaries for each of your variables\nsummary(counties_income)\n\n    county             states           statefips              pci       \n Length:3231        Length:3231        Length:3231        Min.   : 5441  \n Class :character   Class :character   Class :character   1st Qu.:19674  \n Mode  :character   Mode  :character   Mode  :character   Median :22782  \n                                                          Mean   :23268  \n                                                          3rd Qu.:26136  \n                                                          Max.   :76592  \n household_income family_income      population      num_of_households\n Min.   : 11680   Min.   : 13582   Min.   :     17   Min.   :      6  \n 1st Qu.: 37622   1st Qu.: 46942   1st Qu.:  11232   1st Qu.:   4302  \n Median : 43853   Median : 54461   Median :  25975   Median :   9792  \n Mean   : 45220   Mean   : 55752   Mean   :  97552   Mean   :  36130  \n 3rd Qu.: 50854   3rd Qu.: 62850   3rd Qu.:  65806   3rd Qu.:  25014  \n Max.   :124055   Max.   :152857   Max.   :9893481   Max.   :3230383  \n\n# Generate a summary of one variable in your datset using the $ operator\nsummary(counties_income$household_income)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  11680   37622   43853   45220   50854  124055"
   },
   {
     "objectID": "Intro_to_R.html#simple-summary-statistics",
     "href": "Intro_to_R.html#simple-summary-statistics",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Simple summary statistics",
     "text": "Simple summary statistics\nNow that we’ve loaded our dataset, let’s run a simple analysis.\nThe following code block uses the summarize() function to “collapse” variables from the counties_income dataset into a smaller table with summary statistics. Specifically, we calculate the median household income and a count of counties for each state.\nIn this example\n\nmedian(household_income) calculates the median income.\nn() is a function that counts the number of observations in our sample.\n\n\nsummarize(counties_income,\n            med_hhinc = median(household_income),\n            n=n())\n\n  med_hhinc    n\n1     43853 3231\n\n\nWe can also create summary statistics by specific groupings. For example, if we want to calculate the median household income for each state, we can use the .by= argument inside summarize()\n\nsummarize(counties_income, \n          med_hhinc = median(household_income), \n          n = n(), \n          .by = states)\n\n                     states med_hhinc   n\n1                  New York   50467.5  62\n2                  Virginia   47549.0 134\n3                California   53532.0  58\n4                  Colorado   46793.5  64\n5                New Mexico   37933.0  33\n6                New Jersey   70912.0  21\n7                     Texas   44150.5 254\n8                  Maryland   66587.5  24\n9               Connecticut   68960.5   8\n10            Massachusetts   63225.0  14\n11                   Alaska   62519.0  29\n12                   Hawaii   62052.0   5\n13                  Wyoming   55347.0  23\n14                     Utah   49506.0  29\n15             Pennsylvania   46044.0  67\n16                Wisconsin   48709.5  72\n17                Tennessee   37618.0  95\n18             Rhode Island   71238.0   5\n19                     Ohio   44654.5  88\n20               Washington   47195.0  39\n21                  Indiana   46746.0  92\n22                   Kansas   45830.0 105\n23             North Dakota   50274.0  53\n24                 Illinois   47385.0 102\n25            New Hampshire   56904.5  10\n26                Minnesota   50030.0  87\n27                  Florida   43413.0  67\n28                  Georgia   37487.0 159\n29                 Michigan   41759.0  83\n30             South Dakota   47043.5  66\n31                     Iowa   48601.0  99\n32                    Idaho   42072.0  44\n33                 Missouri   39519.0 115\n34           North Carolina   41030.5 100\n35                   Nevada   52101.0  17\n36                 Kentucky   38776.0 120\n37                  Alabama   36447.0  67\n38                  Vermont   52470.0  14\n39              Mississippi   33562.0  82\n40                  Montana   43368.0  56\n41                    Maine   44327.5  16\n42                   Oregon   43524.5  36\n43           South Carolina   39271.0  46\n44                 Delaware   55149.0   3\n45                 Nebraska   45610.0  93\n46                Louisiana   40792.0  64\n47            West Virginia   37895.0  55\n48                 Oklahoma   42751.0  77\n49                 Arkansas   35153.0  75\n50                  Arizona   42987.0  15\n51      U.S. Virgin Islands   38232.0   3\n52              Puerto Rico   17434.0  78\n53                     Guam   48274.0   1\n54 Northern Mariana Islands   23125.0   3\n55           American Samoa   24027.5   4\n\n\nThis tells R to calculate the summary statistics separately for each unique value in the states column"
   },
   {
     "objectID": "Intro_to_R.html#creating-new-variables-with-mutate",
     "href": "Intro_to_R.html#creating-new-variables-with-mutate",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Creating new variables with mutate",
     "text": "Creating new variables with mutate\nThe mutate() function adds new variables to a dataset without collapsing it, unlike summarize() which reduces the dataset to summary rows.\nIn the example below, we use mutate() to create a new column called rank, which ranks counties from highest to lowest based on their per capita income (pci).\n\nrank(-pci) ranks the values of pci in descending order (the minus sign indicates descending).\nThe result is a new dataset ranked_income where each county keeps its original data, now with an added rank column.\n\n\nranked_income &lt;- mutate(counties_income, rank = rank(-pci))\n\n# Print the top 5 rows of our new dataframe/table\nhead(ranked_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households rank\n1    1628706            759460    1\n2     214861             94454    2\n3      12731              5020    3\n4     254643            102912    4\n5    1927852            640215    5\n6     143684             65369    6"
   },
   {
     "objectID": "Intro_to_R.html#how-to-look-up-a-functions-arguments",
     "href": "Intro_to_R.html#how-to-look-up-a-functions-arguments",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "How to look up a function’s arguments",
     "text": "How to look up a function’s arguments\nNot sure what a function does or what arguments it accepts? You can use the help command in R to look it up!\nType a question mark (?) followed by the function name in your console or code chunk:\n\n?mutate\n\n?summarize\n\n# alternatively, you can type\nhelp(summarize)\n\nThis opens the help file for the function, which includes a short description of what the function does, a list of arguments you can use, and examples showing how to apply it. This is a great habit to adopt when trying new functions!"
   },
   {
     "objectID": "Intro_to_R.html#using-pipes-to-create-multi-line-commands",
     "href": "Intro_to_R.html#using-pipes-to-create-multi-line-commands",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Using pipes to create multi-line commands",
     "text": "Using pipes to create multi-line commands\nIn R, the pipe operator |&gt; allows you to chain together multiple steps of a data transformation in a readable, top-to-bottom format. Each step passes its result to the next command. This makes your code easier to read and avoids creating lots of intermediate objects.\nHere’s an example using the |&gt; pipe to filter and summarize data across multiple lines:\n\n# Executing a multi-line command using pipes \ncleaned_data &lt;- counties_income |&gt;\n    # Here we use the filter() command to restrict our sample to a few states\n    filter(states %in% c('New York', 'California', 'North Carolina' )) |&gt;\n    # Use summarise (Note, summarize() and summarise() are interchangeable. British spelling fans, rejoice!)\n    summarise(mean_hhinc = mean(household_income), \n              n = n(), \n              .by = states)\n\nWhat this code does:\n\nStarts with the counties_income dataset\nFilters it to only include counties in New York, California, and North Carolina\nSummarizes the data by state, calculating:\n\nThe mean household income\nThe number of counties"
   },
   {
     "objectID": "Intro_to_R.html#exporting-your-results",
     "href": "Intro_to_R.html#exporting-your-results",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Exporting your results",
     "text": "Exporting your results\nOnce you’ve created a cleaned or summarized dataset, you may want to save it to a file. The write.csv() function lets you export your data to a .csv file that you can open in Excel or share with others.\n\n# Writing a csv to a path\nwrite.csv(cleaned_data, \"output/state_incomes.csv\")\n\nThis line:\n\nWrites the cleaned_data dataset to a file called state_incomes.csv\nSaves it in the output/ folder within your project directory\n\nNote: Make sure the \"output\" folder already exists in your project. R will return an error if the folder doesn’t exist."
   },
   {
     "objectID": "Intro_to_R.html#additional-resources",
     "href": "Intro_to_R.html#additional-resources",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "Additional resources",
     "text": "Additional resources\nAs you embark on your R journey, check out the Other Resources page for additional materials!\nHappy coding!"
   },
   {
     "objectID": "Intro_to_R.html#welcome-to-the-preparing-for-analysis-with-r-landing-page",
     "href": "Intro_to_R.html#welcome-to-the-preparing-for-analysis-with-r-landing-page",
-    "title": "R Installation Webinar",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "",
     "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode: Prep4R2025!\nPresentation slides"
   }
