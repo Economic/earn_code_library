@@ -1,7 +1,7 @@
 ---
 title: "R Installation Webinar"
 format: html
-author: "Emma Cohn & Daniel Perez"
+author: "Daniel Perez & Emma Cohn"
 ---
 
 ## Welcome to the R Installation Webinar landing page!

@@ -102,7 +102,7 @@
     "href": "index.html#user-code-submissions",
     "title": "About",
     "section": "User code submissions",
-    "text": "User code submissions\nHave a coding sample you would like to submit to the EARN code library? Contact dperez@epi.org\nComponents of a code library submission are:\n\nDescription​\nCode file(s)​\nSupplementary data​\nOutput example\nAuthor contact information",
+    "text": "User code submissions\nHave a coding sample you would like to submit to the EARN code library? Contact dperez (at) epi (dot) org\nComponents of a code library submission are:\n\nDescription​\nCode file(s)​\nSupplementary data​\nOutput example\nAuthor contact information",
     "crumbs": [
       "About"
     ]
@@ -319,73 +319,6 @@
     ]
   },
   {
-    "objectID": "benchmarking_workshop.html",
-    "href": "benchmarking_workshop.html",
-    "title": "Benchmarking Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nBenchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars)) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.61\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Benchmarking Data"
-    ]
-  },
-  {
-    "objectID": "epi_libraries.html",
-    "href": "epi_libraries.html",
-    "title": "EPI packages for R",
-    "section": "",
-    "text": "Installation instructions are available on each package’s Github page.\nrealtalk\n\nrealtalk makes it easy to use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nuse epiextractr to download CPS data from the EPI microdata site.\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Code Packages",
-      "R Packages"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html",
-    "href": "tidycensus_example.html",
-    "title": "Load Census tables via Tidycensus",
-    "section": "",
-    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# Reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
-    "crumbs": [
-      "R code",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
-    "href": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
-    "title": "Load Census tables via Tidycensus",
-    "section": "Explore available variables in the ACS 5-year sample",
-    "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
-    "crumbs": [
-      "R code",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html#examples",
-    "href": "tidycensus_example.html#examples",
-    "title": "Load Census tables via Tidycensus",
-    "section": "Examples",
-    "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
-    "crumbs": [
-      "R code",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "resources.html",
-    "href": "resources.html",
-    "title": "Other Resources",
-    "section": "",
-    "text": "If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to dperez@epi.org.\nR@Urban\n\nR@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.\n\nR for Data Science by Garrett Grolemund and Hadley Wickham\n\nR for Data Science is a popular book that covers many basic concepts in R, aimed specifically at beginners.\n\nDataScienceR Github\n\nThis Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).\n\nCausal Inference: The Mixtape\n\nThis ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.\n\nCausal Inference in R\n\nThis book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Learn R",
-      "Other Resources"
-    ]
-  },
-  {
     "objectID": "blsR_example.html",
     "href": "blsR_example.html",
     "title": "Downloading BLS data via blsR",
@@ -438,6 +371,217 @@
     "crumbs": [
       "R code",
       "Downloading BLS data via blsR"
+    ]
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Other Resources",
+    "section": "",
+    "text": "If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to dperez@epi.org.\nR@Urban\n\nR@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.\n\nR for Data Science by Garrett Grolemund and Hadley Wickham\n\nR for Data Science is a popular book that covers many basic concepts in R, aimed specifically at beginners.\n\nDataScienceR Github\n\nThis Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).\n\nCausal Inference: The Mixtape\n\nThis ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.\n\nCausal Inference in R\n\nThis book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Learn R",
+      "Other Resources"
+    ]
+  },
+  {
+    "objectID": "tidycensus_example.html",
+    "href": "tidycensus_example.html",
+    "title": "Load Census tables via Tidycensus",
+    "section": "",
+    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# Reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
+    "crumbs": [
+      "R code",
+      "Load Census tables via Tidycensus"
+    ]
+  },
+  {
+    "objectID": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
+    "href": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
+    "title": "Load Census tables via Tidycensus",
+    "section": "Explore available variables in the ACS 5-year sample",
+    "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
+    "crumbs": [
+      "R code",
+      "Load Census tables via Tidycensus"
+    ]
+  },
+  {
+    "objectID": "tidycensus_example.html#examples",
+    "href": "tidycensus_example.html#examples",
+    "title": "Load Census tables via Tidycensus",
+    "section": "Examples",
+    "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
+    "crumbs": [
+      "R code",
+      "Load Census tables via Tidycensus"
+    ]
+  },
+  {
+    "objectID": "epi_libraries.html",
+    "href": "epi_libraries.html",
+    "title": "EPI packages for R",
+    "section": "",
+    "text": "Installation instructions are available on each package’s Github page.\nrealtalk\n\nrealtalk makes it easy to use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nuse epiextractr to download CPS data from the EPI microdata site.\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Code Packages",
+      "R Packages"
+    ]
+  },
+  {
+    "objectID": "benchmarking_workshop.html",
+    "href": "benchmarking_workshop.html",
+    "title": "Benchmarking Data",
+    "section": "",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nBenchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars)) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 1.0.61\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Benchmarking Data"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html",
+    "href": "intro_to_r.html",
+    "title": "R Installation Webinar",
+    "section": "",
+    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode:\nPresentation slides",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#welcome-to-the-r-installation-webinar-landing-page",
+    "href": "intro_to_r.html#welcome-to-the-r-installation-webinar-landing-page",
+    "title": "R Installation Webinar",
+    "section": "",
+    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode:\nPresentation slides",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#workflow-example",
+    "href": "intro_to_r.html#workflow-example",
+    "title": "R Installation Webinar",
+    "section": "Workflow example",
+    "text": "Workflow example\nThis example demonstrates a simple data analysis workflow.\nIn short, we will use the Tidyverse package to load a dataset from a .csv file, describe and analyze the dataset, and export a final analysis to a new .csv file.",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#load-a-library",
+    "href": "intro_to_r.html#load-a-library",
+    "title": "R Installation Webinar",
+    "section": "Load a library",
+    "text": "Load a library\nRecall, you can install R packages using the install.packages() command.\n\ninstall.packages('tidyverse')\n\nAfter installing a package, you can load it using the library() command.\n\n# Loading a library \nlibrary(tidyverse)",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#read-data-from-a-csv-file",
+    "href": "intro_to_r.html#read-data-from-a-csv-file",
+    "title": "R Installation Webinar",
+    "section": "Read data from a csv file",
+    "text": "Read data from a csv file\n\nDownload the dataset at this link: counties_per_capita_income.csv\nPlace the dataset in your root directory In this case, our data lives in a folder named “data” within this root directory. You can name your folder whatever you’d like!\nUse the read.csv() function to load the data into R.\n\n\ncounties_income &lt;- read.csv(\"data/counties_per_capita_income.csv\")",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#descriptive-analysis",
+    "href": "intro_to_r.html#descriptive-analysis",
+    "title": "R Installation Webinar",
+    "section": "Descriptive analysis",
+    "text": "Descriptive analysis\nSome useful commands to describe your dataset\n\n# Print the number of rows and columns in your table \ndim(counties_income)\n\n[1] 3231    8\n\n# View the top 5 rows of your dataset\nhead(counties_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households\n1    1628706            759460\n2     214861             94454\n3      12731              5020\n4     254643            102912\n5    1927852            640215\n6     143684             65369\n\n# List the variable names of your dataset\nnames(counties_income)\n\n[1] \"county\"            \"states\"            \"statefips\"        \n[4] \"pci\"               \"household_income\"  \"family_income\"    \n[7] \"population\"        \"num_of_households\"\n\n# View a transposed table of your data\nglimpse(counties_income)\n\nRows: 3,231\nColumns: 8\n$ county            &lt;chr&gt; \"New York County\", \"Arlington\", \"Falls Church City\",…\n$ states            &lt;chr&gt; \"New York\", \"Virginia\", \"Virginia\", \"California\", \"C…\n$ statefips         &lt;chr&gt; \"36\", \"51\", \"51\", \"6\", \"6\", \"51\", \"8\", \"35\", \"51\", \"…\n$ pci               &lt;int&gt; 76592, 62018, 59088, 56791, 56248, 54608, 51814, 510…\n$ household_income  &lt;int&gt; 69659, 103208, 120000, 90839, 124055, 85706, 72745, …\n$ family_income     &lt;int&gt; 86553, 139244, 152857, 117357, 124055, 107511, 93981…\n$ population        &lt;int&gt; 1628706, 214861, 12731, 254643, 1927852, 143684, 171…\n$ num_of_households &lt;int&gt; 759460, 94454, 5020, 102912, 640215, 65369, 7507, 75…\n\n# Generate summaries for each of your variables\nsummary(counties_income)\n\n    county             states           statefips              pci       \n Length:3231        Length:3231        Length:3231        Min.   : 5441  \n Class :character   Class :character   Class :character   1st Qu.:19674  \n Mode  :character   Mode  :character   Mode  :character   Median :22782  \n                                                          Mean   :23268  \n                                                          3rd Qu.:26136  \n                                                          Max.   :76592  \n household_income family_income      population      num_of_households\n Min.   : 11680   Min.   : 13582   Min.   :     17   Min.   :      6  \n 1st Qu.: 37622   1st Qu.: 46942   1st Qu.:  11232   1st Qu.:   4302  \n Median : 43853   Median : 54461   Median :  25975   Median :   9792  \n Mean   : 45220   Mean   : 55752   Mean   :  97552   Mean   :  36130  \n 3rd Qu.: 50854   3rd Qu.: 62850   3rd Qu.:  65806   3rd Qu.:  25014  \n Max.   :124055   Max.   :152857   Max.   :9893481   Max.   :3230383  \n\n# Generate a summary of one variable in your datset using the $ operator\nsummary(counties_income$household_income)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  11680   37622   43853   45220   50854  124055",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#simple-summary-statistics",
+    "href": "intro_to_r.html#simple-summary-statistics",
+    "title": "R Installation Webinar",
+    "section": "Simple summary statistics",
+    "text": "Simple summary statistics\nNow that we’ve loaded our dataset, let’s run a simple analysis.\nThe following code block uses the summarize() function to “collapse” variables from the counties_income dataset into a smaller table with summary statistics. Specifically, we calculate the median household income and a count of counties for each state.\nIn this example\n\nmedian(household_income) calculates the median income.\nn() is a function that counts the number of observations in our sample.\n\n\nsummarize(counties_income,\n            med_hhinc = median(household_income),\n            n=n())\n\n  med_hhinc    n\n1     43853 3231\n\n\nWe can also create summary statistics by specific groupings. For example, if we want to calculate the median household income for each state, we can use the .by= argument inside summarize()\n\nsummarize(counties_income, \n          med_hhinc = median(household_income), \n          n = n(), \n          .by = states)\n\n                     states med_hhinc   n\n1                  New York   50467.5  62\n2                  Virginia   47549.0 134\n3                California   53532.0  58\n4                  Colorado   46793.5  64\n5                New Mexico   37933.0  33\n6                New Jersey   70912.0  21\n7                     Texas   44150.5 254\n8                  Maryland   66587.5  24\n9               Connecticut   68960.5   8\n10            Massachusetts   63225.0  14\n11                   Alaska   62519.0  29\n12                   Hawaii   62052.0   5\n13                  Wyoming   55347.0  23\n14                     Utah   49506.0  29\n15             Pennsylvania   46044.0  67\n16                Wisconsin   48709.5  72\n17                Tennessee   37618.0  95\n18             Rhode Island   71238.0   5\n19                     Ohio   44654.5  88\n20               Washington   47195.0  39\n21                  Indiana   46746.0  92\n22                   Kansas   45830.0 105\n23             North Dakota   50274.0  53\n24                 Illinois   47385.0 102\n25            New Hampshire   56904.5  10\n26                Minnesota   50030.0  87\n27                  Florida   43413.0  67\n28                  Georgia   37487.0 159\n29                 Michigan   41759.0  83\n30             South Dakota   47043.5  66\n31                     Iowa   48601.0  99\n32                    Idaho   42072.0  44\n33                 Missouri   39519.0 115\n34           North Carolina   41030.5 100\n35                   Nevada   52101.0  17\n36                 Kentucky   38776.0 120\n37                  Alabama   36447.0  67\n38                  Vermont   52470.0  14\n39              Mississippi   33562.0  82\n40                  Montana   43368.0  56\n41                    Maine   44327.5  16\n42                   Oregon   43524.5  36\n43           South Carolina   39271.0  46\n44                 Delaware   55149.0   3\n45                 Nebraska   45610.0  93\n46                Louisiana   40792.0  64\n47            West Virginia   37895.0  55\n48                 Oklahoma   42751.0  77\n49                 Arkansas   35153.0  75\n50                  Arizona   42987.0  15\n51      U.S. Virgin Islands   38232.0   3\n52              Puerto Rico   17434.0  78\n53                     Guam   48274.0   1\n54 Northern Mariana Islands   23125.0   3\n55           American Samoa   24027.5   4\n\n\nThis tells R to calculate the summary statistics separately for each unique value in the states column",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#creating-new-variables-with-mutate",
+    "href": "intro_to_r.html#creating-new-variables-with-mutate",
+    "title": "R Installation Webinar",
+    "section": "Creating new variables with mutate",
+    "text": "Creating new variables with mutate\nThe mutate() function adds new variables to a dataset without collapsing it, unlike summarize() which reduces the dataset to summary rows.\nIn the example below, we use mutate() to create a new column called rank, which ranks counties from highest to lowest based on their per capita income (pci).\n\nrank(-pci) ranks the values of pci in descending order (the minus sign indicates descending).\nThe result is a new dataset ranked_income where each county keeps its original data, now with an added rank column.\n\n\nranked_income &lt;- mutate(counties_income, rank = rank(-pci))\n\n# Print the top 5 rows of our new dataframe/table\nhead(ranked_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households rank\n1    1628706            759460    1\n2     214861             94454    2\n3      12731              5020    3\n4     254643            102912    4\n5    1927852            640215    5\n6     143684             65369    6",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#how-to-look-up-a-functions-arguments",
+    "href": "intro_to_r.html#how-to-look-up-a-functions-arguments",
+    "title": "R Installation Webinar",
+    "section": "How to look up a function’s arguments",
+    "text": "How to look up a function’s arguments\nNot sure what a function does or what arguments it accepts? You can use the help command in R to look it up!\nType a question mark (?) followed by the function name in your console or code chunk:\n\n?mutate\n\n?summarize\n\n# alternatively, you can type\nhelp(summarize)\n\nThis opens the help file for the function, which includes a short description of what the function does, a list of arguments you can use, and examples showing how to apply it. This is a great habit to adopt when trying new functions!",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#using-pipes-to-create-multi-line-commands",
+    "href": "intro_to_r.html#using-pipes-to-create-multi-line-commands",
+    "title": "R Installation Webinar",
+    "section": "Using pipes to create multi-line commands",
+    "text": "Using pipes to create multi-line commands\nIn R, the pipe operator |&gt; allows you to chain together multiple steps of a data transformation in a readable, top-to-bottom format. Each step passes its result to the next command. This makes your code easier to read and avoids creating lots of intermediate objects.\nHere’s an example using the |&gt; pipe to filter and summarize data across multiple lines:\n\n# Executing a multi-line command using pipes \ncleaned_data &lt;- counties_income |&gt;\n    # Here we use the filter() command to restrict our sample to a few states\n    filter(states %in% c('New York', 'California', 'North Carolina' )) |&gt;\n    # Use summarise (Note, summarize() and summarise() are interchangeable. British spelling fans, rejoice!)\n    summarise(mean_hhinc = mean(household_income), \n              n = n(), \n              .by = states)\n\nWhat this code does:\n\nStarts with the counties_income dataset\nFilters it to only include counties in New York, California, and North Carolina\nSummarizes the data by state, calculating:\n\nThe mean household income\nThe number of counties",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#exporting-your-results",
+    "href": "intro_to_r.html#exporting-your-results",
+    "title": "R Installation Webinar",
+    "section": "Exporting your results",
+    "text": "Exporting your results\nOnce you’ve created a cleaned or summarized dataset, you may want to save it to a file. The write.csv() function lets you export your data to a .csv file that you can open in Excel or share with others.\n\n# Writing a csv to a path\nwrite.csv(cleaned_data, \"output/state_incomes.csv\")\n\nThis line:\n\nWrites the cleaned_data dataset to a file called state_incomes.csv\nSaves it in the output/ folder within your project directory\n\nNote: Make sure the \"output\" folder already exists in your project. R will return an error if the folder doesn’t exist.",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#additional-resources",
+    "href": "intro_to_r.html#additional-resources",
+    "title": "R Installation Webinar",
+    "section": "Additional resources",
+    "text": "Additional resources\nAs you embark on your R journey, check out the Other Resources page for additional materials!\nHappy coding!",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "R Installation Webinar"
     ]
   },
   {
@@ -723,150 +867,6 @@
     "crumbs": [
       "R code",
       "Inflation adjusting with Realtalk"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html",
-    "href": "Intro_to_R.html",
-    "title": "R Installation Webinar",
-    "section": "",
-    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode:\nPresentation slides",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#welcome-to-the-r-installation-webinar-landing-page",
-    "href": "Intro_to_R.html#welcome-to-the-r-installation-webinar-landing-page",
-    "title": "R Installation Webinar",
-    "section": "",
-    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode:\nPresentation slides",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#workflow-example",
-    "href": "Intro_to_R.html#workflow-example",
-    "title": "R Installation Webinar",
-    "section": "Workflow example",
-    "text": "Workflow example\nThis example demonstrates a simple data analysis workflow.\nIn short, we will use the Tidyverse package to load a dataset from a .csv file, describe and analyze the dataset, and export a final analysis to a new .csv file.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#load-a-library",
-    "href": "Intro_to_R.html#load-a-library",
-    "title": "R Installation Webinar",
-    "section": "Load a library",
-    "text": "Load a library\nRecall, you can install R packages using the install.packages() command.\n\ninstall.packages('tidyverse')\n\nAfter installing a package, you can load it using the library() command.\n\n# Loading a library \nlibrary(tidyverse)",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#read-data-from-a-csv-file",
-    "href": "Intro_to_R.html#read-data-from-a-csv-file",
-    "title": "R Installation Webinar",
-    "section": "Read data from a csv file",
-    "text": "Read data from a csv file\n\nDownload the dataset at this link: counties_per_capita_income.csv\nPlace the dataset in your root directory In this case, our data lives in a folder named “data” within this root directory. You can name your folder whatever you’d like!\nUse the read.csv() function to load the data into R.\n\n\ncounties_income &lt;- read.csv(\"data/counties_per_capita_income.csv\")",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#descriptive-analysis",
-    "href": "Intro_to_R.html#descriptive-analysis",
-    "title": "R Installation Webinar",
-    "section": "Descriptive analysis",
-    "text": "Descriptive analysis\nSome useful commands to describe your dataset\n\n# Print the number of rows and columns in your table \ndim(counties_income)\n\n[1] 3231    8\n\n# View the top 5 rows of your dataset\nhead(counties_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households\n1    1628706            759460\n2     214861             94454\n3      12731              5020\n4     254643            102912\n5    1927852            640215\n6     143684             65369\n\n# List the variable names of your dataset\nnames(counties_income)\n\n[1] \"county\"            \"states\"            \"statefips\"        \n[4] \"pci\"               \"household_income\"  \"family_income\"    \n[7] \"population\"        \"num_of_households\"\n\n# View a transposed table of your data\nglimpse(counties_income)\n\nRows: 3,231\nColumns: 8\n$ county            &lt;chr&gt; \"New York County\", \"Arlington\", \"Falls Church City\",…\n$ states            &lt;chr&gt; \"New York\", \"Virginia\", \"Virginia\", \"California\", \"C…\n$ statefips         &lt;chr&gt; \"36\", \"51\", \"51\", \"6\", \"6\", \"51\", \"8\", \"35\", \"51\", \"…\n$ pci               &lt;int&gt; 76592, 62018, 59088, 56791, 56248, 54608, 51814, 510…\n$ household_income  &lt;int&gt; 69659, 103208, 120000, 90839, 124055, 85706, 72745, …\n$ family_income     &lt;int&gt; 86553, 139244, 152857, 117357, 124055, 107511, 93981…\n$ population        &lt;int&gt; 1628706, 214861, 12731, 254643, 1927852, 143684, 171…\n$ num_of_households &lt;int&gt; 759460, 94454, 5020, 102912, 640215, 65369, 7507, 75…\n\n# Generate summaries for each of your variables\nsummary(counties_income)\n\n    county             states           statefips              pci       \n Length:3231        Length:3231        Length:3231        Min.   : 5441  \n Class :character   Class :character   Class :character   1st Qu.:19674  \n Mode  :character   Mode  :character   Mode  :character   Median :22782  \n                                                          Mean   :23268  \n                                                          3rd Qu.:26136  \n                                                          Max.   :76592  \n household_income family_income      population      num_of_households\n Min.   : 11680   Min.   : 13582   Min.   :     17   Min.   :      6  \n 1st Qu.: 37622   1st Qu.: 46942   1st Qu.:  11232   1st Qu.:   4302  \n Median : 43853   Median : 54461   Median :  25975   Median :   9792  \n Mean   : 45220   Mean   : 55752   Mean   :  97552   Mean   :  36130  \n 3rd Qu.: 50854   3rd Qu.: 62850   3rd Qu.:  65806   3rd Qu.:  25014  \n Max.   :124055   Max.   :152857   Max.   :9893481   Max.   :3230383  \n\n# Generate a summary of one variable in your datset using the $ operator\nsummary(counties_income$household_income)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  11680   37622   43853   45220   50854  124055",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#simple-summary-statistics",
-    "href": "Intro_to_R.html#simple-summary-statistics",
-    "title": "R Installation Webinar",
-    "section": "Simple summary statistics",
-    "text": "Simple summary statistics\nNow that we’ve loaded our dataset, let’s run a simple analysis.\nThe following code block uses the summarize() function to “collapse” variables from the counties_income dataset into a smaller table with summary statistics. Specifically, we calculate the median household income and a count of counties for each state.\nIn this example\n\nmedian(household_income) calculates the median income.\nn() is a function that counts the number of observations in our sample.\n\n\nsummarize(counties_income,\n            med_hhinc = median(household_income),\n            n=n())\n\n  med_hhinc    n\n1     43853 3231\n\n\nWe can also create summary statistics by specific groupings. For example, if we want to calculate the median household income for each state, we can use the .by= argument inside summarize()\n\nsummarize(counties_income, \n          med_hhinc = median(household_income), \n          n = n(), \n          .by = states)\n\n                     states med_hhinc   n\n1                  New York   50467.5  62\n2                  Virginia   47549.0 134\n3                California   53532.0  58\n4                  Colorado   46793.5  64\n5                New Mexico   37933.0  33\n6                New Jersey   70912.0  21\n7                     Texas   44150.5 254\n8                  Maryland   66587.5  24\n9               Connecticut   68960.5   8\n10            Massachusetts   63225.0  14\n11                   Alaska   62519.0  29\n12                   Hawaii   62052.0   5\n13                  Wyoming   55347.0  23\n14                     Utah   49506.0  29\n15             Pennsylvania   46044.0  67\n16                Wisconsin   48709.5  72\n17                Tennessee   37618.0  95\n18             Rhode Island   71238.0   5\n19                     Ohio   44654.5  88\n20               Washington   47195.0  39\n21                  Indiana   46746.0  92\n22                   Kansas   45830.0 105\n23             North Dakota   50274.0  53\n24                 Illinois   47385.0 102\n25            New Hampshire   56904.5  10\n26                Minnesota   50030.0  87\n27                  Florida   43413.0  67\n28                  Georgia   37487.0 159\n29                 Michigan   41759.0  83\n30             South Dakota   47043.5  66\n31                     Iowa   48601.0  99\n32                    Idaho   42072.0  44\n33                 Missouri   39519.0 115\n34           North Carolina   41030.5 100\n35                   Nevada   52101.0  17\n36                 Kentucky   38776.0 120\n37                  Alabama   36447.0  67\n38                  Vermont   52470.0  14\n39              Mississippi   33562.0  82\n40                  Montana   43368.0  56\n41                    Maine   44327.5  16\n42                   Oregon   43524.5  36\n43           South Carolina   39271.0  46\n44                 Delaware   55149.0   3\n45                 Nebraska   45610.0  93\n46                Louisiana   40792.0  64\n47            West Virginia   37895.0  55\n48                 Oklahoma   42751.0  77\n49                 Arkansas   35153.0  75\n50                  Arizona   42987.0  15\n51      U.S. Virgin Islands   38232.0   3\n52              Puerto Rico   17434.0  78\n53                     Guam   48274.0   1\n54 Northern Mariana Islands   23125.0   3\n55           American Samoa   24027.5   4\n\n\nThis tells R to calculate the summary statistics separately for each unique value in the states column",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#creating-new-variables-with-mutate",
-    "href": "Intro_to_R.html#creating-new-variables-with-mutate",
-    "title": "R Installation Webinar",
-    "section": "Creating new variables with mutate",
-    "text": "Creating new variables with mutate\nThe mutate() function adds new variables to a dataset without collapsing it, unlike summarize() which reduces the dataset to summary rows.\nIn the example below, we use mutate() to create a new column called rank, which ranks counties from highest to lowest based on their per capita income (pci).\n\nrank(-pci) ranks the values of pci in descending order (the minus sign indicates descending).\nThe result is a new dataset ranked_income where each county keeps its original data, now with an added rank column.\n\n\nranked_income &lt;- mutate(counties_income, rank = rank(-pci))\n\n# Print the top 5 rows of our new dataframe/table\nhead(ranked_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households rank\n1    1628706            759460    1\n2     214861             94454    2\n3      12731              5020    3\n4     254643            102912    4\n5    1927852            640215    5\n6     143684             65369    6",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#how-to-look-up-a-functions-arguments",
-    "href": "Intro_to_R.html#how-to-look-up-a-functions-arguments",
-    "title": "R Installation Webinar",
-    "section": "How to look up a function’s arguments",
-    "text": "How to look up a function’s arguments\nNot sure what a function does or what arguments it accepts? You can use the help command in R to look it up!\nType a question mark (?) followed by the function name in your console or code chunk:\n\n?mutate\n\n?summarize\n\n# alternatively, you can type\nhelp(summarize)\n\nThis opens the help file for the function, which includes a short description of what the function does, a list of arguments you can use, and examples showing how to apply it. This is a great habit to adopt when trying new functions!",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#using-pipes-to-create-multi-line-commands",
-    "href": "Intro_to_R.html#using-pipes-to-create-multi-line-commands",
-    "title": "R Installation Webinar",
-    "section": "Using pipes to create multi-line commands",
-    "text": "Using pipes to create multi-line commands\nIn R, the pipe operator |&gt; allows you to chain together multiple steps of a data transformation in a readable, top-to-bottom format. Each step passes its result to the next command. This makes your code easier to read and avoids creating lots of intermediate objects.\nHere’s an example using the |&gt; pipe to filter and summarize data across multiple lines:\n\n# Executing a multi-line command using pipes \ncleaned_data &lt;- counties_income |&gt;\n    # Here we use the filter() command to restrict our sample to a few states\n    filter(states %in% c('New York', 'California', 'North Carolina' )) |&gt;\n    # Use summarise (Note, summarize() and summarise() are interchangeable. British spelling fans, rejoice!)\n    summarise(mean_hhinc = mean(household_income), \n              n = n(), \n              .by = states)\n\nWhat this code does:\n\nStarts with the counties_income dataset\nFilters it to only include counties in New York, California, and North Carolina\nSummarizes the data by state, calculating:\n\nThe mean household income\nThe number of counties",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#exporting-your-results",
-    "href": "Intro_to_R.html#exporting-your-results",
-    "title": "R Installation Webinar",
-    "section": "Exporting your results",
-    "text": "Exporting your results\nOnce you’ve created a cleaned or summarized dataset, you may want to save it to a file. The write.csv() function lets you export your data to a .csv file that you can open in Excel or share with others.\n\n# Writing a csv to a path\nwrite.csv(cleaned_data, \"output/state_incomes.csv\")\n\nThis line:\n\nWrites the cleaned_data dataset to a file called state_incomes.csv\nSaves it in the output/ folder within your project directory\n\nNote: Make sure the \"output\" folder already exists in your project. R will return an error if the folder doesn’t exist.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
-    ]
-  },
-  {
-    "objectID": "Intro_to_R.html#additional-resources",
-    "href": "Intro_to_R.html#additional-resources",
-    "title": "R Installation Webinar",
-    "section": "Additional resources",
-    "text": "Additional resources\nAs you embark on your R journey, check out the Other Resources page for additional materials!\nHappy coding!",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "R Installation Webinar"
     ]
   }
 ]
