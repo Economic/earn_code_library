@@ -12,7 +12,7 @@ On this site, you will find coding examples, commonly used EPI/EARN methodologie
 
 ## User code submissions
 
-Have a coding sample you would like to submit to the EARN code library? Contact [dperez\@epi.org](mailto:dperez@epi.org)
+Have a coding sample you would like to submit to the EARN code library? Contact dperez (at) epi (dot) org
 
 Components of a code library submission are:
 
