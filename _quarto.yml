@@ -66,7 +66,7 @@ website:
         - foreign_born_stats_ipumsr.qmd
         - rtw_union.qmd
         - union_premium.qmd
-        - wisconsin_suppressed_wages.qmd
+        - median_wages_demos.qmd
 
     - section: "Stata code"
       contents:

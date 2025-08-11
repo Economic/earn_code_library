@@ -9,7 +9,7 @@ Use this code to find median wages and sample sizes by various demographics (rac
 
 **Please note:** these data are already available on the [State of Working American Data Library](https://data.epi.org/). However, due to small sample sizes, some cuts of these data are suppressed. You can use this code to generate all data, regardless of sample size, but **be careful when making claims about data with small sample sizes**.
 
-The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. We'll also set up a `wb` value that will allow us to generate an Excel workbook. 
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. We'll also set up a `wb` value that will allow us to generate an Excel workbook.
 
 ```{r, Libraries, message=FALSE}
 
@@ -27,7 +27,7 @@ wb <- wb_workbook()
 
 ## Set up for inflation adjusting
 
-EPI uses the CPI-U-RS series to inflation adjust wages, so we'll select that series and assign it to a dataframe. 
+EPI uses the CPI-U-RS series to inflation adjust wages, so we'll select that series and assign it to a dataframe.
 
 ```{r, Inflation set up, message=FALSE}
 # pulling in CPI-U-RS series
@@ -43,7 +43,7 @@ cpi2024 <- cpi_data$cpi_u_rs[cpi_data$year==2024]
 
 Running this script chunk will call the BLS Current Population Survey ORG data required to calculate median wages.
 
-We'll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We'll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages. 
+We'll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We'll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages.
 
 ```{r, Download and clean data, message=FALSE}
 #load in CPS ORG data
@@ -60,11 +60,12 @@ cps_org <- load_cps("org", 1979:2024, year, orgwgt, wage, statefips, female, wbh
   mutate(realwage = wage * (cpi2024/cpi_u_rs))
 ```
 
-## Sheet 1: Wages by race, gender, and race and gender. 
+## Sheet 1: Wages by race, gender, and race and gender.
 
 This section of the script produces median wages by year and by various demographic cuts. Here we use EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per year per demographic cut.
 
 ### Median wages by gender
+
 ```{r, Wage by gender, message=FALSE}
 wages_gender <- cps_org |> 
   mutate(female = to_factor(female)) |>
@@ -83,6 +84,7 @@ wages_gender <- cps_org |>
 ```
 
 ### Median wages by race
+
 ```{r, Wage by race, message=FALSE}
 wages_race <- cps_org |> 
   mutate(wbho = to_factor(wbho)) |>
@@ -99,6 +101,7 @@ wages_race <- cps_org |>
 ```
 
 ### Median wages by race and gender
+
 ```{r, Wage by race and gender, message=FALSE}
 wages_race_gender <- cps_org |> 
   mutate(wbho = to_factor(wbho)) |>
@@ -143,7 +146,7 @@ wb$add_worksheet(sheet = "Race and gender_median wages") $
 
 ## Sheet 2: Sample sizes
 
-This code chunk follows the exact same steps as the section above, except it generates sample sizes instead of median wages. It is extremely important to reference this sheet when making claims about the data. Avoid relying on data drawn from small sample sizes. 
+This code chunk follows the exact same steps as the section above, except it generates sample sizes instead of median wages. It is extremely important to reference this sheet when making claims about the data. Avoid relying on data drawn from small sample sizes.
 
 ```{r, Sample sizes, message=FALSE}
 #By gender
@@ -190,13 +193,13 @@ wb$add_worksheet(sheet = "Sample sizes") $
 
 ## Sheet 3: Wages by educational attainment
 
-Finally, this code chunk generates median wages by educational attainment. The code uses the same weighted median wage methodology as above. 
+Finally, this code chunk generates median wages by educational attainment. The code uses the same weighted median wage methodology as above.
 
-It also includes two sets of custom educational categories, which you can exclude or modify as needed. See the [EPI Microdata variables list](https://microdata.epi.org/variables/education/gradeatn/) to learn how the `gradeatn` variable is categorized by default. 
+It also includes two sets of custom educational categories, which you can exclude or modify as needed. See the [EPI Microdata variables list](https://microdata.epi.org/variables/education/gradeatn/) to learn how the `gradeatn` variable is categorized by default.
 
 ### Filter the data
 
-The `gradeatn` variable is only available from 1992, so first we need to filter the data to exclude irrelevant years. 
+The `gradeatn` variable is only available from 1992, so first we need to filter the data to exclude irrelevant years.
 
 ```{r, Filter years, message=FALSE}
 new_cps_org <- filter(cps_org, year >= 1992)
@@ -204,7 +207,7 @@ new_cps_org <- filter(cps_org, year >= 1992)
 
 ### Calculate wages by education level
 
-Now we'll run the code. The first part of both sections of code here creates custom educational attainment categories. The second part calulcates wages. 
+Now we'll run the code. The first part of both sections of code here creates custom educational attainment categories. The second part calulcates wages.
 
 ```{r, Wages by education, message=FALSE}
 #Single category Associate degree
@@ -243,7 +246,7 @@ wages_two_assoc <- new_cps_org |>
 
 ### Format and save output
 
-Here we'll save our two dataframes to a new Excel sheet, formatting the output so both dataframes fit on a single sheet. 
+Here we'll save our two dataframes to a new Excel sheet, formatting the output so both dataframes fit on a single sheet.
 
 ```{r, Add educational wages to Excel, message=FALSE}
 wb$add_worksheet(sheet = "Education median wages") $
