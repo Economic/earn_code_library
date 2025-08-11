@@ -8,7 +8,7 @@
 
 <meta name="author" content="Emma Cohn and Sebastian Martinez Hickey">
 
-<title>State-level median wages by demographic (race, gender, educational attainment) – Code Library</title>
+<title>State-level median wages by demographic – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./wisconsin_suppressed_wages.html">State-level median wages by demographic (race, gender, educational attainment)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./wisconsin_suppressed_wages.html">State-level median wages by demographic</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -324,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./wisconsin_suppressed_wages.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">State-level median wages by demographic (race, gender, educational attainment)</span></a>
+ <span class="menu-text">State-level median wages by demographic</span></a>
   </div>
 </li>
       </ul>
@@ -358,8 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#set-up-for-inflation-adjusting" id="toc-set-up-for-inflation-adjusting" class="nav-link active" data-scroll-target="#set-up-for-inflation-adjusting">Set up for inflation adjusting</a>
-  <ul class="collapse">
+  <li><a href="#set-up-for-inflation-adjusting" id="toc-set-up-for-inflation-adjusting" class="nav-link active" data-scroll-target="#set-up-for-inflation-adjusting">Set up for inflation adjusting</a></li>
   <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link" data-scroll-target="#import-and-clean-data">Import and clean data</a></li>
   <li><a href="#sheet-1-wages-by-race-gender-and-race-and-gender." id="toc-sheet-1-wages-by-race-gender-and-race-and-gender." class="nav-link" data-scroll-target="#sheet-1-wages-by-race-gender-and-race-and-gender.">Sheet 1: Wages by race, gender, and race and gender.</a>
   <ul class="collapse">
@@ -376,16 +375,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#format-and-save-output-1" id="toc-format-and-save-output-1" class="nav-link" data-scroll-target="#format-and-save-output-1">Format and save output</a></li>
   </ul></li>
   <li><a href="#save-your-workbook" id="toc-save-your-workbook" class="nav-link" data-scroll-target="#save-your-workbook">Save your workbook</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./wisconsin_suppressed_wages.html">State-level median wages by demographic (race, gender, educational attainment)</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./wisconsin_suppressed_wages.html">State-level median wages by demographic</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">State-level median wages by demographic (race, gender, educational attainment)</h1>
+<h1 class="title">State-level median wages by demographic</h1>
 </div>
 
 
@@ -423,8 +421,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Set up workbook</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">wb_workbook</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="set-up-for-inflation-adjusting" class="level1">
-<h1>Set up for inflation adjusting</h1>
+<section id="set-up-for-inflation-adjusting" class="level2">
+<h2 class="anchored" data-anchor-id="set-up-for-inflation-adjusting">Set up for inflation adjusting</h2>
 <p>EPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pulling in CPI-U-RS series</span></span>
@@ -433,6 +431,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set base year to 2024</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>cpi2024 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>cpi_u_rs[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2024</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 <section id="import-and-clean-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-and-clean-data">Import and clean data</h2>
 <p><strong>Note:</strong> Don’t forget to <strong>update years</strong> to match your setup before running the script.</p>
@@ -650,7 +649,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>All done! Happy coding!</p>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

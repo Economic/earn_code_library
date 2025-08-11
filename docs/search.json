@@ -376,73 +376,85 @@
   {
     "objectID": "wisconsin_suppressed_wages.html",
     "href": "wisconsin_suppressed_wages.html",
-    "title": "State-level median wages by demographic (race, gender, educational attainment)",
+    "title": "State-level median wages by demographic",
     "section": "",
     "text": "Use this code to find median wages and sample sizes by various demographics (race, gender, race and gender, and educational attainment) using the EPI CPS microdata extracts.\nPlease note: these data are already available on the State of Working American Data Library. However, due to small sample sizes, some cuts of these data are suppressed. You can use this code to generate all data, regardless of sample size, but be careful when making claims about data with small sample sizes.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. We’ll also set up a wb value that will allow us to generate an Excel workbook.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)\nlibrary(openxlsx2)\n\n#Set up workbook\nwb &lt;- wb_workbook()",
     "crumbs": [
       "R code",
       "Code Repository",
-      "State-level median wages by demographic (race, gender, educational attainment)"
+      "State-level median wages by demographic"
+    ]
+  },
+  {
+    "objectID": "wisconsin_suppressed_wages.html#set-up-for-inflation-adjusting",
+    "href": "wisconsin_suppressed_wages.html#set-up-for-inflation-adjusting",
+    "title": "State-level median wages by demographic",
+    "section": "Set up for inflation adjusting",
+    "text": "Set up for inflation adjusting\nEPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.\n\n# pulling in CPI-U-RS series\ncpi_data &lt;- realtalk::cpi_u_rs_annual\n\n# set base year to 2024\ncpi2024 &lt;- cpi_data$cpi_u_rs[cpi_data$year==2024]",
+    "crumbs": [
+      "R code",
+      "Code Repository",
+      "State-level median wages by demographic"
     ]
   },
   {
     "objectID": "wisconsin_suppressed_wages.html#import-and-clean-data",
     "href": "wisconsin_suppressed_wages.html#import-and-clean-data",
-    "title": "State-level median wages by demographic (race, gender, educational attainment)",
+    "title": "State-level median wages by demographic",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate median wages.\nWe’ll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We’ll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages.\n\n#load in CPS ORG data\ncps_org &lt;- load_cps(\"org\", 1979:2024, year, orgwgt, wage, statefips, female, wbho, age, \n                                      selfemp, emp, selfinc, cow1, educ, gradeatn) %&gt;%\n  # Standard labor force and age restrictions, restrict to only Wisconsin (statefips code = 55)\n  filter(age &gt;= 16, emp == 1, statefips == 55,\n         case_when(year &lt; 1989 ~ selfemp == 0,\n                   year &gt;= 1989 & year &lt; 1994 ~ selfemp == 0 | selfinc == 0,\n                   TRUE ~ cow1 &lt;= 5)) %&gt;% \n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') %&gt;%\n  # Inflation adjust wages to 2024$\n  mutate(realwage = wage * (cpi2024/cpi_u_rs))",
     "crumbs": [
       "R code",
       "Code Repository",
-      "State-level median wages by demographic (race, gender, educational attainment)"
+      "State-level median wages by demographic"
     ]
   },
   {
     "objectID": "wisconsin_suppressed_wages.html#sheet-1-wages-by-race-gender-and-race-and-gender.",
     "href": "wisconsin_suppressed_wages.html#sheet-1-wages-by-race-gender-and-race-and-gender.",
-    "title": "State-level median wages by demographic (race, gender, educational attainment)",
+    "title": "State-level median wages by demographic",
     "section": "Sheet 1: Wages by race, gender, and race and gender.",
     "text": "Sheet 1: Wages by race, gender, and race and gender.\nThis section of the script produces median wages by year and by various demographic cuts. Here we use EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per year per demographic cut.\n\nMedian wages by gender\n\nwages_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(female, year)) |&gt;\n  #Relabel for clarity\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = gender, values_from = wage_median)\n\n\n\nMedian wages by race\n\nwages_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, year)) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = wbho, values_from = wage_median)\n\n\n\nMedian wages by race and gender\n\nwages_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  #Relabel for clarity\n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = demographic, values_from = wage_median)\n\n\n\nFormat and save output\nHere we’ll join all three dataframes into one, order our variables, and save the new dataframe to a sheet in our Excel workbook.\n\n#Join the three dataframes by year\nwage_demos &lt;-  left_join(wages_gender, wages_race, by='year') |&gt;\n  left_join(wages_race_gender) |&gt; \n  #Order the columns\n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Create a new sheet and add data to sheet\nwb$add_worksheet(sheet = \"Race and gender_median wages\") $\n  add_data(x = wage_demos)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "State-level median wages by demographic (race, gender, educational attainment)"
+      "State-level median wages by demographic"
     ]
   },
   {
     "objectID": "wisconsin_suppressed_wages.html#sheet-2-sample-sizes",
     "href": "wisconsin_suppressed_wages.html#sheet-2-sample-sizes",
-    "title": "State-level median wages by demographic (race, gender, educational attainment)",
+    "title": "State-level median wages by demographic",
     "section": "Sheet 2: Sample sizes",
     "text": "Sheet 2: Sample sizes\nThis code chunk follows the exact same steps as the section above, except it generates sample sizes instead of median wages. It is extremely important to reference this sheet when making claims about the data. Avoid relying on data drawn from small sample sizes.\n\n#By gender\nsample_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(female, year)) |&gt;\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = gender, values_from = n)\n\n#By race\nsample_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarize(n=n(),\n            .by = c(wbho, year)) |&gt; \n  pivot_wider(id_cols = year, names_from = wbho, values_from = n)\n\n#By race and gender\nsample_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = demographic, values_from = n)\n\n#Join dataframes\nsample_sizes &lt;-  left_join(sample_gender, sample_race, by='year') |&gt;\n  left_join(sample_race_gender) |&gt; \n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Save to Excel\nwb$add_worksheet(sheet = \"Sample sizes\") $\n  add_data(x = sample_sizes)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "State-level median wages by demographic (race, gender, educational attainment)"
+      "State-level median wages by demographic"
     ]
   },
   {
     "objectID": "wisconsin_suppressed_wages.html#sheet-3-wages-by-educational-attainment",
     "href": "wisconsin_suppressed_wages.html#sheet-3-wages-by-educational-attainment",
-    "title": "State-level median wages by demographic (race, gender, educational attainment)",
+    "title": "State-level median wages by demographic",
     "section": "Sheet 3: Wages by educational attainment",
     "text": "Sheet 3: Wages by educational attainment\nFinally, this code chunk generates median wages by educational attainment. The code uses the same weighted median wage methodology as above.\nIt also includes two sets of custom educational categories, which you can exclude or modify as needed. See the EPI Microdata variables list to learn how the gradeatn variable is categorized by default.\n\nFilter the data\nThe gradeatn variable is only available from 1992, so first we need to filter the data to exclude irrelevant years.\n\nnew_cps_org &lt;- filter(cps_org, year &gt;= 1992)\n\n\n\nCalculate wages by education level\nNow we’ll run the code. The first part of both sections of code here creates custom educational attainment categories. The second part calulcates wages.\n\n#Single category Associate degree\nwages_sing_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 | gradeatn == 12 ~ \"Associate degree-all\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n#Two category Associate degree\nwages_two_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 ~ \"Associate degree-occupational/vocational\",\n                          gradeatn == 12 ~ \"Associate degree-academic program\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n\n\nFormat and save output\nHere we’ll save our two dataframes to a new Excel sheet, formatting the output so both dataframes fit on a single sheet.\n\nwb$add_worksheet(sheet = \"Education median wages\") $\n  add_data(x = wages_sing_assoc, start_col = 1) $\n  add_data(x = wages_two_assoc, start_col = 8)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "State-level median wages by demographic (race, gender, educational attainment)"
+      "State-level median wages by demographic"
     ]
   },
   {
     "objectID": "wisconsin_suppressed_wages.html#save-your-workbook",
     "href": "wisconsin_suppressed_wages.html#save-your-workbook",
-    "title": "State-level median wages by demographic (race, gender, educational attainment)",
+    "title": "State-level median wages by demographic",
     "section": "Save your workbook",
     "text": "Save your workbook\nNote: Don’t forget to file names and file paths to match your setup before running this code chunk.\n\nwb_save(wb, \"output/wisconsin_wages_2025.xlsx\")\n\nAll done! Happy coding!",
     "crumbs": [
       "R code",
       "Code Repository",
-      "State-level median wages by demographic (race, gender, educational attainment)"
+      "State-level median wages by demographic"
     ]
   },
   {
