@@ -364,13 +364,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#foraging-for-data-in-the-wild-2025" id="toc-foraging-for-data-in-the-wild-2025" class="nav-link active" data-scroll-target="#foraging-for-data-in-the-wild-2025">Foraging for Data in the Wild 2025</a>
-  <ul class="collapse">
-  <li><a href="#joris-unemployment-insurance-example" id="toc-joris-unemployment-insurance-example" class="nav-link" data-scroll-target="#joris-unemployment-insurance-example">Jori’s Unemployment Insurance example</a></li>
+  <li><a href="#joris-unemployment-insurance-example" id="toc-joris-unemployment-insurance-example" class="nav-link active" data-scroll-target="#joris-unemployment-insurance-example">Jori’s Unemployment Insurance example</a></li>
   <li><a href="#using-the-qcew-to-measure-employment-growth-in-data-centers-by-state" id="toc-using-the-qcew-to-measure-employment-growth-in-data-centers-by-state" class="nav-link" data-scroll-target="#using-the-qcew-to-measure-employment-growth-in-data-centers-by-state">Using the QCEW to measure employment growth in data centers by state</a></li>
   <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">1) Load libraries</a></li>
   <li><a href="#bls-functions-for-loading-qcew-data" id="toc-bls-functions-for-loading-qcew-data" class="nav-link" data-scroll-target="#bls-functions-for-loading-qcew-data">2) BLS functions for loading QCEW data</a></li>
-  <li><a href="#research-question-qcew-data-pull" id="toc-research-question-qcew-data-pull" class="nav-link" data-scroll-target="#research-question-qcew-data-pull">3) Research question &amp; QCEW data pull</a></li>
+  <li><a href="#qcew-data-pull" id="toc-qcew-data-pull" class="nav-link" data-scroll-target="#qcew-data-pull">3) QCEW data pull</a></li>
   <li><a href="#add-readable-labels-industry-area-titles" id="toc-add-readable-labels-industry-area-titles" class="nav-link" data-scroll-target="#add-readable-labels-industry-area-titles">4) Add readable labels (industry &amp; area titles)</a>
   <ul class="collapse">
   <li><a href="#a-first-attempt-at-joining-labels" id="toc-a-first-attempt-at-joining-labels" class="nav-link" data-scroll-target="#a-first-attempt-at-joining-labels">4a) First attempt at joining labels</a></li>
@@ -378,12 +376,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#c-cleaning-continued" id="toc-c-cleaning-continued" class="nav-link" data-scroll-target="#c-cleaning-continued">4c) Cleaning continued</a></li>
   </ul></li>
   <li><a href="#quarterly-dates-averages" id="toc-quarterly-dates-averages" class="nav-link" data-scroll-target="#quarterly-dates-averages">5) Quarterly dates &amp; averages</a></li>
-  <li><a href="#monthly-data-from-qcew" id="toc-monthly-data-from-qcew" class="nav-link" data-scroll-target="#monthly-data-from-qcew">6) Monthly data from QCEW</a></li>
-  <li><a href="#measure-growth-since-late-2022" id="toc-measure-growth-since-late-2022" class="nav-link" data-scroll-target="#measure-growth-since-late-2022">7) Measure growth since late 2022</a></li>
-  <li><a href="#quick-visualization" id="toc-quick-visualization" class="nav-link" data-scroll-target="#quick-visualization">8) Quick visualization</a></li>
-  <li><a href="#optional-reshape-for-statebycolumn-tables" id="toc-optional-reshape-for-statebycolumn-tables" class="nav-link" data-scroll-target="#optional-reshape-for-statebycolumn-tables">9) Optional: reshape for state‑by‑column tables</a></li>
-  <li><a href="#reproducibility-notes" id="toc-reproducibility-notes" class="nav-link" data-scroll-target="#reproducibility-notes">10) Reproducibility notes</a></li>
-  </ul></li>
+  <li><a href="#reshape-to-create-statebycolumn-tables" id="toc-reshape-to-create-statebycolumn-tables" class="nav-link" data-scroll-target="#reshape-to-create-statebycolumn-tables">6) Reshape to create state‑by‑column tables</a></li>
+  <li><a href="#monthly-data-from-qcew" id="toc-monthly-data-from-qcew" class="nav-link" data-scroll-target="#monthly-data-from-qcew">7) Monthly data from QCEW</a></li>
+  <li><a href="#measure-employment-growth-since-late-2022" id="toc-measure-employment-growth-since-late-2022" class="nav-link" data-scroll-target="#measure-employment-growth-since-late-2022">8) Measure employment growth since late 2022</a></li>
+  <li><a href="#bonus-making-a-quick-visualization" id="toc-bonus-making-a-quick-visualization" class="nav-link" data-scroll-target="#bonus-making-a-quick-visualization">9) Bonus: Making a quick visualization</a></li>
+  <li><a href="#notes-on-reproducibility" id="toc-notes-on-reproducibility" class="nav-link" data-scroll-target="#notes-on-reproducibility">10) Notes on reproducibility</a></li>
   </ul>
 </nav>
     </div>
@@ -415,12 +412,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="foraging-for-data-in-the-wild-2025" class="level1">
-<h1>Foraging for Data in the Wild 2025</h1>
 <section id="joris-unemployment-insurance-example" class="level2">
 <h2 class="anchored" data-anchor-id="joris-unemployment-insurance-example">Jori’s Unemployment Insurance example</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coming soon!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="using-the-qcew-to-measure-employment-growth-in-data-centers-by-state" class="level2">
@@ -440,6 +435,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Bonus: quick visualization with <strong>ggplot2</strong>!</li>
 </ol>
 </blockquote>
+<p><strong>Question.</strong> How has “data center” employment (NAICS 518) grown since late 2022, and in which states has it grown the most?</p>
+<p>To answer these questions, we’ll fetch 2022–2024 quarterly data for NAICS <strong>518: Computing infrastructure providers, data processing, web hosting, and related services</strong>.</p>
+<p>** Disclaimer**: I’m not sure if this is the most appropriate NAICS code, but it makes for a good exercise! Depending on your research question, you may want to refine how you select industry codes (e.g., include selected sub‑industries or complementary sectors.).</p>
 </section>
 <section id="load-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="load-libraries">1) Load libraries</h2>
@@ -482,10 +480,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  Construction &lt;- qcewGetIndustryData("2015", "1", "1012")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="research-question-qcew-data-pull" class="level2">
-<h2 class="anchored" data-anchor-id="research-question-qcew-data-pull">3) Research question &amp; QCEW data pull</h2>
-<p><strong>Question.</strong> How has “data center” employment (NAICS 518) grown since late 2022, and in which states has it grown the most?</p>
-<p>To answer these questions, we’ll fetch 2022–2024 quarterly data for NAICS <strong>518: Computing infrastructure providers, data processing, web hosting, and related services</strong>. (Disclaimer: I’m not sure if this is the most appropriate NAICS code, but it makes for a good exercise! Depending on your research question, you may want to refine industry coverage (e.g., include selected sub‑industries or complementary sectors.).</p>
+<section id="qcew-data-pull" class="level2">
+<h2 class="anchored" data-anchor-id="qcew-data-pull">3) QCEW data pull</h2>
 <p>Since the example functions load only one quarter at a time, we’ll want to make some modifications. Instead of calling the function 12 times by hand, we’ll build a grid of parameters and map across it.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set our parameters </span></span>
@@ -677,108 +673,16 @@ Caused by warning:
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="monthly-data-from-qcew" class="level2">
-<h2 class="anchored" data-anchor-id="monthly-data-from-qcew">6) Monthly data from QCEW</h2>
-<p>The QCEW provides monthly employment levels in each quarter! With a few tweaks to our data frame, we can produce a monthly series, giving us a more granular look at how data center employment has grown since 2022. Each QCEW quarter reports employment for its three months. We can unpivot those columns to build a monthly time series.</p>
+<section id="reshape-to-create-statebycolumn-tables" class="level2">
+<h2 class="anchored" data-anchor-id="reshape-to-create-statebycolumn-tables">6) Reshape to create state‑by‑column tables</h2>
+<p>Now that we have quarterly data, we’ll use pivot_wider() to create a table of quarterly data that is long by date.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>qcew_monthly <span class="ot">&lt;-</span> qcew_clean <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"month"</span>),</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"month_in_qtr"</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"month(</span><span class="sc">\\</span><span class="st">d+)_emplvl"</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"emplvl"</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">month_in_qtr =</span> <span class="fu">as.integer</span>(month_in_qtr),</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">month        =</span> (qtr <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">3</span> <span class="sc">+</span> month_in_qtr,</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">date         =</span> <span class="fu">make_date</span>(year, month, <span class="dv">1</span>),</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(area_title, area_fips, industry_code, year, qtr, date, emplvl) <span class="sc">|&gt;</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(area_title, year, qtr, date) <span class="sc">|&gt;</span> </span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># let's clean up our state names!</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">str_replace</span>(area_title, <span class="st">" -- Statewide"</span>, <span class="st">""</span>))</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(qcew_monthly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 8
-  area_title         area_fips industry_code  year   qtr date       emplvl state
-  &lt;chr&gt;              &lt;chr&gt;             &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;date&gt;      &lt;int&gt; &lt;chr&gt;
-1 Alabama -- Statew… 01000               518  2022     1 2022-01-01   2421 Alab…
-2 Alabama -- Statew… 01000               518  2022     1 2022-02-01   2511 Alab…
-3 Alabama -- Statew… 01000               518  2022     1 2022-03-01   2523 Alab…
-4 Alabama -- Statew… 01000               518  2022     2 2022-04-01   2722 Alab…
-5 Alabama -- Statew… 01000               518  2022     2 2022-05-01   2795 Alab…
-6 Alabama -- Statew… 01000               518  2022     2 2022-06-01   2798 Alab…</code></pre>
-</div>
-</div>
-</section>
-<section id="measure-growth-since-late-2022" class="level2">
-<h2 class="anchored" data-anchor-id="measure-growth-since-late-2022">7) Measure growth since late 2022</h2>
-<p>For a simple comparison, compute percentage change from <strong>November 2022</strong> to the latest available month for each state. (If a state is missing November specifically, we’ll use the first available month on or after 2022‑11‑01.)</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>state_growth <span class="ot">&lt;-</span> qcew_monthly <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_emplvl =</span> <span class="fu">first</span>(emplvl),</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_emplvl   =</span> <span class="fu">last</span>(emplvl),</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date   =</span> <span class="fu">first</span>(date),</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_date     =</span> <span class="fu">last</span>(date),</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by=</span>state) <span class="sc">|&gt;</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">emp_change =</span> (end_emplvl <span class="sc">-</span> start_emplvl),</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change =</span> (end_emplvl <span class="sc">/</span> start_emplvl <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pct_change))</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>state_growth <span class="sc">|&gt;</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 7
-   state     start_emplvl end_emplvl start_date end_date   emp_change pct_change
-   &lt;chr&gt;            &lt;int&gt;      &lt;int&gt; &lt;date&gt;     &lt;date&gt;          &lt;int&gt;      &lt;dbl&gt;
- 1 Alabama           2421       3931 2022-01-01 2024-12-01       1510       62.4
- 2 Idaho              903       1295 2022-01-01 2024-12-01        392       43.4
- 3 South Da…          293        405 2022-01-01 2024-12-01        112       38.2
- 4 Alaska              89        119 2022-01-01 2024-12-01         30       33.7
- 5 New Jers…        12474      16048 2022-01-01 2024-12-01       3574       28.7
- 6 Wyoming            163        208 2022-01-01 2024-12-01         45       27.6
- 7 Maryland          4377       5521 2022-01-01 2024-12-01       1144       26.1
- 8 Rhode Is…          625        787 2022-01-01 2024-12-01        162       25.9
- 9 New Hamp…         1465       1823 2022-01-01 2024-12-01        358       24.4
-10 West Vir…         1182       1435 2022-01-01 2024-12-01        253       21.4</code></pre>
-</div>
-</div>
-</section>
-<section id="quick-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="quick-visualization">8) Quick visualization</h2>
-<p>Lets plot a few series using ggplot2</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sel_state_data <span class="ot">&lt;-</span> qcew_monthly <span class="sc">|&gt;</span> </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Texas'</span>, <span class="st">'Arkansas'</span>, <span class="st">'Louisiana'</span>))</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sel_state_data, <span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>emplvl, <span class="at">color=</span>state)) <span class="sc">+</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Monthly employment (NAICS 518)"</span>,</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Employment level"</span>,</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"State"</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="foraging_for_data_files/figure-html/ggplots-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="optional-reshape-for-statebycolumn-tables" class="level2">
-<h2 class="anchored" data-anchor-id="optional-reshape-for-statebycolumn-tables">9) Optional: reshape for state‑by‑column tables</h2>
-<p>Finally, we’ll use pivot_wider() to create a table of quarterly data, that is long by date.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>state_qtr_table <span class="ot">&lt;-</span> qcew_qtr <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">str_replace</span>(area_title, <span class="st">" -- Statewide"</span>, <span class="st">""</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(qdate, state, qtr_avg_emp) <span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> qdate, <span class="at">names_from =</span> state, <span class="at">values_from =</span> qtr_avg_emp)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>state_qtr_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>state_qtr_table <span class="ot">&lt;-</span> qcew_qtr <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">str_replace</span>(area_title, <span class="st">" -- Statewide"</span>, <span class="st">""</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(qdate, state, qtr_avg_emp) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> qdate, <span class="at">names_from =</span> state, <span class="at">values_from =</span> qtr_avg_emp)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>state_qtr_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 54
    qdate      Alabama Alaska Arizona Arkansas California Colorado Connecticut
@@ -805,13 +709,106 @@ Caused by warning:
 </div>
 </div>
 </section>
-<section id="reproducibility-notes" class="level2">
-<h2 class="anchored" data-anchor-id="reproducibility-notes">10) Reproducibility notes</h2>
-<p>Pro-tips - This module reads files directly from <strong>bls.gov</strong>; those URLs occasionally change. If a link breaks, visit the QCEW classifications pages to refresh the URLs. - Consult <strong>QCEW layout/codebook</strong> to confirm variable meanings &amp; aggregation levels for your projects.</p>
-<p>Happy coding!</p>
-
-
+<section id="monthly-data-from-qcew" class="level2">
+<h2 class="anchored" data-anchor-id="monthly-data-from-qcew">7) Monthly data from QCEW</h2>
+<p>The QCEW provides monthly employment levels in each quarter! With a few tweaks to our data frame, we can produce a monthly series, giving us a more granular look at how data center employment has grown since 2022. Each QCEW quarter reports employment for its three months. We can unpivot those columns to build a monthly time series.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>qcew_monthly <span class="ot">&lt;-</span> qcew_clean <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"month"</span>),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"month_in_qtr"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"month(</span><span class="sc">\\</span><span class="st">d+)_emplvl"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"emplvl"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">month_in_qtr =</span> <span class="fu">as.integer</span>(month_in_qtr),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">month        =</span> (qtr <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">3</span> <span class="sc">+</span> month_in_qtr,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">date         =</span> <span class="fu">make_date</span>(year, month, <span class="dv">1</span>),</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(area_title, area_fips, industry_code, year, qtr, date, emplvl) <span class="sc">|&gt;</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(area_title, year, qtr, date) <span class="sc">|&gt;</span> </span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># let's clean up our state names!</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">str_replace</span>(area_title, <span class="st">" -- Statewide"</span>, <span class="st">""</span>))</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(qcew_monthly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  area_title         area_fips industry_code  year   qtr date       emplvl state
+  &lt;chr&gt;              &lt;chr&gt;             &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;date&gt;      &lt;int&gt; &lt;chr&gt;
+1 Alabama -- Statew… 01000               518  2022     1 2022-01-01   2421 Alab…
+2 Alabama -- Statew… 01000               518  2022     1 2022-02-01   2511 Alab…
+3 Alabama -- Statew… 01000               518  2022     1 2022-03-01   2523 Alab…
+4 Alabama -- Statew… 01000               518  2022     2 2022-04-01   2722 Alab…
+5 Alabama -- Statew… 01000               518  2022     2 2022-05-01   2795 Alab…
+6 Alabama -- Statew… 01000               518  2022     2 2022-06-01   2798 Alab…</code></pre>
+</div>
+</div>
 </section>
+<section id="measure-employment-growth-since-late-2022" class="level2">
+<h2 class="anchored" data-anchor-id="measure-employment-growth-since-late-2022">8) Measure employment growth since late 2022</h2>
+<p>For a simple comparison, compute percentage change from <strong>November 2022</strong> to the latest available month for each state. (If a state is missing November specifically, we’ll use the first available month on or after 2022‑11‑01.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>state_growth <span class="ot">&lt;-</span> qcew_monthly <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_emplvl =</span> <span class="fu">first</span>(emplvl),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_emplvl   =</span> <span class="fu">last</span>(emplvl),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date   =</span> <span class="fu">first</span>(date),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_date     =</span> <span class="fu">last</span>(date),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by=</span>state) <span class="sc">|&gt;</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">emp_change =</span> (end_emplvl <span class="sc">-</span> start_emplvl),</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change =</span> (end_emplvl <span class="sc">/</span> start_emplvl <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pct_change))</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>state_growth <span class="sc">|&gt;</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+   state     start_emplvl end_emplvl start_date end_date   emp_change pct_change
+   &lt;chr&gt;            &lt;int&gt;      &lt;int&gt; &lt;date&gt;     &lt;date&gt;          &lt;int&gt;      &lt;dbl&gt;
+ 1 Alabama           2421       3931 2022-01-01 2024-12-01       1510       62.4
+ 2 Idaho              903       1295 2022-01-01 2024-12-01        392       43.4
+ 3 South Da…          293        405 2022-01-01 2024-12-01        112       38.2
+ 4 Alaska              89        119 2022-01-01 2024-12-01         30       33.7
+ 5 New Jers…        12474      16048 2022-01-01 2024-12-01       3574       28.7
+ 6 Wyoming            163        208 2022-01-01 2024-12-01         45       27.6
+ 7 Maryland          4377       5521 2022-01-01 2024-12-01       1144       26.1
+ 8 Rhode Is…          625        787 2022-01-01 2024-12-01        162       25.9
+ 9 New Hamp…         1465       1823 2022-01-01 2024-12-01        358       24.4
+10 West Vir…         1182       1435 2022-01-01 2024-12-01        253       21.4</code></pre>
+</div>
+</div>
+</section>
+<section id="bonus-making-a-quick-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="bonus-making-a-quick-visualization">9) Bonus: Making a quick visualization</h2>
+<p>Lets plot a few states using ggplot2</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sel_state_data <span class="ot">&lt;-</span> qcew_monthly <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Texas'</span>, <span class="st">'Arkansas'</span>, <span class="st">'Louisiana'</span>))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sel_state_data, <span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>emplvl, <span class="at">color=</span>state)) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Monthly employment (NAICS 518)"</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Employment level"</span>,</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"State"</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="foraging_for_data_files/figure-html/ggplots-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="notes-on-reproducibility" class="level2">
+<h2 class="anchored" data-anchor-id="notes-on-reproducibility">10) Notes on reproducibility</h2>
+<blockquote class="blockquote">
+<p>Pro-tips: - This module reads files directly from <strong>bls.gov</strong>; those URLs occasionally change. If a link breaks, visit the QCEW classifications pages to refresh the URLs. - Consult <strong>QCEW layout/codebook</strong> to confirm variable meanings &amp; aggregation levels for your projects.</p>
+</blockquote>
+<p>Happy coding!🕺</p>
+
+
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

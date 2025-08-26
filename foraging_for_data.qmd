@@ -3,12 +3,10 @@ title: "Foraging for Data in the Wild 2025"
 author: "Daniel Perez & Jori Kandra"
 ---
 
-# Foraging for Data in the Wild 2025
-
 ## Jori's Unemployment Insurance example
 
 ```{r}
-#
+# Coming soon!
 ```
 
 ## Using the QCEW to measure employment growth in data centers by state
@@ -25,6 +23,12 @@ author: "Daniel Perez & Jori Kandra"
 > 8.  Use some tricks to create quarterly and monthly data types with `lubridate`.
 > 9.  Measure employment changes for NAICS industry **518**.
 > 10. Bonus: quick visualization with **ggplot2**!
+
+**Question.** How has “data center” employment (NAICS 518) grown since late 2022, and in which states has it grown the most?
+
+To answer these questions, we’ll fetch 2022–2024 quarterly data for NAICS **518: Computing infrastructure providers, data processing, web hosting, and related services**.
+
+\*\* Disclaimer\*\*: I'm not sure if this is the most appropriate NAICS code, but it makes for a good exercise! Depending on your research question, you may want to refine how you select industry codes (e.g., include selected sub‑industries or complementary sectors.).
 
 ## 1) Load libraries
 
@@ -70,11 +74,7 @@ qcewGetIndustryData <- function (year, qtr, industry) {
 
 ```
 
-## 3) Research question & QCEW data pull
-
-**Question.** How has “data center” employment (NAICS 518) grown since late 2022, and in which states has it grown the most?
-
-To answer these questions, we’ll fetch 2022–2024 quarterly data for NAICS **518: Computing infrastructure providers, data processing, web hosting, and related services**. (Disclaimer: I'm not sure if this is the most appropriate NAICS code, but it makes for a good exercise! Depending on your research question, you may want to refine industry coverage (e.g., include selected sub‑industries or complementary sectors.).
+## 3) QCEW data pull
 
 Since the example functions load only one quarter at a time, we'll want to make some modifications. Instead of calling the function 12 times by hand, we’ll build a grid of parameters and map across it.
 
@@ -118,7 +118,6 @@ Industry titles downloaded from <https://www.bls.gov/cew/classifications/industr
 Area titles downloaded from <https://www.bls.gov/cew/classifications/areas/qcew-area-titles.htm>
 
 ```{r Load labels, message=FALSE}
-
 
 # link to csv files on the BLS QCEW site
 ind_title_url <- 'https://www.bls.gov/cew/classifications/industry/industry-titles.csv'
@@ -218,7 +217,20 @@ qcew_qtr <- qcew_clean |>
   )
 ```
 
-## 6) Monthly data from QCEW
+## 6) Reshape to create state‑by‑column tables
+
+Now that we have quarterly data, we'll use pivot_wider() to create a table of quarterly data that is long by date.
+
+```{r}
+state_qtr_table <- qcew_qtr |>
+  mutate(state = str_replace(area_title, " -- Statewide", "")) |>
+  select(qdate, state, qtr_avg_emp) |>
+  pivot_wider(id_cols = qdate, names_from = state, values_from = qtr_avg_emp)
+
+state_qtr_table
+```
+
+## 7) Monthly data from QCEW
 
 The QCEW provides monthly employment levels in each quarter! With a few tweaks to our data frame, we can produce a monthly series, giving us a more granular look at how data center employment has grown since 2022. Each QCEW quarter reports employment for its three months. We can unpivot those columns to build a monthly time series.
 
@@ -244,7 +256,7 @@ qcew_monthly <- qcew_clean |>
 head(qcew_monthly)
 ```
 
-## 7) Measure growth since late 2022
+## 8) Measure employment growth since late 2022
 
 For a simple comparison, compute percentage change from **November 2022** to the latest available month for each state. (If a state is missing November specifically, we’ll use the first available month on or after 2022‑11‑01.)
 
@@ -265,9 +277,9 @@ state_growth <- qcew_monthly |>
 state_growth |> slice_head(n = 10)
 ```
 
-## 8) Quick visualization
+## 9) Bonus: Making a quick visualization
 
-Lets plot a few series using ggplot2
+Lets plot a few states using ggplot2
 
 ```{r ggplots}
 
@@ -284,21 +296,8 @@ ggplot(data = sel_state_data, aes(x=date, y=emplvl, color=state)) +
 
 ```
 
-## 9) Optional: reshape for state‑by‑column tables
+## 10) Notes on reproducibility
 
-Finally, we'll use pivot_wider() to create a table of quarterly data, that is long by date.
+> Pro-tips: - This module reads files directly from **bls.gov**; those URLs occasionally change. If a link breaks, visit the QCEW classifications pages to refresh the URLs. - Consult **QCEW layout/codebook** to confirm variable meanings & aggregation levels for your projects.
 
-```{r}
-state_qtr_table <- qcew_qtr |>
-  mutate(state = str_replace(area_title, " -- Statewide", "")) |>
-  select(qdate, state, qtr_avg_emp) |>
-  pivot_wider(id_cols = qdate, names_from = state, values_from = qtr_avg_emp)
-
-state_qtr_table
-```
-
-## 10) Reproducibility notes
-
-Pro-tips - This module reads files directly from **bls.gov**; those URLs occasionally change. If a link breaks, visit the QCEW classifications pages to refresh the URLs. - Consult **QCEW layout/codebook** to confirm variable meanings & aggregation levels for your projects.
-
-Happy coding!
+Happy coding!🕺
