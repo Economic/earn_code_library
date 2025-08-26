@@ -453,7 +453,8 @@ data/"): 'wget' not found</code></pre>
 </section>
 <section id="wrangle-data" class="level3">
 <h3 class="anchored" data-anchor-id="wrangle-data">3) Wrangle data</h3>
-<p>Replace raw variable names using a user-defined data dictionary. The data dictionary is a combination of the <a href="https://oui.doleta.gov/dmstree/handbooks/402/402_4/4024c6/4024c6.pdf#ETA539">DOL ETA 539 Data Map</a> (found on <a href="https://oui.doleta.gov/unemploy/DataDownloads.asp">Data Downloads</a> page) and the <a href="https://www.dol.gov/sites/dolgov/files/ETA/handbooks/2017/ETHand401_5th.pdf">ETA 401 handook</a> “Item by Item Instructions.”</p>
+<p>Replace raw variable names using a user-defined data dictionary (download it <a href="https://github.com/Economic/earn_code_library/blob/main/data/eta539_var_names.csv">here</a>).</p>
+<p>The data dictionary is a combination of the <a href="https://oui.doleta.gov/dmstree/handbooks/402/402_4/4024c6/4024c6.pdf#ETA539">DOL ETA 539 Data Map</a> (found on <a href="https://oui.doleta.gov/unemploy/DataDownloads.asp">Data Downloads</a> page) and the <a href="https://www.dol.gov/sites/dolgov/files/ETA/handbooks/2017/ETHand401_5th.pdf">ETA 401 handook</a> “Item by Item Instructions.”</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data dictionary</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data_dictionary <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/eta539_var_names.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

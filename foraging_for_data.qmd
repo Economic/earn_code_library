@@ -22,7 +22,6 @@ Use the command-line utility function wget to trigger and direct the download of
 
 (If wget doesn't work on your machine, you can download the file manually and place it in your working directory)
 
-
 ```{r}
 # "wget -N" omits download if data has not been updated "-P" sets the file destination"
 system("wget -N https://oui.doleta.gov/unemploy/csv/ar539.csv  -P data/")
@@ -31,7 +30,9 @@ system("wget -N https://oui.doleta.gov/unemploy/csv/ar539.csv  -P data/")
 
 ### 3) Wrangle data
 
-Replace raw variable names using a user-defined data dictionary. The data dictionary is a combination of the [DOL ETA 539 Data Map](https://oui.doleta.gov/dmstree/handbooks/402/402_4/4024c6/4024c6.pdf#ETA539) (found on [Data Downloads](https://oui.doleta.gov/unemploy/DataDownloads.asp) page) and the [ETA 401 handook](https://www.dol.gov/sites/dolgov/files/ETA/handbooks/2017/ETHand401_5th.pdf) "Item by Item Instructions."
+Replace raw variable names using a user-defined data dictionary (download it [here](https://github.com/Economic/earn_code_library/blob/main/data/eta539_var_names.csv)).
+
+The data dictionary is a combination of the [DOL ETA 539 Data Map](https://oui.doleta.gov/dmstree/handbooks/402/402_4/4024c6/4024c6.pdf#ETA539) (found on [Data Downloads](https://oui.doleta.gov/unemploy/DataDownloads.asp) page) and the [ETA 401 handook](https://www.dol.gov/sites/dolgov/files/ETA/handbooks/2017/ETHand401_5th.pdf) "Item by Item Instructions."
 
 ```{r}
 # read in data dictionary
