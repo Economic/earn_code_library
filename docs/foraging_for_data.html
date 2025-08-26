@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Perez &amp; Jori Kandra">
+
+<title>Foraging for Data in the Wild 2025 – Code Library</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./viz_workshop.html" rel="next">
+<link href="./intro_to_r.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./graphics/EARN_logo_primary.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Code Library</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Economic/earn_code_library"> <i class="bi bi-fab fa-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./foraging_for_data.html">Foraging for Data in the Wild 2025</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Learn R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing R &amp; RStudio EARN Talk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./foraging_for_data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Foraging for Data in the Wild 2025</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./viz_workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualizing Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./benchmarking_workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benchmarking Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EARNCon data bootcamp files</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Other Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./epi_libraries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./stata_binipolate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stata packages</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">R code</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Load Census tables via Tidycensus</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./blsR_example.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Downloading BLS data via blsR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted percentiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./epi_microdata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Load EPI CPS Extracts via epiextractr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./inflation_adjusting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inflation adjusting with Realtalk</span></a>
+  </div>
+</li>
+          <li class="px-0"><hr class="sidebar-divider hi "></li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Code Repository</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./union_density.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Historical state union density</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./foreign_born_stats_ipumsr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using ipumsr to load immigrant statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rtw_union.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparing union density rates in right-to-work versus non-right-to-work states</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./union_premium.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calculate union wage premiums by state and year</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./median_wages_demos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">State-level median wages by demographic</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Stata code</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Wage deciles by state</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#foraging-for-data-in-the-wild-2025" id="toc-foraging-for-data-in-the-wild-2025" class="nav-link active" data-scroll-target="#foraging-for-data-in-the-wild-2025">Foraging for Data in the Wild 2025</a>
+  <ul class="collapse">
+  <li><a href="#joris-unemployment-insurance-example" id="toc-joris-unemployment-insurance-example" class="nav-link" data-scroll-target="#joris-unemployment-insurance-example">Jori’s Unemployment Insurance example</a></li>
+  <li><a href="#using-the-qcew-to-measure-employment-growth-in-data-centers-by-state" id="toc-using-the-qcew-to-measure-employment-growth-in-data-centers-by-state" class="nav-link" data-scroll-target="#using-the-qcew-to-measure-employment-growth-in-data-centers-by-state">Using the QCEW to measure employment growth in data centers by state</a></li>
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">1) Load libraries</a></li>
+  <li><a href="#bls-functions-for-loading-qcew-data" id="toc-bls-functions-for-loading-qcew-data" class="nav-link" data-scroll-target="#bls-functions-for-loading-qcew-data">2) BLS functions for loading QCEW data</a></li>
+  <li><a href="#research-question-qcew-data-pull" id="toc-research-question-qcew-data-pull" class="nav-link" data-scroll-target="#research-question-qcew-data-pull">3) Research question &amp; QCEW data pull</a></li>
+  <li><a href="#add-readable-labels-industry-area-titles" id="toc-add-readable-labels-industry-area-titles" class="nav-link" data-scroll-target="#add-readable-labels-industry-area-titles">4) Add readable labels (industry &amp; area titles)</a>
+  <ul class="collapse">
+  <li><a href="#a-first-attempt-at-joining-labels" id="toc-a-first-attempt-at-joining-labels" class="nav-link" data-scroll-target="#a-first-attempt-at-joining-labels">4a) First attempt at joining labels</a></li>
+  <li><a href="#b-harmonizing-data-types-to-join" id="toc-b-harmonizing-data-types-to-join" class="nav-link" data-scroll-target="#b-harmonizing-data-types-to-join">4b) Harmonizing data types to join</a></li>
+  <li><a href="#c-cleaning-continued" id="toc-c-cleaning-continued" class="nav-link" data-scroll-target="#c-cleaning-continued">4c) Cleaning continued</a></li>
+  </ul></li>
+  <li><a href="#quarterly-dates-averages" id="toc-quarterly-dates-averages" class="nav-link" data-scroll-target="#quarterly-dates-averages">5) Quarterly dates &amp; averages</a></li>
+  <li><a href="#monthly-data-from-qcew" id="toc-monthly-data-from-qcew" class="nav-link" data-scroll-target="#monthly-data-from-qcew">6) Monthly data from QCEW</a></li>
+  <li><a href="#measure-growth-since-late-2022" id="toc-measure-growth-since-late-2022" class="nav-link" data-scroll-target="#measure-growth-since-late-2022">7) Measure growth since late 2022</a></li>
+  <li><a href="#quick-visualization" id="toc-quick-visualization" class="nav-link" data-scroll-target="#quick-visualization">8) Quick visualization</a></li>
+  <li><a href="#optional-reshape-for-statebycolumn-tables" id="toc-optional-reshape-for-statebycolumn-tables" class="nav-link" data-scroll-target="#optional-reshape-for-statebycolumn-tables">9) Optional: reshape for state‑by‑column tables</a></li>
+  <li><a href="#reproducibility-notes" id="toc-reproducibility-notes" class="nav-link" data-scroll-target="#reproducibility-notes">10) Reproducibility notes</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./foraging_for_data.html">Foraging for Data in the Wild 2025</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Foraging for Data in the Wild 2025</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Daniel Perez &amp; Jori Kandra </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="foraging-for-data-in-the-wild-2025" class="level1">
+<h1>Foraging for Data in the Wild 2025</h1>
+<section id="joris-unemployment-insurance-example" class="level2">
+<h2 class="anchored" data-anchor-id="joris-unemployment-insurance-example">Jori’s Unemployment Insurance example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="using-the-qcew-to-measure-employment-growth-in-data-centers-by-state" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-qcew-to-measure-employment-growth-in-data-centers-by-state">Using the QCEW to measure employment growth in data centers by state</h2>
+<blockquote class="blockquote">
+<p><strong>Objectives</strong></p>
+<ol type="1">
+<li>Create data by iteratively calling a function.</li>
+<li>Bind/append data frames to create a large dataset.</li>
+<li>Read data from a .CSV directly from the web into R.</li>
+<li>Harmonize data types.</li>
+<li>Use joins to combine datasets.</li>
+<li>Filter using string detection.</li>
+<li>Reorder variables using <code>select()</code>, <code>arrange()</code>, and/or <code>relocate()</code> functions.</li>
+<li>Use some tricks to create quarterly and monthly data types with <code>lubridate</code>.</li>
+<li>Measure employment changes for NAICS industry <strong>518</strong>.</li>
+<li>Bonus: quick visualization with <strong>ggplot2</strong>!</li>
+</ol>
+</blockquote>
+</section>
+<section id="load-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="load-libraries">1) Load libraries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.4.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bls-functions-for-loading-qcew-data" class="level2">
+<h2 class="anchored" data-anchor-id="bls-functions-for-loading-qcew-data">2) BLS functions for loading QCEW data</h2>
+<p>The BLS conveniently provides a script and three functions for R users to load QCEW data directly into R! Below are two helpers adapted for this module. They construct an API URL and return a data frame for the requested year/quarter/industry or area.</p>
+<p>These resources can be downloaded from this page: <a href="https://www.bls.gov/cew/additional-resources/open-data/sample-code.htm#RSCRIPT" class="uri">https://www.bls.gov/cew/additional-resources/open-data/sample-code.htm#RSCRIPT</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This function loads all industries for one geographical area</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>qcewGetAreaData <span class="ot">&lt;-</span> <span class="cf">function</span>(year, qtr, area) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="st">"http://data.bls.gov/cew/data/api/YEAR/QTR/area/AREA.csv"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"YEAR"</span>, year, url, <span class="at">ignore.case=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"QTR"</span>, <span class="fu">tolower</span>(qtr), url, <span class="at">ignore.case=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"AREA"</span>, <span class="fu">toupper</span>(area), url, <span class="at">ignore.case=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read.csv</span>(url, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">quote=</span><span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, <span class="at">dec=</span><span class="st">"."</span>, <span class="at">na.strings=</span><span class="st">" "</span>, <span class="at">skip=</span><span class="dv">0</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># This function loads one industry for all geographical areas</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>qcewGetIndustryData <span class="ot">&lt;-</span> <span class="cf">function</span> (year, qtr, industry) {</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    url <span class="ot">&lt;-</span> <span class="st">"http://data.bls.gov/cew/data/api/YEAR/QTR/industry/INDUSTRY.csv"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    url <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"YEAR"</span>, year, url, <span class="at">ignore.case=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    url <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"QTR"</span>, <span class="fu">tolower</span>(qtr), url, <span class="at">ignore.case=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    url <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"INDUSTRY"</span>, industry, url, <span class="at">ignore.case=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read.csv</span>(url, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">quote=</span><span class="st">"</span><span class="sc">\"</span><span class="st">"</span>, <span class="at">dec=</span><span class="st">"."</span>, <span class="at">na.strings=</span><span class="st">" "</span>, <span class="at">skip=</span><span class="dv">0</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick examples (not evaluated by default)</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># In ex. 1, we call the qcewGetAreaData() function, passing parameters for year, quarter, and areafips/geography i.e. year = 2015, quarter = 1, areafips = 26000 or Michigan.</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># We then assign the data called to a variable called MichiganData!</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#  MichiganData &lt;- qcewGetAreaData("2015", "1", "26000")</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  Construction &lt;- qcewGetIndustryData("2015", "1", "1012")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="research-question-qcew-data-pull" class="level2">
+<h2 class="anchored" data-anchor-id="research-question-qcew-data-pull">3) Research question &amp; QCEW data pull</h2>
+<p><strong>Question.</strong> How has “data center” employment (NAICS 518) grown since late 2022, and in which states has it grown the most?</p>
+<p>To answer these questions, we’ll fetch 2022–2024 quarterly data for NAICS <strong>518: Computing infrastructure providers, data processing, web hosting, and related services</strong>. (Disclaimer: I’m not sure if this is the most appropriate NAICS code, but it makes for a good exercise! Depending on your research question, you may want to refine industry coverage (e.g., include selected sub‑industries or complementary sectors.).</p>
+<p>Since the example functions load only one quarter at a time, we’ll want to make some modifications. Instead of calling the function 12 times by hand, we’ll build a grid of parameters and map across it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set our parameters </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="dv">2022</span><span class="sc">:</span><span class="dv">2024</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>quarters <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>industries <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'518'</span>)   </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create 12 combinations (3 years × 4 quarters × 1 industry) to pass through pmap()</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">crossing</span>(<span class="at">year =</span> years, <span class="at">qtr =</span> quarters, <span class="at">industry =</span> industries)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># returns 12 dataframes, one for each combination</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>qcew_raw <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">pmap</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  combos,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(year, qtr, industry) {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">qcewGetIndustryData</span>(year, qtr, industry)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>year <span class="ot">&lt;-</span> year</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>qtr  <span class="ot">&lt;-</span> qtr</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>industry <span class="ot">&lt;-</span> industry</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    df</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Combines all dataframes by appending or binding "rows" </span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Explore our data</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(qcew_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 29,112
+Columns: 43
+$ area_fips                       &lt;chr&gt; "01000", "01000", "01001", "01003", "0…
+$ own_code                        &lt;int&gt; 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…
+$ industry_code                   &lt;int&gt; 518, 518, 518, 518, 518, 518, 518, 518…
+$ agglvl_code                     &lt;int&gt; 55, 55, 75, 75, 75, 75, 75, 75, 75, 75…
+$ size_code                       &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ year                            &lt;int&gt; 2022, 2022, 2022, 2022, 2022, 2022, 20…
+$ qtr                             &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+$ disclosure_code                 &lt;chr&gt; "", "", "N", "", "N", "", "N", "N", "N…
+$ qtrly_estabs                    &lt;int&gt; 1, 1019, 2, 31, 1, 4, 2, 1, 1, 0, 1, 6…
+$ month1_emplvl                   &lt;int&gt; 13, 2421, 0, 72, 0, 7, 0, 0, 0, 0, 0, …
+$ month2_emplvl                   &lt;int&gt; 13, 2511, 0, 73, 0, 7, 0, 0, 0, 0, 0, …
+$ month3_emplvl                   &lt;int&gt; 13, 2523, 0, 79, 0, 7, 0, 0, 0, 0, 0, …
+$ total_qtrly_wages               &lt;dbl&gt; 249734, 60137580, 0, 1271327, 0, 67735…
+$ taxable_qtrly_wages             &lt;dbl&gt; 0, 20180327, 0, 574492, 0, 47119, 0, 0…
+$ qtrly_contributions             &lt;int&gt; 0, 322219, 0, 8174, 0, 2132, 0, 0, 0, …
+$ avg_wkly_wage                   &lt;int&gt; 1478, 1862, 0, 1310, 0, 744, 0, 0, 0, …
+$ lq_disclosure_code              &lt;chr&gt; "", "", "N", "", "N", "", "N", "N", "N…
+$ lq_qtrly_estabs                 &lt;dbl&gt; 4.05, 1.81, 0.51, 1.06, 0.29, 0.39, 0.…
+$ lq_month1_emplvl                &lt;dbl&gt; 1.07, 0.40, 0.00, 0.31, 0.00, 0.05, 0.…
+$ lq_month2_emplvl                &lt;dbl&gt; 1.06, 0.42, 0.00, 0.31, 0.00, 0.05, 0.…
+$ lq_month3_emplvl                &lt;dbl&gt; 1.05, 0.42, 0.00, 0.33, 0.00, 0.05, 0.…
+$ lq_total_qtrly_wages            &lt;dbl&gt; 1.29, 0.30, 0.00, 0.21, 0.00, 0.02, 0.…
+$ lq_taxable_qtrly_wages          &lt;dbl&gt; 0.00, 0.33, 0.00, 0.25, 0.00, 0.04, 0.…
+$ lq_qtrly_contributions          &lt;dbl&gt; 0.00, 0.40, 0.00, 0.27, 0.00, 0.15, 0.…
+$ lq_avg_wkly_wage                &lt;dbl&gt; 1.21, 0.73, 0.00, 0.65, 0.00, 0.36, 0.…
+$ oty_disclosure_code             &lt;chr&gt; "N", "", "N", "", "N", "", "N", "N", "…
+$ oty_qtrly_estabs_chg            &lt;int&gt; 0, 318, 0, 10, 1, 0, 1, -1, 1, 0, 0, 1…
+$ oty_qtrly_estabs_pct_chg        &lt;dbl&gt; 0.0, 45.4, 0.0, 47.6, 100.0, 0.0, 100.…
+$ oty_month1_emplvl_chg           &lt;int&gt; 0, 149, 0, 0, 0, 3, 0, 0, 0, 0, 0, -1,…
+$ oty_month1_emplvl_pct_chg       &lt;dbl&gt; 0.0, 6.6, 0.0, 0.0, 0.0, 75.0, 0.0, 0.…
+$ oty_month2_emplvl_chg           &lt;int&gt; 0, 216, 0, 0, 0, 2, 0, 0, 0, 0, 0, -1,…
+$ oty_month2_emplvl_pct_chg       &lt;dbl&gt; 0.0, 9.4, 0.0, 0.0, 0.0, 40.0, 0.0, 0.…
+$ oty_month3_emplvl_chg           &lt;int&gt; 0, 201, 0, 3, 0, 2, 0, 0, 0, 0, 0, -1,…
+$ oty_month3_emplvl_pct_chg       &lt;dbl&gt; 0.0, 8.7, 0.0, 3.9, 0.0, 40.0, 0.0, 0.…
+$ oty_total_qtrly_wages_chg       &lt;dbl&gt; 0, 13354348, 0, 210886, 0, 5327, 0, 0,…
+$ oty_total_qtrly_wages_pct_chg   &lt;dbl&gt; 0.0, 28.5, 0.0, 19.9, 0.0, 8.5, 0.0, 0…
+$ oty_taxable_qtrly_wages_chg     &lt;int&gt; 0, 2694560, 0, 39716, 0, 12909, 0, 0, …
+$ oty_taxable_qtrly_wages_pct_chg &lt;dbl&gt; 0.0, 15.4, 0.0, 7.4, 0.0, 37.7, 0.0, 0…
+$ oty_qtrly_contributions_chg     &lt;int&gt; 0, -46111, 0, -4990, 0, 371, 0, 0, 0, …
+$ oty_qtrly_contributions_pct_chg &lt;dbl&gt; 0.0, -12.5, 0.0, -37.9, 0.0, 21.1, 0.0…
+$ oty_avg_wkly_wage_chg           &lt;int&gt; 0, 295, 0, 203, 0, -285, 0, 0, 0, 0, 0…
+$ oty_avg_wkly_wage_pct_chg       &lt;dbl&gt; 0.0, 18.8, 0.0, 18.3, 0.0, -27.7, 0.0,…
+$ industry                        &lt;chr&gt; "518", "518", "518", "518", "518", "51…</code></pre>
+</div>
+</div>
+</section>
+<section id="add-readable-labels-industry-area-titles" class="level2">
+<h2 class="anchored" data-anchor-id="add-readable-labels-industry-area-titles">4) Add readable labels (industry &amp; area titles)</h2>
+<p>Our dataframe is loaded! But it’s not very legible. For starters, some geographic and industry titles would help.</p>
+<p>The BLS provides a codebook for parsing our data <a href="https://www.bls.gov/cew/about-data/downloadable-file-layouts/quarterly/naics-based-quarterly-layout.htm" class="uri">https://www.bls.gov/cew/about-data/downloadable-file-layouts/quarterly/naics-based-quarterly-layout.htm</a>. We’ll load these directly into R.</p>
+<p>** disclaimer ** depending on your IT’s security settings, you may not be able to directly download these links into R. If you encounter this issue (like I did), you can navigate directly to the .htm links below, download the .CSV files, and place them in your working directory.</p>
+<p>Industry titles downloaded from <a href="https://www.bls.gov/cew/classifications/industry/industry-titles.htm" class="uri">https://www.bls.gov/cew/classifications/industry/industry-titles.htm</a></p>
+<p>Area titles downloaded from <a href="https://www.bls.gov/cew/classifications/areas/qcew-area-titles.htm" class="uri">https://www.bls.gov/cew/classifications/areas/qcew-area-titles.htm</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># link to csv files on the BLS QCEW site</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ind_title_url <span class="ot">&lt;-</span> <span class="st">'https://www.bls.gov/cew/classifications/industry/industry-titles.csv'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>area_title_url <span class="ot">&lt;-</span> <span class="st">'https://www.bls.gov/cew/classifications/areas/area-titles-csv.csv'</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # Read csv files directly into R from the QCEW page</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ind_titles  &lt;- read_csv(ind_title_url)</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># area_titles &lt;- read_csv(area_title_url)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>ind_titles <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/industry_titles.csv'</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>area_titles <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/area-titles-csv.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="a-first-attempt-at-joining-labels" class="level3">
+<h3 class="anchored" data-anchor-id="a-first-attempt-at-joining-labels">4a) First attempt at joining labels</h3>
+<p>We’ll first attempt a natural <code>left_join()</code> on industry_code. A left join keeps all rows from our main dataset (qcew, the “x” table) and adds matches from ind_titles (the “y” table). By default, it matches on any identically named columns (a “natural join”), but we could also set the key explicitly using the <code>by =</code> argument.</p>
+<p>See Section <a href="https://r4ds.hadley.nz/joins.html#how-do-joins-work">19.4 How do joins work?</a> from <a href="https://r4ds.hadley.nz/"><strong>R for Data Science (2e)</strong></a> for some great visualizations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Can you spot the difference?</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(qcew_raw<span class="sc">$</span>industry_code)   <span class="co"># likely &lt;int&gt; / &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> int [1:29112] 518 518 518 518 518 518 518 518 518 518 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ind_titles<span class="sc">$</span>industry_code) <span class="co"># likely &lt;chr&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:2678] "10" "101" "1011" "1012" "1013" "102" "1021" "1022" "1023" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What happens?</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>qcew_raw <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(ind_titles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(industry_code)`</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `dplyr::left_join()`:
+! Can't join `x$industry_code` with `y$industry_code` due to
+  incompatible types.
+ℹ `x$industry_code` is a &lt;integer&gt;.
+ℹ `y$industry_code` is a &lt;character&gt;.</code></pre>
+</div>
+</div>
+</section>
+<section id="b-harmonizing-data-types-to-join" class="level3">
+<h3 class="anchored" data-anchor-id="b-harmonizing-data-types-to-join">4b) Harmonizing data types to join</h3>
+<p>Maldito! We have an issue. Despite matching variable names, industry_code in datasets “x” and “y” are different datatypes. in “x”, it’s an integer, a numeric type. in “y” it’s a character. In order to merge we need our datatypes to be the same.</p>
+<p>Fortunately, is an easy fix. We can convert one of two columns to match data types. Which should we convert? Well, it’s easier to go from character to numeric here. A quirk of R is that numerics don’t have leading zeros, but strings can. You wouldn’t write 100 as 0100, or 00100, right? Right??</p>
+<p>Since NAICS 3‑digit codes like 518 don’t have leading zeros, converting ind_titles$industry_code to numeric is safe here. (General tip: if codes are required to have leading zeros, keep them as character in both tables.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the join keys the same type</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ind_titles <span class="ot">&lt;-</span> ind_titles <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">industry_code =</span> <span class="fu">as.numeric</span>(industry_code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `industry_code = as.numeric(industry_code)`.
+Caused by warning:
+! NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now the join works:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>qcew_ind_clean <span class="ot">&lt;-</span> qcew_raw <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># natural join on identical names</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ind_titles)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(industry_code)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We could also be explicit about which variable to join by</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># qcew_ind_clean &lt;- qcew_raw |&gt; </span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   left_join(ind_titles, by = join_by(industry_code))</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># If our variable names differ, we could map them using </span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># left_join(ind_titles, by = c("industry_code" = "ind_code"))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="c-cleaning-continued" class="level3">
+<h3 class="anchored" data-anchor-id="c-cleaning-continued">4c) Cleaning continued</h3>
+<p>Now join titles and keep only variables we need. We also want limit to <strong>private‑sector, statewide</strong> data only. We know from the QCEW codebook that: <code>own_code == 5</code> and <code>agglvl_code == 55</code>.</p>
+<p>See this codebook for more detail: <a href="https://www.bls.gov/cew/about-data/downloadable-file-layouts/quarterly/naics-based-quarterly-layout.htm">QCEW Field Layouts for NAICS-Based, Quarterly CSV Files</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (If needed) ensure area_fips types match before joining area_titles</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># area_titles &lt;- area_titles |&gt; mutate(area_fips = as.character(area_fips))</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>qcew_clean <span class="ot">&lt;-</span> qcew_ind_clean <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(area_titles) <span class="sc">|&gt;</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Too many variables we don't need, let's restrict and re-order using select</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    year, qtr, area_fips, area_title, industry_code,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    industry_title, own_code, agglvl_code, month1_emplvl, month2_emplvl,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    month3_emplvl, total_qtrly_wages) <span class="sc">|&gt;</span> </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now, why are seeing two rows for each state? Again, per the codebook, QCEW contains data for public and private sector industries</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We can filter for private sector data using own_code == 5</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(own_code <span class="sc">==</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(agglvl_code <span class="sc">==</span> <span class="dv">55</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(area_fips)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tip: An alternative way to filter for statewide data. If you don’t have a variable like agglvl_code, you can use string detection to filter statewide rows. We prefer to use code‑book filters when available.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># filter(str_detect(area_title, " -- Statewide")) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="quarterly-dates-averages" class="level2">
+<h2 class="anchored" data-anchor-id="quarterly-dates-averages">5) Quarterly dates &amp; averages</h2>
+<p>Create a quarterly average employment measure and a proper quarterly date using <strong>lubridate</strong>’s <code>yq()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>qcew_qtr <span class="ot">&lt;-</span> qcew_clean <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtr_avg_emp =</span> (month1_emplvl <span class="sc">+</span> month2_emplvl <span class="sc">+</span> month3_emplvl) <span class="sc">/</span> <span class="dv">3</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">qdate       =</span> <span class="fu">yq</span>(<span class="fu">paste</span>(year, qtr, <span class="at">sep =</span> <span class="st">" Q"</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="monthly-data-from-qcew" class="level2">
+<h2 class="anchored" data-anchor-id="monthly-data-from-qcew">6) Monthly data from QCEW</h2>
+<p>The QCEW provides monthly employment levels in each quarter! With a few tweaks to our data frame, we can produce a monthly series, giving us a more granular look at how data center employment has grown since 2022. Each QCEW quarter reports employment for its three months. We can unpivot those columns to build a monthly time series.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>qcew_monthly <span class="ot">&lt;-</span> qcew_clean <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"month"</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"month_in_qtr"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"month(</span><span class="sc">\\</span><span class="st">d+)_emplvl"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"emplvl"</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">month_in_qtr =</span> <span class="fu">as.integer</span>(month_in_qtr),</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">month        =</span> (qtr <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">3</span> <span class="sc">+</span> month_in_qtr,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">date         =</span> <span class="fu">make_date</span>(year, month, <span class="dv">1</span>),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(area_title, area_fips, industry_code, year, qtr, date, emplvl) <span class="sc">|&gt;</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(area_title, year, qtr, date) <span class="sc">|&gt;</span> </span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># let's clean up our state names!</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">str_replace</span>(area_title, <span class="st">" -- Statewide"</span>, <span class="st">""</span>))</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(qcew_monthly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  area_title         area_fips industry_code  year   qtr date       emplvl state
+  &lt;chr&gt;              &lt;chr&gt;             &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;date&gt;      &lt;int&gt; &lt;chr&gt;
+1 Alabama -- Statew… 01000               518  2022     1 2022-01-01   2421 Alab…
+2 Alabama -- Statew… 01000               518  2022     1 2022-02-01   2511 Alab…
+3 Alabama -- Statew… 01000               518  2022     1 2022-03-01   2523 Alab…
+4 Alabama -- Statew… 01000               518  2022     2 2022-04-01   2722 Alab…
+5 Alabama -- Statew… 01000               518  2022     2 2022-05-01   2795 Alab…
+6 Alabama -- Statew… 01000               518  2022     2 2022-06-01   2798 Alab…</code></pre>
+</div>
+</div>
+</section>
+<section id="measure-growth-since-late-2022" class="level2">
+<h2 class="anchored" data-anchor-id="measure-growth-since-late-2022">7) Measure growth since late 2022</h2>
+<p>For a simple comparison, compute percentage change from <strong>November 2022</strong> to the latest available month for each state. (If a state is missing November specifically, we’ll use the first available month on or after 2022‑11‑01.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>state_growth <span class="ot">&lt;-</span> qcew_monthly <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_emplvl =</span> <span class="fu">first</span>(emplvl),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_emplvl   =</span> <span class="fu">last</span>(emplvl),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date   =</span> <span class="fu">first</span>(date),</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_date     =</span> <span class="fu">last</span>(date),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by=</span>state) <span class="sc">|&gt;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">emp_change =</span> (end_emplvl <span class="sc">-</span> start_emplvl),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change =</span> (end_emplvl <span class="sc">/</span> start_emplvl <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pct_change))</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>state_growth <span class="sc">|&gt;</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+   state     start_emplvl end_emplvl start_date end_date   emp_change pct_change
+   &lt;chr&gt;            &lt;int&gt;      &lt;int&gt; &lt;date&gt;     &lt;date&gt;          &lt;int&gt;      &lt;dbl&gt;
+ 1 Alabama           2421       3931 2022-01-01 2024-12-01       1510       62.4
+ 2 Idaho              903       1295 2022-01-01 2024-12-01        392       43.4
+ 3 South Da…          293        405 2022-01-01 2024-12-01        112       38.2
+ 4 Alaska              89        119 2022-01-01 2024-12-01         30       33.7
+ 5 New Jers…        12474      16048 2022-01-01 2024-12-01       3574       28.7
+ 6 Wyoming            163        208 2022-01-01 2024-12-01         45       27.6
+ 7 Maryland          4377       5521 2022-01-01 2024-12-01       1144       26.1
+ 8 Rhode Is…          625        787 2022-01-01 2024-12-01        162       25.9
+ 9 New Hamp…         1465       1823 2022-01-01 2024-12-01        358       24.4
+10 West Vir…         1182       1435 2022-01-01 2024-12-01        253       21.4</code></pre>
+</div>
+</div>
+</section>
+<section id="quick-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="quick-visualization">8) Quick visualization</h2>
+<p>Lets plot a few series using ggplot2</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sel_state_data <span class="ot">&lt;-</span> qcew_monthly <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Texas'</span>, <span class="st">'Arkansas'</span>, <span class="st">'Louisiana'</span>))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sel_state_data, <span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>emplvl, <span class="at">color=</span>state)) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Monthly employment (NAICS 518)"</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Employment level"</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"State"</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="foraging_for_data_files/figure-html/ggplots-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="optional-reshape-for-statebycolumn-tables" class="level2">
+<h2 class="anchored" data-anchor-id="optional-reshape-for-statebycolumn-tables">9) Optional: reshape for state‑by‑column tables</h2>
+<p>Finally, we’ll use pivot_wider() to create a table of quarterly data, that is long by date.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>state_qtr_table <span class="ot">&lt;-</span> qcew_qtr <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">str_replace</span>(area_title, <span class="st">" -- Statewide"</span>, <span class="st">""</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(qdate, state, qtr_avg_emp) <span class="sc">|&gt;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> qdate, <span class="at">names_from =</span> state, <span class="at">values_from =</span> qtr_avg_emp)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>state_qtr_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 54
+   qdate      Alabama Alaska Arizona Arkansas California Colorado Connecticut
+   &lt;date&gt;       &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;
+ 1 2022-01-01   2485    96.3  12099.    4383.     66262.   16167.       3649.
+ 2 2022-04-01   2772.  108    12538.    4546.     71640.   16592        3759.
+ 3 2022-07-01   3060.  112.   12322     4705.     72875    16611.       3883.
+ 4 2022-10-01   3143    97.3  12230     4746.     74211    16504        3795.
+ 5 2023-01-01   3563.  117.   12441     4786.     84623    16157        3795 
+ 6 2023-04-01   3699.  132.   12235.    4589      83776.   15891.       3778 
+ 7 2023-07-01   3872   131.   11652.    4521.     83244.   15563        3750.
+ 8 2023-10-01   3875   121    11905.    4494.     81299    15325.       3755.
+ 9 2024-01-01   3738   108.   11328.    4328      79859    15195.       4081.
+10 2024-04-01   3812.  110.   11648.    4184.     79504.   15147        4314.
+11 2024-07-01   3929   130.   11294.    4170.     79714.   15044.       4371 
+12 2024-10-01   3943.  119.   11102.    4139      78642.   14959.       4306 
+# ℹ 46 more variables: Delaware &lt;dbl&gt;,
+#   `District of Columbia, not unknown` &lt;dbl&gt;, Florida &lt;dbl&gt;, Georgia &lt;dbl&gt;,
+#   Hawaii &lt;dbl&gt;, Idaho &lt;dbl&gt;, Illinois &lt;dbl&gt;, Indiana &lt;dbl&gt;, Iowa &lt;dbl&gt;,
+#   Kansas &lt;dbl&gt;, Kentucky &lt;dbl&gt;, Louisiana &lt;dbl&gt;, Maine &lt;dbl&gt;, Maryland &lt;dbl&gt;,
+#   Massachusetts &lt;dbl&gt;, Michigan &lt;dbl&gt;, Minnesota &lt;dbl&gt;, Mississippi &lt;dbl&gt;,
+#   Missouri &lt;dbl&gt;, Montana &lt;dbl&gt;, Nebraska &lt;dbl&gt;, Nevada &lt;dbl&gt;,
+#   `New Hampshire` &lt;dbl&gt;, `New Jersey` &lt;dbl&gt;, `New Mexico` &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</section>
+<section id="reproducibility-notes" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-notes">10) Reproducibility notes</h2>
+<p>Pro-tips - This module reads files directly from <strong>bls.gov</strong>; those URLs occasionally change. If a link breaks, visit the QCEW classifications pages to refresh the URLs. - Consult <strong>QCEW layout/codebook</strong> to confirm variable meanings &amp; aggregation levels for your projects.</p>
+<p>Happy coding!</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./intro_to_r.html" class="pagination-link" aria-label="Installing R &amp; RStudio EARN Talk">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Installing R &amp; RStudio EARN Talk</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./viz_workshop.html" class="pagination-link" aria-label="Visualizing Data">
+        <span class="nav-page-text">Visualizing Data</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

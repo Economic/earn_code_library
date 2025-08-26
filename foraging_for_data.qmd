@@ -1,0 +1,304 @@
+---
+title: "Foraging for Data in the Wild 2025"
+author: "Daniel Perez & Jori Kandra"
+---
+
+# Foraging for Data in the Wild 2025
+
+## Jori's Unemployment Insurance example
+
+```{r}
+#
+```
+
+## Using the QCEW to measure employment growth in data centers by state
+
+> **Objectives**
+>
+> 1.  Create data by iteratively calling a function.
+> 2.  Bind/append data frames to create a large dataset.
+> 3.  Read data from a .CSV directly from the web into R.
+> 4.  Harmonize data types.
+> 5.  Use joins to combine datasets.
+> 6.  Filter using string detection.
+> 7.  Reorder variables using `select()`, `arrange()`, and/or `relocate()` functions.
+> 8.  Use some tricks to create quarterly and monthly data types with `lubridate`.
+> 9.  Measure employment changes for NAICS industry **518**.
+> 10. Bonus: quick visualization with **ggplot2**!
+
+## 1) Load libraries
+
+```{r Libraries, message=FALSE}
+
+library(tidyverse)
+library(lubridate)
+
+```
+
+## 2) BLS functions for loading QCEW data
+
+The BLS conveniently provides a script and three functions for R users to load QCEW data directly into R! Below are two helpers adapted for this module. They construct an API URL and return a data frame for the requested year/quarter/industry or area.
+
+These resources can be downloaded from this page: <https://www.bls.gov/cew/additional-resources/open-data/sample-code.htm#RSCRIPT>
+
+```{r QCEW functions}
+
+# This function loads all industries for one geographical area
+qcewGetAreaData <- function(year, qtr, area) {
+  url <- "http://data.bls.gov/cew/data/api/YEAR/QTR/area/AREA.csv"
+  url <- sub("YEAR", year, url, ignore.case=FALSE)
+  url <- sub("QTR", tolower(qtr), url, ignore.case=FALSE)
+  url <- sub("AREA", toupper(area), url, ignore.case=FALSE)
+  read.csv(url, header = TRUE, sep = ",", quote="\"", dec=".", na.strings=" ", skip=0)
+}
+
+# This function loads one industry for all geographical areas
+qcewGetIndustryData <- function (year, qtr, industry) {
+	url <- "http://data.bls.gov/cew/data/api/YEAR/QTR/industry/INDUSTRY.csv"
+	url <- sub("YEAR", year, url, ignore.case=FALSE)
+	url <- sub("QTR", tolower(qtr), url, ignore.case=FALSE)
+	url <- sub("INDUSTRY", industry, url, ignore.case=FALSE)
+	read.csv(url, header = TRUE, sep = ",", quote="\"", dec=".", na.strings=" ", skip=0)
+}
+
+# Quick examples (not evaluated by default)
+# In ex. 1, we call the qcewGetAreaData() function, passing parameters for year, quarter, and areafips/geography i.e. year = 2015, quarter = 1, areafips = 26000 or Michigan.
+# We then assign the data called to a variable called MichiganData!
+
+#  MichiganData <- qcewGetAreaData("2015", "1", "26000")
+#  Construction <- qcewGetIndustryData("2015", "1", "1012")
+
+```
+
+## 3) Research question & QCEW data pull
+
+**Question.** How has “data center” employment (NAICS 518) grown since late 2022, and in which states has it grown the most?
+
+To answer these questions, we’ll fetch 2022–2024 quarterly data for NAICS **518: Computing infrastructure providers, data processing, web hosting, and related services**. (Disclaimer: I'm not sure if this is the most appropriate NAICS code, but it makes for a good exercise! Depending on your research question, you may want to refine industry coverage (e.g., include selected sub‑industries or complementary sectors.).
+
+Since the example functions load only one quarter at a time, we'll want to make some modifications. Instead of calling the function 12 times by hand, we’ll build a grid of parameters and map across it.
+
+```{r Load QCEW}
+# Set our parameters 
+years <- 2022:2024
+quarters <- 1:4
+industries <- c('518')   
+
+# create 12 combinations (3 years × 4 quarters × 1 industry) to pass through pmap()
+combos <- tidyr::crossing(year = years, qtr = quarters, industry = industries)
+
+# returns 12 dataframes, one for each combination
+qcew_raw <- purrr::pmap(
+  combos,
+  function(year, qtr, industry) {
+    df <- qcewGetIndustryData(year, qtr, industry)
+    df$year <- year
+    df$qtr  <- qtr
+    df$industry <- industry
+    df
+}) |> 
+# Combines all dataframes by appending or binding "rows" 
+  bind_rows()
+
+#Explore our data
+glimpse(qcew_raw)
+
+```
+
+## 4) Add readable labels (industry & area titles)
+
+Our dataframe is loaded! But it's not very legible. For starters, some geographic and industry titles would help.
+
+The BLS provides a codebook for parsing our data <https://www.bls.gov/cew/about-data/downloadable-file-layouts/quarterly/naics-based-quarterly-layout.htm>. We'll load these directly into R.
+
+\*\* disclaimer \*\* depending on your IT's security settings, you may not be able to directly download these links into R. If you encounter this issue (like I did), you can navigate directly to the .htm links below, download the .CSV files, and place them in your working directory.
+
+Industry titles downloaded from <https://www.bls.gov/cew/classifications/industry/industry-titles.htm>
+
+Area titles downloaded from <https://www.bls.gov/cew/classifications/areas/qcew-area-titles.htm>
+
+```{r Load labels, message=FALSE}
+
+
+# link to csv files on the BLS QCEW site
+ind_title_url <- 'https://www.bls.gov/cew/classifications/industry/industry-titles.csv'
+area_title_url <- 'https://www.bls.gov/cew/classifications/areas/area-titles-csv.csv'
+
+# # Read csv files directly into R from the QCEW page
+# ind_titles  <- read_csv(ind_title_url)
+# area_titles <- read_csv(area_title_url)
+
+ind_titles <- read_csv('data/industry_titles.csv')
+area_titles <- read_csv('data/area-titles-csv.csv')
+
+```
+
+### 4a) First attempt at joining labels
+
+We’ll first attempt a natural `left_join()` on industry_code. A left join keeps all rows from our main dataset (qcew, the "x" table) and adds matches from ind_titles (the "y" table). By default, it matches on any identically named columns (a "natural join"), but we could also set the key explicitly using the `by =` argument.
+
+See Section [19.4 How do joins work?](https://r4ds.hadley.nz/joins.html#how-do-joins-work) from [**R for Data Science (2e)**](https://r4ds.hadley.nz/) for some great visualizations.
+
+```{r Comparing label dfs, error=TRUE}
+# Can you spot the difference?
+glimpse(qcew_raw$industry_code)   # likely <int> / <dbl>
+glimpse(ind_titles$industry_code) # likely <chr>
+
+# What happens?
+qcew_raw |>
+  dplyr::left_join(ind_titles)
+```
+
+### 4b) Harmonizing data types to join
+
+Maldito! We have an issue. Despite matching variable names, industry_code in datasets "x" and "y" are different datatypes. in "x", it's an integer, a numeric type. in "y" it's a character. In order to merge we need our datatypes to be the same.
+
+Fortunately, is an easy fix. We can convert one of two columns to match data types. Which should we convert? Well, it's easier to go from character to numeric here. A quirk of R is that numerics don't have leading zeros, but strings can. You wouldn't write 100 as 0100, or 00100, right? Right??
+
+Since NAICS 3‑digit codes like 518 don’t have leading zeros, converting ind_titles\$industry_code to numeric is safe here. (General tip: if codes are required to have leading zeros, keep them as character in both tables.)
+
+```{r Data cleaning}
+
+# Make the join keys the same type
+ind_titles <- ind_titles |>
+  mutate(industry_code = as.numeric(industry_code))
+
+# Now the join works:
+qcew_ind_clean <- qcew_raw |>
+  # natural join on identical names
+  left_join(ind_titles)  
+
+# We could also be explicit about which variable to join by
+# qcew_ind_clean <- qcew_raw |> 
+#   left_join(ind_titles, by = join_by(industry_code))
+
+# If our variable names differ, we could map them using 
+# left_join(ind_titles, by = c("industry_code" = "ind_code"))
+
+```
+
+### 4c) Cleaning continued
+
+Now join titles and keep only variables we need. We also want limit to **private‑sector, statewide** data only. We know from the QCEW codebook that: `own_code == 5` and `agglvl_code == 55`.
+
+See this codebook for more detail: [QCEW Field Layouts for NAICS-Based, Quarterly CSV Files](https://www.bls.gov/cew/about-data/downloadable-file-layouts/quarterly/naics-based-quarterly-layout.htm)
+
+```{r Cleaning continued}
+
+# (If needed) ensure area_fips types match before joining area_titles
+# area_titles <- area_titles |> mutate(area_fips = as.character(area_fips))
+
+qcew_clean <- qcew_ind_clean |>
+  left_join(area_titles) |> 
+  # Too many variables we don't need, let's restrict and re-order using select
+  select(
+    year, qtr, area_fips, area_title, industry_code,
+    industry_title, own_code, agglvl_code, month1_emplvl, month2_emplvl,
+    month3_emplvl, total_qtrly_wages) |> 
+
+  # Now, why are seeing two rows for each state? Again, per the codebook, QCEW contains data for public and private sector industries
+  # We can filter for private sector data using own_code == 5
+  filter(own_code == 5) |> 
+  filter(agglvl_code == 55)
+
+# Tip: An alternative way to filter for statewide data. If you don’t have a variable like agglvl_code, you can use string detection to filter statewide rows. We prefer to use code‑book filters when available.
+# filter(str_detect(area_title, " -- Statewide")) 
+
+```
+
+## 5) Quarterly dates & averages
+
+Create a quarterly average employment measure and a proper quarterly date using **lubridate**’s `yq()`.
+
+```{r}
+qcew_qtr <- qcew_clean |>
+  mutate(
+    qtr_avg_emp = (month1_emplvl + month2_emplvl + month3_emplvl) / 3,
+    qdate       = yq(paste(year, qtr, sep = " Q"))
+  )
+```
+
+## 6) Monthly data from QCEW
+
+The QCEW provides monthly employment levels in each quarter! With a few tweaks to our data frame, we can produce a monthly series, giving us a more granular look at how data center employment has grown since 2022. Each QCEW quarter reports employment for its three months. We can unpivot those columns to build a monthly time series.
+
+```{r Create monthyl data frame}
+
+qcew_monthly <- qcew_clean |>
+  pivot_longer(
+    cols = starts_with("month"),
+    names_to = "month_in_qtr",
+    names_pattern = "month(\\d+)_emplvl",
+    values_to = "emplvl"
+  ) |>
+  mutate(
+    month_in_qtr = as.integer(month_in_qtr),
+    month        = (qtr - 1) * 3 + month_in_qtr,
+    date         = make_date(year, month, 1),
+  ) |>
+  select(area_title, area_fips, industry_code, year, qtr, date, emplvl) |>
+  arrange(area_title, year, qtr, date) |> 
+  # let's clean up our state names!
+  mutate(state = str_replace(area_title, " -- Statewide", ""))
+
+head(qcew_monthly)
+```
+
+## 7) Measure growth since late 2022
+
+For a simple comparison, compute percentage change from **November 2022** to the latest available month for each state. (If a state is missing November specifically, we’ll use the first available month on or after 2022‑11‑01.)
+
+```{r Growth}
+
+state_growth <- qcew_monthly |>
+  summarise(
+    start_emplvl = first(emplvl),
+    end_emplvl   = last(emplvl),
+    start_date   = first(date),
+    end_date     = last(date),
+    .by=state) |>
+  mutate(
+    emp_change = (end_emplvl - start_emplvl),
+    pct_change = (end_emplvl / start_emplvl - 1) * 100) |>
+  arrange(desc(pct_change))
+
+state_growth |> slice_head(n = 10)
+```
+
+## 8) Quick visualization
+
+Lets plot a few series using ggplot2
+
+```{r ggplots}
+
+sel_state_data <- qcew_monthly |> 
+  filter(state %in% c('Texas', 'Arkansas', 'Louisiana'))
+
+ggplot(data = sel_state_data, aes(x=date, y=emplvl, color=state)) +
+  geom_line() +
+  labs(
+    title = "Monthly employment (NAICS 518)",
+    x = NULL, y = "Employment level",
+    color = "State"
+  ) 
+
+```
+
+## 9) Optional: reshape for state‑by‑column tables
+
+Finally, we'll use pivot_wider() to create a table of quarterly data, that is long by date.
+
+```{r}
+state_qtr_table <- qcew_qtr |>
+  mutate(state = str_replace(area_title, " -- Statewide", "")) |>
+  select(qdate, state, qtr_avg_emp) |>
+  pivot_wider(id_cols = qdate, names_from = state, values_from = qtr_avg_emp)
+
+state_qtr_table
+```
+
+## 10) Reproducibility notes
+
+Pro-tips - This module reads files directly from **bls.gov**; those URLs occasionally change. If a link breaks, visit the QCEW classifications pages to refresh the URLs. - Consult **QCEW layout/codebook** to confirm variable meanings & aggregation levels for your projects.
+
+Happy coding!
