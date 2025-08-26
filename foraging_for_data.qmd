@@ -3,10 +3,128 @@ title: "Foraging for Data in the Wild 2025"
 author: "Daniel Perez & Jori Kandra"
 ---
 
-## Jori's Unemployment Insurance example
+## Unemployment Insurance Claims by State
+
+### 1) Import libraries
+
+```{r message=FALSE}
+library(tidyverse)
+library(data.table) # setnames(), map DOL data dictionary to the raw data
+library(lubridate) # data helper functions to recast messy data as date type
+library(openxlsx2) # mapping data and setting formatting for excel wb
+```
+
+### 2) Download raw data
+
+UI IC & CC (NSA) comes for [ETA 539](https://oui.doleta.gov/unemploy/csv/ar539.csv), which can be found on the [DOL ETA website](https://oui.doleta.gov/unemploy/DataDownloads.asp).
+
+Use the command-line utility function wget to trigger and direct the download of exportable online data. Wrap the statement in system() to direct execution to the terminal
+
+(If wget doesn't work on your machine, you can download the file manually and place it in your working directory)
+
 
 ```{r}
-# Coming soon!
+# "wget -N" omits download if data has not been updated "-P" sets the file destination"
+system("wget -N https://oui.doleta.gov/unemploy/csv/ar539.csv  -P data/")
+
+```
+
+### 3) Wrangle data
+
+Replace raw variable names using a user-defined data dictionary. The data dictionary is a combination of the [DOL ETA 539 Data Map](https://oui.doleta.gov/dmstree/handbooks/402/402_4/4024c6/4024c6.pdf#ETA539) (found on [Data Downloads](https://oui.doleta.gov/unemploy/DataDownloads.asp) page) and the [ETA 401 handook](https://www.dol.gov/sites/dolgov/files/ETA/handbooks/2017/ETHand401_5th.pdf) "Item by Item Instructions."
+
+```{r}
+# read in data dictionary
+data_dictionary <- read.csv("data/eta539_var_names.csv")
+```
+
+### 4) Cleanse and manipulate data
+
+Use `data.table::setnames()` to apply the data dictionary to the raw data. Recast date columns to be of `Date` class type (or data storage type). "Wild data" often stores dates as `str` (or string) class type, so use functions from the `?lubridate` package to easily handle and manipulate date types.
+
+```{r}
+# Cleanse raw data
+raw_data <- read.csv("data/ar539.csv") |>
+  # use $ operator to select column from data frame
+  setnames(old = data_dictionary$dol_code, new = data_dictionary$dol_title) |>
+  # format date as class 'Date' 
+  mutate(report_date = mdy(report_date),
+         reflect_week_ending = mdy(reflect_week_ending))
+```
+
+### 5) Analyze
+
+Use `dplyr::mutate()` to create new columns. Calculate non-seasonally adjusted initial claims as state UI initial claims + short-term compensation (or workshare) initial claims and non-seasonally adjusted continued claims as state UI continued claims + short-tern compensation (or workshare) continued claims.
+
+```{r}
+# Initial claims (NSA) 
+initial_claims <- raw_data  |> 
+  # Initial Claims & Continued Claims, non seasonally adjusted (as seen here: https://oui.doleta.gov/unemploy/claims.asp) 
+  # UI IC is calculated from c3 (initial claims) & c7 (short time compensation workshare)
+  mutate(nsa_initial_claims = state_ui_initial_claims + stc_workshare_equivalent_initial_claims) |> 
+  select(state, report_date, nsa_initial_claims) |> 
+  # filter out unstable reporting
+  filter(report_date >= '1987-01-01') |>
+  # transform into wide format - each state is own column
+  #note: https://bookdown.org/Maxine/r4ds/pivoting.html
+  pivot_wider(id_cols = report_date, names_from = state, values_from = nsa_initial_claims) |> 
+  # remove Puerto Rico and US Virgin Islands
+  select(-PR, -VI) |> 
+  # replace state abbreviation with state name
+  setnames(old = state.abb, new = state.name) |> 
+  # rename DC (not included in state* utility functions)
+  rename(`District of Columbia` = DC) |> 
+  # sort data
+  arrange(report_date)
+
+# Continued claims (NSA) 
+continued_claims <- raw_data |> 
+  # Initial Claims & Continued Claims, non seasonally adjusted (as seen here: https://oui.doleta.gov/unemploy/claims.asp) 
+  # UI CC is calculated from c8 & c12
+  mutate(nsa_continued_claims = state_ui_adjusted_continued_weeks_claimed + stc_workshare_equivalent_continued_weeks_claimed) |> 
+  select(state, reflect_week_ending, nsa_continued_claims) |> 
+  # filter out unstable reporting
+  filter(reflect_week_ending >= '1987-01-01') |>
+  # transform into wide format - each state is own column
+  pivot_wider(id_cols = reflect_week_ending, names_from = state, values_from = nsa_continued_claims) |> 
+  # remove Puerto Rico & US Virgin Islands
+  select(-PR, -VI) |> 
+  # replace state abbreviation with state name
+  setnames(old = state.abb, new = state.name) |> 
+  # replace DC (not included in state.* utility data)
+  rename(`District of Columbia` = DC) |> 
+  # sort data 
+  arrange(reflect_week_ending)
+```
+
+### 6) Export data
+
+Use `?openxlsx2` to create excel workbooks, which support multiple tabs and backend formatting. This is a great way to generate replicable final products. Note that openxlsx2 uses the `$` pipe operator to modify workbook objects created by `openxlsx2::wb_workbook()`. Create worksheets, add data, and use functions such as `opnexlsx2::wb_set_col_widths()` and `openxlsx2::add_cell_style()` to stylize the workbook.
+
+```{r}
+# create WB object
+wb <- wb_workbook()
+
+# write UI state IC to WB object
+#note: $ - pipe operator in openxlsx2 
+wb$
+  # add new worksheet
+  add_worksheet(sheet = "Initial claims")$
+  # add data to worksheet
+  add_data(x = initial_claims)$
+  # set columm widths
+  set_col_widths(cols = 2:ncol(initial_claims), widths = 15)$
+  # format column headers
+  add_cell_style(dims = wb_dims(rows = 1, cols = 2:ncol(initial_claims)), 
+                 wrap_text = TRUE, horizontal = "center", vertical = "center")$
+  # repeat for continued claims
+  add_worksheet(sheet = "Continued claims")$
+  add_data(x = continued_claims)$
+  set_col_widths(cols = 2:ncol(continued_claims), widths = 15)$
+  add_cell_style(dims = wb_dims(rows = 1, cols = 2:ncol(continued_claims)), 
+                 wrap_text = TRUE, horizontal = "center", vertical = "center")$
+  # save workbook to output folder
+  save("output/state_ui.xlsx")
 ```
 
 ## Using the QCEW to measure employment growth in data centers by state
@@ -263,7 +381,7 @@ For a simple comparison, compute percentage change from **November 2022** to the
 ```{r Growth}
 
 state_growth <- qcew_monthly |>
-  summarise(
+  summarize(
     start_emplvl = first(emplvl),
     end_emplvl   = last(emplvl),
     start_date   = first(date),
@@ -272,6 +390,7 @@ state_growth <- qcew_monthly |>
   mutate(
     emp_change = (end_emplvl - start_emplvl),
     pct_change = (end_emplvl / start_emplvl - 1) * 100) |>
+  # arrange data in descending order by pct_change
   arrange(desc(pct_change))
 
 state_growth |> slice_head(n = 10)
@@ -280,6 +399,8 @@ state_growth |> slice_head(n = 10)
 ## 9) Bonus: Making a quick visualization
 
 Lets plot a few states using ggplot2
+
+P.S. check out [viz_workshop.qmd](viz_workshop.qmd) for some more ggplot examples!
 
 ```{r ggplots}
 
