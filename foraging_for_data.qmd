@@ -206,20 +206,16 @@ industries <- c('518')
 # create 12 combinations (3 years × 4 quarters × 1 industry) to pass through pmap()
 combos <- tidyr::crossing(year = years, qtr = quarters, industry = industries)
 
-# returns 12 dataframes, one for each combination
-qcew_raw <- purrr::pmap(
-  combos,
-  function(year, qtr, industry) {
-    df <- qcewGetIndustryData(year, qtr, industry)
-    df$year <- year
-    df$qtr  <- qtr
-    df$industry <- industry
-    df
-}) |> 
-# Combines all dataframes by appending or binding "rows" 
+# Takes the combinations, runs qcewGetIndustryData() once for each
+# returns a list of "small" dataframes, which we combine into a large one called QCEW raw
+
+qcew_raw <- pmap(combos, function(year, qtr, industry){
+  qcewGetIndustryData(year, qtr, industry)
+  }) |> 
+  # Combines all dataframes by appending/binding "rows" 
   bind_rows()
 
-#Explore our data
+# Explores our data
 glimpse(qcew_raw)
 
 ```
@@ -288,7 +284,7 @@ qcew_ind_clean <- qcew_raw |>
 
 # We could also be explicit about which variable to join by
 # qcew_ind_clean <- qcew_raw |> 
-#   left_join(ind_titles, by = join_by(industry_code))
+#   left_join(ind_titles, by = 'industry_code')
 
 # If our variable names differ, we could map them using 
 # left_join(ind_titles, by = c("industry_code" = "ind_code"))
@@ -312,7 +308,7 @@ qcew_clean <- qcew_ind_clean |>
   select(
     year, qtr, area_fips, area_title, industry_code,
     industry_title, own_code, agglvl_code, month1_emplvl, month2_emplvl,
-    month3_emplvl, total_qtrly_wages) |> 
+    month3_emplvl) |> 
 
   # Now, why are seeing two rows for each state? Again, per the codebook, QCEW contains data for public and private sector industries
   # We can filter for private sector data using own_code == 5

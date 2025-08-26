@@ -618,24 +618,20 @@ data/"): 'wget' not found</code></pre>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create 12 combinations (3 years × 4 quarters × 1 industry) to pass through pmap()</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">crossing</span>(<span class="at">year =</span> years, <span class="at">qtr =</span> quarters, <span class="at">industry =</span> industries)</span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># returns 12 dataframes, one for each combination</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>qcew_raw <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">pmap</span>(</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  combos,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(year, qtr, industry) {</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">qcewGetIndustryData</span>(year, qtr, industry)</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>year <span class="ot">&lt;-</span> year</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>qtr  <span class="ot">&lt;-</span> qtr</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>industry <span class="ot">&lt;-</span> industry</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    df</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> </span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Combines all dataframes by appending or binding "rows" </span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Explore our data</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(qcew_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Takes the combinations, runs qcewGetIndustryData() once for each</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># returns a list of "small" dataframes, which we combine into a large one called QCEW raw</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>qcew_raw <span class="ot">&lt;-</span> <span class="fu">pmap</span>(combos, <span class="cf">function</span>(year, qtr, industry){</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qcewGetIndustryData</span>(year, qtr, industry)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span> </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Combines all dataframes by appending/binding "rows" </span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Explores our data</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(qcew_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 29,112
-Columns: 43
+Columns: 42
 $ area_fips                       &lt;chr&gt; "01000", "01000", "01001", "01003", "0…
 $ own_code                        &lt;int&gt; 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…
 $ industry_code                   &lt;int&gt; 518, 518, 518, 518, 518, 518, 518, 518…
@@ -677,8 +673,7 @@ $ oty_taxable_qtrly_wages_pct_chg &lt;dbl&gt; 0.0, 15.4, 0.0, 7.4, 0.0, 37.7, 0.
 $ oty_qtrly_contributions_chg     &lt;int&gt; 0, -46111, 0, -4990, 0, 371, 0, 0, 0, …
 $ oty_qtrly_contributions_pct_chg &lt;dbl&gt; 0.0, -12.5, 0.0, -37.9, 0.0, 21.1, 0.0…
 $ oty_avg_wkly_wage_chg           &lt;int&gt; 0, 295, 0, 203, 0, -285, 0, 0, 0, 0, 0…
-$ oty_avg_wkly_wage_pct_chg       &lt;dbl&gt; 0.0, 18.8, 0.0, 18.3, 0.0, -27.7, 0.0,…
-$ industry                        &lt;chr&gt; "518", "518", "518", "518", "518", "51…</code></pre>
+$ oty_avg_wkly_wage_pct_chg       &lt;dbl&gt; 0.0, 18.8, 0.0, 18.3, 0.0, -27.7, 0.0,…</code></pre>
 </div>
 </div>
 </section>
@@ -754,7 +749,7 @@ Caused by warning:
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We could also be explicit about which variable to join by</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># qcew_ind_clean &lt;- qcew_raw |&gt; </span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   left_join(ind_titles, by = join_by(industry_code))</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   left_join(ind_titles, by = 'industry_code')</span></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># If our variable names differ, we could map them using </span></span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># left_join(ind_titles, by = c("industry_code" = "ind_code"))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -774,7 +769,7 @@ Caused by warning:
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    year, qtr, area_fips, area_title, industry_code,</span>
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    industry_title, own_code, agglvl_code, month1_emplvl, month2_emplvl,</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    month3_emplvl, total_qtrly_wages) <span class="sc">|&gt;</span> </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    month3_emplvl) <span class="sc">|&gt;</span> </span>
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now, why are seeing two rows for each state? Again, per the codebook, QCEW contains data for public and private sector industries</span></span>
 <span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We can filter for private sector data using own_code == 5</span></span>
