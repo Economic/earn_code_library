@@ -1,0 +1,17 @@
+{
+  "hash": "d9d5f161f0bcdf0182cd8b1db39c9b94",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Using EPI's CPS Extracts in R\"\nformat: html\nauthor: 'Ben Zipperer'\n---\n\n\n\n\n## Welcome to the Using the EPI CPS Microdata Extracts in R landing page!\n\nThis training and code workflow was originally delivered as an EARN Talk on September 16th, 2025.\n\nMissed this talk? See the recording here: [**Using EPI's CPS Microdata Extracts in R**](https://us06web.zoom.us/rec/share/LUmvO1f2UQY0vqu-NgLkVfKWQyP3pXax_HyLfTBlxWNleY9qXTF83VT6B1JZLSly.bqKANOKojiehqhai). Passcode: 3xtracts2025!\n\n[Additional links:]{.underline}\n\n-   Presentation slides: <https://economic.github.io/zipperer_2025_webinar_epiextracts>\n\n-   EPI CPS extracts documentation <https://microdata.epi.org/>\n\n-   epiextractr package <https://economic.github.io/epiextractr/>\n\n-   EARN Code Library [Load EPI CPS Extracts via epiextractr](epi_microdata.qmd) page\n\n## Final CPS script\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\nlibrary(epiextractr)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# low wage threshold\nlow_wage_threshold = 20\n\n# use the CPS ORG\norg_data = load_org(2024, year, orgwgt, wage, wageotc, statefips, female, wbhao)\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nUsing EPI CPS ORG Extracts, Version 2025.9.11\n```\n\n\n:::\n\n```{.r .cell-code}\nga_data = org_data |> \n  # wage earners only\n  filter(wageotc > 0) |> \n  # in Georgia\n  filter(statefips == 13) |> \n  # 2024 only\n  filter(year == 2024) |> \n  # low wage indicator\n  mutate(low_wage = if_else(wageotc < low_wage_threshold, 1, 0))\n\n# number low-wage in Georgia\nga_data |> \n  count(low_wage, wt = orgwgt / 12)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 2 × 2\n  low_wage        n\n     <dbl>    <dbl>\n1        0 2904705.\n2        1 1668287.\n```\n\n\n:::\n\n```{.r .cell-code}\n# share low-wage\nga_data |> \n  summarize(\n    weighted.mean(low_wage, w = orgwgt),\n    .by = wbhao\n  )\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 5 × 2\n  wbhao        `weighted.mean(low_wage, w = orgwgt)`\n  <int+lbl>                                    <dbl>\n1 1 [White]                                    0.305\n2 2 [Black]                                    0.384\n3 3 [Hispanic]                                 0.557\n4 4 [Asian]                                    0.299\n5 5 [Other]                                    0.494\n```\n\n\n:::\n\n```{.r .cell-code}\n# analysis by gender\nga_data |> \n  count(female, wt = orgwgt / 12)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 2 × 2\n  female            n\n  <int+lbl>     <dbl>\n1 0 [Male]   2309205.\n2 1 [Female] 2263787.\n```\n\n\n:::\n\n```{.r .cell-code}\n# analysis by race\nga_data |> \n  count(wbhao, wt = orgwgt / 12)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 5 × 2\n  wbhao               n\n  <int+lbl>       <dbl>\n1 1 [White]    2197534.\n2 2 [Black]    1486286.\n3 3 [Hispanic]  612498.\n4 4 [Asian]     258840.\n5 5 [Other]      17833.\n```\n\n\n:::\n:::",
+    "supporting": [
+      "epi_extracts_webinar_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

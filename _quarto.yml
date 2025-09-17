@@ -36,6 +36,7 @@ website:
       - section: "Tutorials"
         contents:
         - intro_to_r.qmd
+        - epi_extracts_webinar.qmd
         - foraging_for_data.qmd
         - viz_workshop.qmd
         - benchmarking_workshop.qmd

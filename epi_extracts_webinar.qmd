@@ -1,0 +1,65 @@
+---
+title: "Using EPI's CPS Extracts in R"
+format: html
+author: 'Ben Zipperer'
+---
+
+## Welcome to the Using the EPI CPS Microdata Extracts in R landing page!
+
+This training and code workflow was originally delivered as an EARN Talk on September 16th, 2025.
+
+Missed this talk? See the recording here: [**Using EPI's CPS Microdata Extracts in R**](https://us06web.zoom.us/rec/share/LUmvO1f2UQY0vqu-NgLkVfKWQyP3pXax_HyLfTBlxWNleY9qXTF83VT6B1JZLSly.bqKANOKojiehqhai). Passcode: 3xtracts2025!
+
+[Additional links:]{.underline}
+
+-   Presentation slides: <https://economic.github.io/zipperer_2025_webinar_epiextracts>
+
+-   EPI CPS extracts documentation <https://microdata.epi.org/>
+
+-   epiextractr package <https://economic.github.io/epiextractr/>
+
+-   EARN Code Library [Load EPI CPS Extracts via epiextractr](epi_microdata.qmd) page
+
+## Final CPS script
+
+```{r, message=FALSE}
+library(tidyverse)
+library(epiextractr)
+```
+
+```{r}
+# low wage threshold
+low_wage_threshold = 20
+
+# use the CPS ORG
+org_data = load_org(2024, year, orgwgt, wage, wageotc, statefips, female, wbhao)
+
+ga_data = org_data |> 
+  # wage earners only
+  filter(wageotc > 0) |> 
+  # in Georgia
+  filter(statefips == 13) |> 
+  # 2024 only
+  filter(year == 2024) |> 
+  # low wage indicator
+  mutate(low_wage = if_else(wageotc < low_wage_threshold, 1, 0))
+
+# number low-wage in Georgia
+ga_data |> 
+  count(low_wage, wt = orgwgt / 12)
+
+# share low-wage
+ga_data |> 
+  summarize(
+    weighted.mean(low_wage, w = orgwgt),
+    .by = wbhao
+  )
+  
+# analysis by gender
+ga_data |> 
+  count(female, wt = orgwgt / 12)
+
+# analysis by race
+ga_data |> 
+  count(wbhao, wt = orgwgt / 12)
+```

@@ -3,6 +3,12 @@ title: "Foraging for Data in the Wild 2025"
 author: "Daniel Perez & Jori Kandra"
 ---
 
+## Welcome to the Foraging for Data in the Wild 2025 Landing page!
+
+This training and code workflow was originally delivered as an EARN Talk on August 26th, 2025.
+
+**NOTE:** Some users have experienced issues downloading the datasets with the R commands below. An updated script and webinar recording will be shared in October 2025.
+
 ## Unemployment Insurance Claims by State
 
 ### 1) Import libraries
@@ -20,7 +26,7 @@ UI IC & CC (NSA) comes for [ETA 539](https://oui.doleta.gov/unemploy/csv/ar539.c
 
 Use the command-line utility function wget to trigger and direct the download of exportable online data. Wrap the statement in system() to direct execution to the terminal
 
-(If wget doesn't work on your machine, you can download the file manually and place it in your working directory)
+**NOTE:** Some users encounter a 403 error with these commands. If this happens, manually download the `ar539.csv` file and place it in your working directory.
 
 ```{r}
 # "wget -N" omits download if data has not been updated "-P" sets the file destination"

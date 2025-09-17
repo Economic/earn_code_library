@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ben Zipperer">
 
-<title>EARNCon data bootcamp files – Code Library</title>
+<title>Using EPI’s CPS Extracts in R – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./resources.html" rel="next">
-<link href="./benchmarking_workshop.html" rel="prev">
+<link href="./foraging_for_data.html" rel="next">
+<link href="./intro_to_r.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -112,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./prev_bootcamps.html">EARNCon data bootcamp files</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./epi_extracts_webinar.html">Using EPI’s CPS Extracts in R</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -164,7 +199,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./epi_extracts_webinar.html" class="sidebar-item-text sidebar-link">
+  <a href="./epi_extracts_webinar.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Using EPI’s CPS Extracts in R</span></a>
   </div>
 </li>
@@ -188,7 +223,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link active">
+  <a href="./prev_bootcamps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">EARNCon data bootcamp files</span></a>
   </div>
 </li>
@@ -335,39 +370,29 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-bootcamp" id="toc-data-bootcamp" class="nav-link active" data-scroll-target="#data-bootcamp">2023 Data bootcamp</a>
-  <ul class="collapse">
-  <li><a href="#data-analysis-in-r-first-steps" id="toc-data-analysis-in-r-first-steps" class="nav-link" data-scroll-target="#data-analysis-in-r-first-steps">Data analysis in R: First steps</a></li>
-  <li><a href="#using-apis-to-access-data-in-r" id="toc-using-apis-to-access-data-in-r" class="nav-link" data-scroll-target="#using-apis-to-access-data-in-r">Using APIs to access data in R</a></li>
-  </ul></li>
-  <li><a href="#earncon-data-bootcamp" id="toc-earncon-data-bootcamp" class="nav-link" data-scroll-target="#earncon-data-bootcamp">2022 EARNCon Data bootcamp</a>
-  <ul class="collapse">
-  <li><a href="#data-analysis-in-r-video" id="toc-data-analysis-in-r-video" class="nav-link" data-scroll-target="#data-analysis-in-r-video">Data analysis in R (Video)</a></li>
-  <li><a href="#code-library-presentation-video" id="toc-code-library-presentation-video" class="nav-link" data-scroll-target="#code-library-presentation-video">Code Library Presentation (Video)</a></li>
-  <li><a href="#data-analysis-in-stata-video" id="toc-data-analysis-in-stata-video" class="nav-link" data-scroll-target="#data-analysis-in-stata-video">Data analysis in Stata (Video)</a></li>
-  </ul></li>
-  <li><a href="#earncon-data-bootcamp-1" id="toc-earncon-data-bootcamp-1" class="nav-link" data-scroll-target="#earncon-data-bootcamp-1">2021 EARNCon Data Bootcamp</a>
-  <ul class="collapse">
-  <li><a href="#first-steps-in-stata-video" id="toc-first-steps-in-stata-video" class="nav-link" data-scroll-target="#first-steps-in-stata-video">2021 First steps in Stata (Video)</a></li>
-  <li><a href="#using-stata-effectively-video" id="toc-using-stata-effectively-video" class="nav-link" data-scroll-target="#using-stata-effectively-video">2021 Using Stata effectively (Video)</a></li>
-  <li><a href="#first-steps-in-r-video" id="toc-first-steps-in-r-video" class="nav-link" data-scroll-target="#first-steps-in-r-video">2021 First steps in R (Video)</a></li>
-  <li><a href="#using-r-effectively-video" id="toc-using-r-effectively-video" class="nav-link" data-scroll-target="#using-r-effectively-video">2021 Using R effectively (Video)</a></li>
-  </ul></li>
+  <li><a href="#welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page" id="toc-welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page" class="nav-link active" data-scroll-target="#welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page">Welcome to the Using the EPI CPS Microdata Extracts in R landing page!</a></li>
+  <li><a href="#final-cps-script" id="toc-final-cps-script" class="nav-link" data-scroll-target="#final-cps-script">Final CPS script</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./prev_bootcamps.html">EARNCon data bootcamp files</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./epi_extracts_webinar.html">Using EPI’s CPS Extracts in R</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">EARNCon data bootcamp files</h1>
+<h1 class="title">Using EPI’s CPS Extracts in R</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ben Zipperer </p>
+          </div>
+  </div>
     
   
     
@@ -378,72 +403,95 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="https://economic.github.io/data_bootcamp/">EPI Bootcamp Website</a></p>
-<section id="data-bootcamp" class="level1">
-<h1>2023 Data bootcamp</h1>
-<section id="data-analysis-in-r-first-steps" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-in-r-first-steps">Data analysis in R: First steps</h2>
-<p>First steps to data analysis in R slides (<a href="https://economic.github.io/data_bootcamp/zipperer_firststepsR_slides.pdf">pdf</a>)<br>
-EPI national wage percentiles data (<a href="https://economic.github.io/data_bootcamp/epi_wage_percentiles.csv">csv</a>)<br>
-2022 EPI CPS ORG extracts data (<a href="https://economic.github.io/data_bootcamp/epi_cpsorg_2022.dta.zip">zipped .dta</a>)</p>
+<section id="welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page" class="level2">
+<h2 class="anchored" data-anchor-id="welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page">Welcome to the Using the EPI CPS Microdata Extracts in R landing page!</h2>
+<p>This training and code workflow was originally delivered as an EARN Talk on September 16th, 2025.</p>
+<p>Missed this talk? See the recording here: <a href="https://us06web.zoom.us/rec/share/LUmvO1f2UQY0vqu-NgLkVfKWQyP3pXax_HyLfTBlxWNleY9qXTF83VT6B1JZLSly.bqKANOKojiehqhai"><strong>Using EPI’s CPS Microdata Extracts in R</strong></a>. Passcode: 3xtracts2025!</p>
+<p><u>Additional links:</u></p>
+<ul>
+<li><p>Presentation slides: <a href="https://economic.github.io/zipperer_2025_webinar_epiextracts" class="uri">https://economic.github.io/zipperer_2025_webinar_epiextracts</a></p></li>
+<li><p>EPI CPS extracts documentation <a href="https://microdata.epi.org/" class="uri">https://microdata.epi.org/</a></p></li>
+<li><p>epiextractr package <a href="https://economic.github.io/epiextractr/" class="uri">https://economic.github.io/epiextractr/</a></p></li>
+<li><p>EARN Code Library <a href="./epi_microdata.html">Load EPI CPS Extracts via epiextractr</a> page</p></li>
+</ul>
 </section>
-<section id="using-apis-to-access-data-in-r" class="level2">
-<h2 class="anchored" data-anchor-id="using-apis-to-access-data-in-r">Using APIs to access data in R</h2>
-<p>Accessing BLS and Census data (<a href="bls_census_api_databootcamp.R">code</a>)</p>
-</section>
-</section>
-<section id="earncon-data-bootcamp" class="level1">
-<h1>2022 EARNCon Data bootcamp</h1>
-<section id="data-analysis-in-r-video" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-in-r-video">Data analysis in R (<a href="https://www.youtube.com/watch?v=PG7T0AoxIY0&amp;list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&amp;index=7">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/zipperer_dataanalysisinR_slides.pdf">Data analysis in R slides</a><br>
-<a href="https://github.com/Economic/data_bootcamp/blob/master/mw_state_annual.xlsx">Historical minimum wage data</a><br>
-<a href="https://economic.github.io/data_bootcamp/r-cpi-u-rs-allitems.xlsx">CPI-U-RS data<br>
-</a><a href="https://github.com/Economic/data_bootcamp/blob/master/epi_cps_org_2022.dta.zip">EPI CPS ORG data</a></p>
-</section>
-<section id="code-library-presentation-video" class="level2">
-<h2 class="anchored" data-anchor-id="code-library-presentation-video">Code Library Presentation (<a href="https://www.youtube.com/watch?v=3owr9nGizYQ&amp;list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&amp;index=6">Video</a>)</h2>
-<p><a href="https://github.com/Economic/data_bootcamp/blob/master/Code%20Library%20Presentation.pptx">Code library powerpoint</a></p>
-</section>
-<section id="data-analysis-in-stata-video" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis-in-stata-video">Data analysis in Stata (<a href="https://www.youtube.com/watch?v=L04fzN2uOVE&amp;list=PLOeWdRZsn2L__Noita2w4bQwd1tMJrfLU&amp;index=5">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/Data%20analysis%20in%20.pptx">Data analysis in Stata slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/data_bootcamp_2022.do">Stata session do file</a></p>
-</section>
-</section>
-<section id="earncon-data-bootcamp-1" class="level1">
-<h1>2021 EARNCon Data Bootcamp</h1>
-<section id="first-steps-in-stata-video" class="level2">
-<h2 class="anchored" data-anchor-id="first-steps-in-stata-video">2021 First steps in Stata (<a href="https://www.youtube.com/watch?v=t1tKg9A6NaU&amp;list=PLOeWdRZsn2L8geg2kkqcYZniR5TBk98si&amp;index=7">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/stata_session1.pdf">Stata session 1 slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/stata_session1.do">Stata session 1 do file</a><br>
-<a href="https://economic.github.io/data_bootcamp/epi_cpsorg_2020.dta">EPI CPS ORG 2020 stata data file</a></p>
-</section>
-<section id="using-stata-effectively-video" class="level2">
-<h2 class="anchored" data-anchor-id="using-stata-effectively-video">2021 Using Stata effectively (<a href="https://www.youtube.com/watch?v=cl91pM6XuHM&amp;list=PLOeWdRZsn2L8geg2kkqcYZniR5TBk98si&amp;index=8">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/stata_session2.pdf">Stata session 2 slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/earn_data_bootcamp_session2.do">Stata session 2 do file</a><br>
-<a href="https://economic.github.io/data_bootcamp/r-cpi-u-rs-allitems.xlsx">CPI-U-RS data</a><br>
-<a href="https://economic.github.io/data_bootcamp/epi_cpsorg_2020.dta">EPI CPS ORG 2020 stata data file</a><br>
-<a href="https://microdata.epi.org/epi_cpsorg_1979_2021.zip">Full EPI CPS ORG</a> (zipped data files)</p>
-</section>
-<section id="first-steps-in-r-video" class="level2">
-<h2 class="anchored" data-anchor-id="first-steps-in-r-video">2021 First steps in R (<a href="https://www.youtube.com/watch?v=fcHHWTwZZq8&amp;list=PLOeWdRZsn2L8geg2kkqcYZniR5TBk98si&amp;index=7">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/zipperer_firststepsR_slides.pdf">Slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_2019.dta">acs_2019.dta</a><br>
-<a href="https://economic.github.io/data_bootcamp/epi_wage_percentiles.csv">epi_wage_percentiles.csv</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_wage_analysis.R">acs_wage_analysis.R</a></p>
-</section>
-<section id="using-r-effectively-video" class="level2">
-<h2 class="anchored" data-anchor-id="using-r-effectively-video">2021 Using R effectively (<a href="https://www.youtube.com/watch?v=mMc0PGh_W-Y">Video</a>)</h2>
-<p><a href="https://economic.github.io/data_bootcamp/zipperer_usingReffectively_slides.pdf">Slides</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_2019.dta">acs_2019.dta</a><br>
-<a href="https://economic.github.io/data_bootcamp/geocorr2018.csv">geocorr2018.csv</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_wage_analysis_LAST_TIME.R">acs_wage_analysis_LAST_TIME.R</a><br>
-<a href="https://economic.github.io/data_bootcamp/acs_wage_analysis_FINAL.R">acs_wage_analysis_FINAL.R</a></p>
+<section id="final-cps-script" class="level2">
+<h2 class="anchored" data-anchor-id="final-cps-script">Final CPS script</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># low wage threshold</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>low_wage_threshold <span class="ot">=</span> <span class="dv">20</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># use the CPS ORG</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>org_data <span class="ot">=</span> <span class="fu">load_org</span>(<span class="dv">2024</span>, year, orgwgt, wage, wageotc, statefips, female, wbhao)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using EPI CPS ORG Extracts, Version 2025.9.11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ga_data <span class="ot">=</span> org_data <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># wage earners only</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(wageotc <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># in Georgia</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(statefips <span class="sc">==</span> <span class="dv">13</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2024 only</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># low wage indicator</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_wage =</span> <span class="fu">if_else</span>(wageotc <span class="sc">&lt;</span> low_wage_threshold, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># number low-wage in Georgia</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(low_wage, <span class="at">wt =</span> orgwgt <span class="sc">/</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  low_wage        n
+     &lt;dbl&gt;    &lt;dbl&gt;
+1        0 2904705.
+2        1 1668287.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># share low-wage</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">weighted.mean</span>(low_wage, <span class="at">w =</span> orgwgt),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> wbhao</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  wbhao        `weighted.mean(low_wage, w = orgwgt)`
+  &lt;int+lbl&gt;                                    &lt;dbl&gt;
+1 1 [White]                                    0.305
+2 2 [Black]                                    0.384
+3 3 [Hispanic]                                 0.557
+4 4 [Asian]                                    0.299
+5 5 [Other]                                    0.494</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># analysis by gender</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(female, <span class="at">wt =</span> orgwgt <span class="sc">/</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  female            n
+  &lt;int+lbl&gt;     &lt;dbl&gt;
+1 0 [Male]   2309205.
+2 1 [Female] 2263787.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># analysis by race</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(wbhao, <span class="at">wt =</span> orgwgt <span class="sc">/</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  wbhao               n
+  &lt;int+lbl&gt;       &lt;dbl&gt;
+1 1 [White]    2197534.
+2 2 [Black]    1486286.
+3 3 [Hispanic]  612498.
+4 4 [Asian]     258840.
+5 5 [Other]      17833.</code></pre>
+</div>
+</div>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1013,13 +1061,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./benchmarking_workshop.html" class="pagination-link" aria-label="Benchmarking Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Benchmarking Data</span>
+      <a href="./intro_to_r.html" class="pagination-link" aria-label="Installing R &amp; RStudio EARN Talk">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Installing R &amp; RStudio EARN Talk</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./resources.html" class="pagination-link" aria-label="Other Resources">
-        <span class="nav-page-text">Other Resources</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./foraging_for_data.html" class="pagination-link" aria-label="Foraging for Data in the Wild 2025">
+        <span class="nav-page-text">Foraging for Data in the Wild 2025</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

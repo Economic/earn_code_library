@@ -6,7 +6,7 @@ Installation instructions are available on each package’s Github page.
 
 [realtalk](https://economic.github.io/realtalk/)
 
--   realtalk makes it easy to use common US price indexes in R.
+-   realtalk makes it easy to load and use common US price indexes in R.
 
 [epidatatools](https://economic.github.io/epidatatools/)
 

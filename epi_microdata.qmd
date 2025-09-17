@@ -61,19 +61,20 @@ org <- load_cps("org", 2010:2022, year, orgwgt, wage, age, statefips, wbho,
 
 To simplify usage, you can omit the `.extracts_dir` argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.
 
+Edit your .renviron file easily by installing the [usethis](https://usethis.r-lib.org/) package `install.packages("usethis")`
+
 ```{r Access your .Renviron file, eval=FALSE}
-# Find the .Renviron file
-renviron_path <- file.path(Sys.getenv("HOME"), ".Renviron")
+# Load use this
+library(usethis)
 
-# Open the file for editing
-file.edit(renviron_path)
+# run the edit_r_environ() command from the usethis package
+edit_r_environ()
 
-# Paste the environment variable settings into your .Renviron file,
-# and make sure the paths are set to the location of your CPS files
+# Paste the file paths that point to your CPS files into the .renviron file in the following format:
 
-EPIEXTRACTS_CPSBASIC_DIR=C:/YOUR_PATH/cps
-EPIEXTRACTS_CPSMAY_DIR=C:/YOUR_PATH/cps
-EPIEXTRACTS_CPSORG_DIR=C:/YOUR_PATH/cps
+EPIEXTRACTS_CPSBASIC_DIR = 'C:/YOUR_PATH/cps'
+EPIEXTRACTS_CPSMAY_DIR = 'C:/YOUR_PATH/cps'
+EPIEXTRACTS_CPSORG_DIR = 'C:/YOUR_PATH/cps'
 
 ```
 
