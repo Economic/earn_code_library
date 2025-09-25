@@ -83,7 +83,7 @@ This method produces inflation-adjusted union wage premiums for one state over t
 
 Note: Because you can't combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.
 
-You can check sample sizes by running the code through line X and checking the `n` column of `wage_series`.
+You can check sample sizes by running the code through the line noted below and checking the `n` column of `wage_series`.
 
 ### Set up inflation adjustment
 
@@ -113,7 +113,7 @@ wage_series <- cps_org |>
      quantiles_n = 9L, 
      quantiles_w = c(1:4, 5, 4:1)),
      n=n(),
-     .by = c(year, union)) |>
+     .by = c(year, union)) |> #if you want to check the sample size, run your code through this line (exclude the |> character)
   # Merge annual CPI data to data frame by year
   left_join(cpi_data, by='year') |>
   # Inflation adjust wages
