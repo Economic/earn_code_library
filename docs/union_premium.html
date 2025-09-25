@@ -480,7 +480,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="method-2-time-series">Method 2: Time series</h2>
 <p>This method produces inflation-adjusted union wage premiums for one state over time.</p>
 <p>Note: Because you can’t combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.</p>
-<p>You can check sample sizes by running the code through line X and checking the <code>n</code> column of <code>wage_series</code>.</p>
+<p>You can check sample sizes by running the code through the line noted below and checking the <code>n</code> column of <code>wage_series</code>.</p>
 <section id="set-up-inflation-adjustment" class="level3">
 <h3 class="anchored" data-anchor-id="set-up-inflation-adjustment">Set up inflation adjustment</h3>
 <p>For more information on inflation adjusting wages, see <a href="https://economic.github.io/earn_code_library/inflation_adjusting.html">Inflation adjusting with Realtalk</a>.</p>
@@ -507,7 +507,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">quantiles_n =</span> <span class="dv">9</span>L, </span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">quantiles_w =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">1</span>)),</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">n=</span><span class="fu">n</span>(),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">.by =</span> <span class="fu">c</span>(year, union)) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">.by =</span> <span class="fu">c</span>(year, union)) <span class="sc">|&gt;</span> <span class="co">#if you want to check the sample size, run your code through this line (exclude the |&gt; character)</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge annual CPI data to data frame by year</span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cpi_data, <span class="at">by=</span><span class="st">'year'</span>) <span class="sc">|&gt;</span></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inflation adjust wages</span></span>
