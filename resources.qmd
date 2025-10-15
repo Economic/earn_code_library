@@ -2,7 +2,7 @@
 title: "Other Resources"
 ---
 
-If you can't find the answers you're looking for in our tutorials or elsewhere on our site, check out these external resources. If you're still stuck, feel free to reach out to [dperez\@epi.org](mailto:dperez@epi.org).
+If you can't find the answers you're looking for in our tutorials or elsewhere on our site, check out these external resources. If you're still stuck, feel free to reach out to [ecohn\@epi.org](mailto:ecohn@epi.org).
 
 [R\@Urban](https://urbaninstitute.github.io/r-at-urban/)
 

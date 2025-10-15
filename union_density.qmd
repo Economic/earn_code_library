@@ -3,8 +3,6 @@ title: "Historical state union density"
 author: 'Daniel Perez, EARN/EPI'
 ---
 
-Contact: [dperez\@epi.org](mailto:%20dperez@epi.org)
-
 ### This script uses Current Population Survey (CPS) microdata extracts from <https://microdata.epi.org/> to calculate union density from 1983-Present.
 
 ```{r Libraries, message=FALSE}
