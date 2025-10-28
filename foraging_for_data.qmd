@@ -7,7 +7,9 @@ author: "Daniel Perez & Jori Kandra"
 
 This training and code workflow was originally delivered as an EARN Talk on August 26th, 2025.
 
-**NOTE:** Some users have experienced issues downloading the datasets with the R commands below. An updated script and webinar recording will be shared in October 2025.
+Missed this talk? See the recording here: [Foraging for Data in the Wild](https://us06web.zoom.us/rec/share/F6RJWuOmoBHg4sW18IQCIqceh0iXp6DNA1wUox8-WP9GG9z-0hnN4dNTtrcM9wu7.CPj-D7vEGerBpFSn?startTime=1756233183000).
+
+**Passcode:** 4aging2025!
 
 ## Unemployment Insurance Claims by State
 
