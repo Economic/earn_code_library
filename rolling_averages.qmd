@@ -88,7 +88,7 @@ epop_race <- basic |>
          sample12 = rollsum(n, k = 12, align = "right", fill = NA)) |> 
   ungroup() |> 
   select(date, race, epop12, sample12) |>
-  # Pivot the data to display each race/ethnicity as its own column with appropriate label (EPOP or sample size count)
+  # Pivot the data to display each race/ethnicity as its own column with appropriate label
   pivot_wider(
     names_from = race,
     values_from = c(epop12, sample12),
