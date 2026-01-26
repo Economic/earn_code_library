@@ -69,6 +69,7 @@ website:
         - rtw_union.qmd
         - union_premium.qmd
         - median_wages_demos.qmd
+        - rolling_averages.qmd
 
     - section: "Stata code"
       contents:

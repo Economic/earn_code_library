@@ -1,0 +1,117 @@
+---
+title: "Calculating rolling averages"
+author: "Emma Cohn and Daniel Perez"
+format: html
+editor: visual
+---
+
+This script will teach you how to calculate simple rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.
+
+## Load required libraries
+
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven't yet set up your computer to run [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html), complete that process before running this code.
+
+```{r, Libraries, message=FALSE}
+
+#Load necessary libraries
+library(tidyverse)
+library(epiextractr)
+library(epidatatools)
+library(realtalk)
+library(labelled)
+library(zoo)
+library(openxlsx2)
+```
+
+## Import and clean data
+
+**Note:** Don't forget to **update years** to match your setup before running the script.
+
+Running this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs. It will also create a variable that will allow you to calculate prime-age EPOPs and set up some date formatting for the rolling average calculation later.
+
+```{r, Download and clean data, message=FALSE}
+# Import CPS ORG data
+basic <- load_basic(2018:2024, "year", "month", "basicwgt", "age", "wbhao", "selfinc", "emp") |>
+  #Filter to working age population
+  filter(age >= 16) |> 
+  # Create prime-age variable
+  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0)) |> 
+  # Create population variable
+  mutate(pop = 1) |> 
+  # Create date in yyyy-mm-dd format
+  mutate(date = ymd(paste0(year,'-', month,'-1'))) 
+```
+
+## Calculate monthly rolling averages for EPOPs
+
+This code chunk creates total 'employment' and 'population' counts, calculates the (prime-age) EPOP, sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.
+
+```{r, overall EPOP, message=FALSE}
+epop_all <- basic |>
+  # Optional: filter to calculate prime-age EPOPS
+  filter(prime_age == 1) |> 
+  # Total population and employment levels
+  summarise(total_pop = sum(pop * basicwgt, na.rm=TRUE),
+            total_emp = sum(emp * basicwgt, na.rm=TRUE),
+            n=n(),
+            .by=date) |>
+  # Calculate EPOP
+  mutate(epop = total_emp/total_pop) |> 
+  # Order by date
+  arrange(date) |> 
+# Calculate rolling average of previous 12 months for both EPOP and sample size
+  mutate(all_epop12 = rollmean(epop, k = 12, align = "right", fill = NA),
+         all_sample12 = rollsum(n, k = 12, align = "right", fill = NA)) |> 
+  select(date, all_epop12, all_sample12) |>
+  # Suppress data with sample size of < 250
+  mutate(all_epop12 = if_else(is.na(all_sample12) | all_sample12 < 250,
+                            NA_real_, all_epop12))
+```
+
+### Calculate EPOPs by race/ethnicity and format output
+
+This section adds code that breaks out EPOPs by race/ethnicity, using the `wbhao` variable. It also pivots the data so that each race/ethnicity group is its own column.
+
+```{r, race/ethnicity EPOP, message=FALSE}
+epop_race <- basic |>
+  summarise(total_pop = sum(pop * basicwgt, na.rm=TRUE),
+            total_emp = sum(emp * basicwgt, na.rm=TRUE),
+            n=n(),
+            .by=c(wbhao, date)) |>
+  mutate(epop = total_emp/total_pop,
+         race = to_factor(wbhao)) |> 
+  # Ensure correct order within each racial/ethnic category
+  arrange(race, date) |>  
+  # Compute rolling mean per 'race' group
+  group_by(race) |>       
+  mutate(epop12 = rollmean(epop, k = 12, align = "right", fill = NA),
+         sample12 = rollsum(n, k = 12, align = "right", fill = NA)) |> 
+  ungroup() |> 
+  select(date, race, epop12, sample12) |>
+  # Pivot the data to display each race/ethnicity as its own column with appropriate label (EPOP or sample size count)
+  pivot_wider(
+    names_from = race,
+    values_from = c(epop12, sample12),
+    names_glue = "{race}_{.value}"
+  )
+```
+
+## Export your data to a downloadable Excel
+
+Use `openxlsx2` to create a downloadable Excel. Don't forget to **edit the file path** to ensure it saves to the right location.
+
+```{r, Excel, message=FALSE}
+#  Export epop tables to one workbook 
+wb <- wb_workbook()
+
+wb$ 
+  # Add worksheet
+  add_worksheet(sheet = "US EPOPs")$
+  add_data(x = epop_all)$
+  add_worksheet(sheet = "EPOPs by race")$
+  add_data(x = epop_race)
+
+wb_save(wb, file = "output/epop_tables.xlsx", overwrite = TRUE)
+```
+
+And that's it! You can benchmark your data to the [State of Working America Data Library](https://data.epi.org/labor_force/labor_force_emp/line/month/national/percent_emp_12_month/overall?timeStart=1976-12-01&timeEnd=2025-12-01&dateString=2024-11-01&highlightedLines=overall) before filtering to specific states or demographic cuts to ensure reliability. As always, be sure to keep an eye on those sample sizes!
