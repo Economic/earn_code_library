@@ -32,33 +32,26 @@ Running this script chunk will call the BLS Current Population Survey Basic data
 ```{r, Download and clean data, message=FALSE}
 # Import CPS ORG data
 basic <- load_basic(2018:2024, "year", "month", "basicwgt", "age", "wbhao", "selfinc", "emp") |>
-  #Filter to working age population
-  filter(age >= 16) |> 
+  #Filter to working age population with employment information
+  filter(age >= 16, !is.na(emp)) |> 
   # Create prime-age variable
   mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0)) |> 
-  # Create population variable
-  mutate(pop = 1) |> 
   # Create date in yyyy-mm-dd format
   mutate(date = ymd(paste0(year,'-', month,'-1'))) 
 ```
 
 ## Calculate monthly rolling averages for EPOPs
 
-This code chunk creates total 'employment' and 'population' counts, calculates the (prime-age) EPOP, sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.
+This code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable `emp` (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.
 
 ```{r, overall EPOP, message=FALSE}
 epop_all <- basic |>
   # Optional: filter to calculate prime-age EPOPS
   filter(prime_age == 1) |> 
-  # Total population and employment levels
-  summarise(total_pop = sum(pop * basicwgt, na.rm=TRUE),
-            total_emp = sum(emp * basicwgt, na.rm=TRUE),
+  # Calculate EPOP as the weighted mean of 'emp' variable
+  summarise(epop = weighted.mean(emp, w = basicwgt),
             n=n(),
-            .by=date) |>
-  # Calculate EPOP
-  mutate(epop = total_emp/total_pop) |> 
-  # Order by date
-  arrange(date) |> 
+            .by=date) |> 
 # Calculate rolling average of previous 12 months for both EPOP and sample size
   mutate(all_epop12 = rollmean(epop, k = 12, align = "right", fill = NA),
          all_sample12 = rollsum(n, k = 12, align = "right", fill = NA)) |> 
@@ -74,12 +67,10 @@ This section adds code that breaks out EPOPs by race/ethnicity, using the `wbhao
 
 ```{r, race/ethnicity EPOP, message=FALSE}
 epop_race <- basic |>
-  summarise(total_pop = sum(pop * basicwgt, na.rm=TRUE),
-            total_emp = sum(emp * basicwgt, na.rm=TRUE),
+  summarise(epop = weighted.mean(emp, w = basicwgt),
             n=n(),
-            .by=c(wbhao, date)) |>
-  mutate(epop = total_emp/total_pop,
-         race = to_factor(wbhao)) |> 
+            .by=c(wbhao, date)) |> 
+  mutate(race = to_factor(wbhao)) |> 
   # Ensure correct order within each racial/ethnic category
   arrange(race, date) |>  
   # Compute rolling mean per 'race' group
