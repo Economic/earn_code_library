@@ -999,7 +999,7 @@
     "href": "rolling_averages.html#load-required-libraries",
     "title": "Calculating rolling averages",
     "section": "Load required libraries",
-    "text": "Load required libraries\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run EPI CPS microdata extracts, complete that process before running this code.\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(labelled)\nlibrary(zoo)\nlibrary(openxlsx2)",
+    "text": "Load required libraries\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run EPI CPS microdata extracts, complete that process before running this code.\n\n#Load necessary libraries\nlibrary(tidyverse) #this package contains most common R functions\nlibrary(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts\nlibrary(labelled) #allows you to easily clean data; includes functions like 'to_factor'\nlibrary(zoo) #contains functions like rollmean and rollsum\nlibrary(openxlsx2) #allows you to format and export data to an Excel workbook",
     "crumbs": [
       "R code",
       "Code Repository",

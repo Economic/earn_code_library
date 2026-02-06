@@ -14,11 +14,11 @@ The following chunk of code loads the R libraries necessary for this exercise. Y
 ```{r, Libraries, message=FALSE}
 
 #Load necessary libraries
-library(tidyverse)
-library(epiextractr)
-library(labelled)
-library(zoo)
-library(openxlsx2)
+library(tidyverse) #this package contains most common R functions
+library(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts
+library(labelled) #allows you to easily clean data; includes functions like 'to_factor'
+library(zoo) #contains functions like rollmean and rollsum
+library(openxlsx2) #allows you to format and export data to an Excel workbook
 ```
 
 ## Import and clean data
