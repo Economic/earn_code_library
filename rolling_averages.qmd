@@ -16,8 +16,6 @@ The following chunk of code loads the R libraries necessary for this exercise. Y
 #Load necessary libraries
 library(tidyverse)
 library(epiextractr)
-library(epidatatools)
-library(realtalk)
 library(labelled)
 library(zoo)
 library(openxlsx2)
