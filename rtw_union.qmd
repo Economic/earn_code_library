@@ -9,7 +9,7 @@ execute:
 
 Use this code to find union density rates for right-to-work versus non-right-to-work states using the [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html).
 
-\[**2/10/26 UPDATE:** See here for a more accurate way to assign RTW vs non-RTW labels that takes into account changes in status over time. The code below has not been updated to account for this new methodology.\]
+\[**2/10/26 UPDATE:** See [here](https://economic.github.io/earn_code_library/rtw_definitions.html) for a more accurate way to assign RTW vs non-RTW labels that takes into account changes in status over time. The code below has not been updated to account for this new methodology.\]
 
 **Note:** This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file [here](https://s3.amazonaws.com/media.earn.us/files/geo_rtw_labels.csv) and save to your project before running code.
 
