@@ -1,0 +1,73 @@
+---
+title: "Defining states by right-to-work status by year"
+author: "Emma Cohn"
+format: html
+editor: visual
+execute: 
+  eval: false
+---
+
+Use this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html).
+
+**Note:** This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file [here](https://s3.amazonaws.com/media.earn.us/files/state_rtw_definitions.csv) and save to your project before running code.
+
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.
+
+```{r, Libraries, message=FALSE}
+
+#Load necessary libraries
+library(tidyverse)
+library(epiextractr)
+library(labelled)
+```
+
+## Import and clean data
+
+**Note:** Don't forget to **update years, file names,** and **file paths** to match your setup before running the script.
+
+In this chunk, you'll reformat the RTW label **rtw_status_years.csv** file into a format that's easier to process in R.
+
+```{r, RTW status CSV, message=FALSE}
+
+# read in RTW status by year
+rtw_status_year <- read.csv("./input/rtw_status_year.csv") |> 
+  pivot_longer(cols = -year, names_to = "state", values_to = "rtw_status") |> 
+  arrange(state, year)
+```
+
+Running this script chunk will call and clean the BLS Current Population Survey Basic data required to calculate prime age EPOPs. It will also join the `rtw_status_years` data frame you created to label each state as "RTW" or "Non-RTW" in a given year.
+
+```{r, Download and clean data, message=FALSE}
+
+# import CPS Basic data
+cps_basic <- load_basic(2000:2025, "year", "month", "selfemp", "selfinc", "age", "statefips", "emp", "lfstat",
+              "cow1", "female", "wbhao", "basicwgt") |> 
+  # Age restrictions
+  filter(age >= 16) |> 
+  # identify prime-age (for EPOPs)
+  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0), state=to_factor(statefips)) |> 
+  # merge RTW status
+  left_join(rtw_status_year, by = c("year", "state")) |> 
+  # adjust for missing Oct data
+  mutate(weight = case_match(year, 
+                             2025 ~ basicwgt / 11, 
+                             .default = basicwgt / 12))
+```
+
+## Run analysis
+
+Here you'll run the analysis to calculate prime age EPOPs by RTW vs. non-RTW states over time.
+
+```{r, Run analysis and create Excel, message=FALSE}
+epop_rtw <- cps_basic |> 
+  filter(prime_age == 1) |> 
+  # EPOP = weighted mean of employment
+  summarise(epop = weighted.mean(emp, w = weight, na.rm = TRUE), .by = c(year, rtw_status)) |> 
+  # reshape wide by RTW label
+  pivot_wider(id_cols = year, names_from = rtw_status, values_from = epop) |> 
+  rename(RTW = `1`, non_RTW = `0`)
+```
+
+And that's all! You can easily apply the first two code chunks to any CPS (or other survey) analysis you want to do.
+
+Happy coding!

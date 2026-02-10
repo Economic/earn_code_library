@@ -345,6 +345,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Calculating rolling averages</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rtw_definitions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Defining states by right-to-work status by year</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -412,6 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Use this code to find union density rates for right-to-work versus non-right-to-work states using the <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>.</p>
+<p>[<strong>2/10/26 UPDATE:</strong> See here for a more accurate way to assign RTW vs non-RTW labels that takes into account changes in status over time. The code below has not been updated to account for this new methodology.]</p>
 <p><strong>Note:</strong> This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file <a href="https://s3.amazonaws.com/media.earn.us/files/geo_rtw_labels.csv">here</a> and save to your project before running code.</p>
 <p>You can edit this file (and the relevant code below) to change how states are grouped (e.g., by region).</p>
 <p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
@@ -465,7 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"wage"</span>, <span class="st">"union"</span>, <span class="st">"lfstat"</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load supplemental RTW label data</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>geo_rtw_labels <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"input/geo_rtw_labels.csv"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>geo_rtw_labels <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./geo_rtw_labels.csv"</span>)<span class="er">)</span> <span class="sc">%&gt;%</span> </span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(statefips, rtw, rtw_timeline_lab)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Import CPS ORG data</span></span>
@@ -502,23 +509,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Note:</strong> This wage does not factor in any controls (e.g., demographics, occupation, education), so is best used for a relative comparison.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># median wage for 2023 and 2024</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binipolate</span>(cps_org <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2023</span>), wage, <span class="at">bin_size =</span> <span class="fl">0.25</span>, <span class="at">.by =</span> year, <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 3
-   year probs value
-  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-1  2023   0.5  24.0
-2  2024   0.5  25.0</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># median wage by RTW status for 2024</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binipolate</span>(cps_org <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>), wage, <span class="at">bin_size =</span> <span class="fl">0.25</span>, <span class="at">.by =</span> <span class="fu">c</span>(year, rtw_timeline_lab), <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 4
-   year rtw_timeline_lab probs value
-  &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;
-1  2024 Non-RTW            0.5  26.4
-2  2024 RTW                0.5  23.2</code></pre>
-</div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binipolate</span>(cps_org <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2023</span>), wage, <span class="at">bin_size =</span> <span class="fl">0.25</span>, <span class="at">.by =</span> year, <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># median wage by RTW status for 2024</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">binipolate</span>(cps_org <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>), wage, <span class="at">bin_size =</span> <span class="fl">0.25</span>, <span class="at">.by =</span> <span class="fu">c</span>(year, rtw_timeline_lab), <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Happy coding!</p>
 
