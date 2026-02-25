@@ -1,11 +1,11 @@
 ---
-title: "Calculating rolling averages"
+title: "(Monthly) rolling averages"
 author: "Emma Cohn and Daniel Perez"
 format: html
 editor: visual
 ---
 
-This script will teach you how to calculate simple rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.
+This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.
 
 ## Load required libraries
 
@@ -42,6 +42,8 @@ basic <- load_basic(2018:2024, "year", "month", "basicwgt", "age", "wbhao", "sel
 
 This code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable `emp` (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.
 
+In order to **change the rolling length**, change the `k` value. This code calculates 12-month rolling averages; a smaller number of months will be *more susceptible to short-term changes* such as business cycles or seasonal employment. On the flip side, a high number of months will *smooth out shorter-term or temporary changes*, like the effects of recent policy, but will include *more robust sample sizes*. Consider this when deciding how many months (or other measure) to include.
+
 ```{r, overall EPOP, message=FALSE}
 epop_all <- basic |>
   # Optional: filter to calculate prime-age EPOPS
@@ -50,7 +52,7 @@ epop_all <- basic |>
   summarise(epop = weighted.mean(emp, w = basicwgt),
             n=n(),
             .by=date) |> 
-# Calculate rolling average of previous 12 months for both EPOP and sample size
+# Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size
   mutate(all_epop12 = rollmean(epop, k = 12, align = "right", fill = NA),
          all_sample12 = rollsum(n, k = 12, align = "right", fill = NA)) |> 
   select(date, all_epop12, all_sample12) |>

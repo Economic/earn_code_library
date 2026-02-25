@@ -1,5 +1,5 @@
 ---
-title: "Comparing union density rates in right-to-work versus non-right-to-work states"
+title: "Union density rates in right-to-work (RTW) versus non-RTW states"
 author: "Jori Kandra and Emma Cohn"
 format: html
 editor: visual

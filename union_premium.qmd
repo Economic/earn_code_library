@@ -1,5 +1,5 @@
 ---
-title: "Calculate union wage premiums by state and year"
+title: "Union wage premiums by state"
 author: "Emma Cohn"
 format: html
 editor: visual

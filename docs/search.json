@@ -299,61 +299,61 @@
   {
     "objectID": "rolling_averages.html",
     "href": "rolling_averages.html",
-    "title": "Calculating rolling averages",
+    "title": "(Monthly) rolling averages",
     "section": "",
-    "text": "This script will teach you how to calculate simple rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.",
+    "text": "This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculating rolling averages"
+      "(Monthly) rolling averages"
     ]
   },
   {
     "objectID": "rolling_averages.html#load-required-libraries",
     "href": "rolling_averages.html#load-required-libraries",
-    "title": "Calculating rolling averages",
+    "title": "(Monthly) rolling averages",
     "section": "Load required libraries",
     "text": "Load required libraries\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run EPI CPS microdata extracts, complete that process before running this code.\n\n#Load necessary libraries\nlibrary(tidyverse) #this package contains most common R functions\nlibrary(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts\nlibrary(labelled) #allows you to easily clean data; includes functions like 'to_factor'\nlibrary(zoo) #contains functions like rollmean and rollsum\nlibrary(openxlsx2) #allows you to format and export data to an Excel workbook",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculating rolling averages"
+      "(Monthly) rolling averages"
     ]
   },
   {
     "objectID": "rolling_averages.html#import-and-clean-data",
     "href": "rolling_averages.html#import-and-clean-data",
-    "title": "Calculating rolling averages",
+    "title": "(Monthly) rolling averages",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs. It will also create a variable that will allow you to calculate prime-age EPOPs and set up some date formatting for the rolling average calculation later.\n\n# Import CPS ORG data\nbasic &lt;- load_basic(2018:2024, \"year\", \"month\", \"basicwgt\", \"age\", \"wbhao\", \"selfinc\", \"emp\") |&gt;\n  #Filter to working age population with employment information\n  filter(age &gt;= 16, !is.na(emp)) |&gt; \n  # Create prime-age variable\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0)) |&gt; \n  # Create date in yyyy-mm-dd format\n  mutate(date = ymd(paste0(year,'-', month,'-1')))",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculating rolling averages"
+      "(Monthly) rolling averages"
     ]
   },
   {
     "objectID": "rolling_averages.html#calculate-monthly-rolling-averages-for-epops",
     "href": "rolling_averages.html#calculate-monthly-rolling-averages-for-epops",
-    "title": "Calculating rolling averages",
+    "title": "(Monthly) rolling averages",
     "section": "Calculate monthly rolling averages for EPOPs",
-    "text": "Calculate monthly rolling averages for EPOPs\nThis code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable emp (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.\n\nepop_all &lt;- basic |&gt;\n  # Optional: filter to calculate prime-age EPOPS\n  filter(prime_age == 1) |&gt; \n  # Calculate EPOP as the weighted mean of 'emp' variable\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=date) |&gt; \n# Calculate rolling average of previous 12 months for both EPOP and sample size\n  mutate(all_epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         all_sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  select(date, all_epop12, all_sample12) |&gt;\n  # Suppress data with sample size of &lt; 250\n  mutate(all_epop12 = if_else(is.na(all_sample12) | all_sample12 &lt; 250,\n                            NA_real_, all_epop12))\n\n\nCalculate EPOPs by race/ethnicity and format output\nThis section adds code that breaks out EPOPs by race/ethnicity, using the wbhao variable. It also pivots the data so that each race/ethnicity group is its own column.\n\nepop_race &lt;- basic |&gt;\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=c(wbhao, date)) |&gt; \n  mutate(race = to_factor(wbhao)) |&gt; \n  # Ensure correct order within each racial/ethnic category\n  arrange(race, date) |&gt;  \n  # Compute rolling mean per 'race' group\n  group_by(race) |&gt;       \n  mutate(epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  ungroup() |&gt; \n  select(date, race, epop12, sample12) |&gt;\n  # Pivot the data to display each race/ethnicity as its own column with appropriate label\n  pivot_wider(\n    names_from = race,\n    values_from = c(epop12, sample12),\n    names_glue = \"{race}_{.value}\"\n  )",
+    "text": "Calculate monthly rolling averages for EPOPs\nThis code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable emp (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.\nIn order to change the rolling length, change the k value. This code calculates 12-month rolling averages; a smaller number of months will be more susceptible to short-term changes such as business cycles or seasonal employment. On the flip side, a high number of months will smooth out shorter-term or temporary changes, like the effects of recent policy, but will include more robust sample sizes. Consider this when deciding how many months (or other measure) to include.\n\nepop_all &lt;- basic |&gt;\n  # Optional: filter to calculate prime-age EPOPS\n  filter(prime_age == 1) |&gt; \n  # Calculate EPOP as the weighted mean of 'emp' variable\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=date) |&gt; \n# Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size\n  mutate(all_epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         all_sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  select(date, all_epop12, all_sample12) |&gt;\n  # Suppress data with sample size of &lt; 250\n  mutate(all_epop12 = if_else(is.na(all_sample12) | all_sample12 &lt; 250,\n                            NA_real_, all_epop12))\n\n\nCalculate EPOPs by race/ethnicity and format output\nThis section adds code that breaks out EPOPs by race/ethnicity, using the wbhao variable. It also pivots the data so that each race/ethnicity group is its own column.\n\nepop_race &lt;- basic |&gt;\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=c(wbhao, date)) |&gt; \n  mutate(race = to_factor(wbhao)) |&gt; \n  # Ensure correct order within each racial/ethnic category\n  arrange(race, date) |&gt;  \n  # Compute rolling mean per 'race' group\n  group_by(race) |&gt;       \n  mutate(epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  ungroup() |&gt; \n  select(date, race, epop12, sample12) |&gt;\n  # Pivot the data to display each race/ethnicity as its own column with appropriate label\n  pivot_wider(\n    names_from = race,\n    values_from = c(epop12, sample12),\n    names_glue = \"{race}_{.value}\"\n  )",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculating rolling averages"
+      "(Monthly) rolling averages"
     ]
   },
   {
     "objectID": "rolling_averages.html#export-your-data-to-a-downloadable-excel",
     "href": "rolling_averages.html#export-your-data-to-a-downloadable-excel",
-    "title": "Calculating rolling averages",
+    "title": "(Monthly) rolling averages",
     "section": "Export your data to a downloadable Excel",
     "text": "Export your data to a downloadable Excel\nUse openxlsx2 to create a downloadable Excel. Don’t forget to edit the file path to ensure it saves to the right location.\n\n#  Export epop tables to one workbook \nwb &lt;- wb_workbook()\n\nwb$ \n  # Add worksheet\n  add_worksheet(sheet = \"US EPOPs\")$\n  add_data(x = epop_all)$\n  add_worksheet(sheet = \"EPOPs by race\")$\n  add_data(x = epop_race)\n\nwb_save(wb, file = \"output/epop_tables.xlsx\", overwrite = TRUE)\n\nAnd that’s it! You can benchmark your data to the State of Working America Data Library before filtering to specific states or demographic cuts to ensure reliability. As always, be sure to keep an eye on those sample sizes!",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculating rolling averages"
+      "(Monthly) rolling averages"
     ]
   },
   {
@@ -994,109 +994,109 @@
   {
     "objectID": "rtw_union.html",
     "href": "rtw_union.html",
-    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "title": "Union density rates in right-to-work (RTW) versus non-RTW states",
     "section": "",
     "text": "Use this code to find union density rates for right-to-work versus non-right-to-work states using the EPI CPS microdata extracts.\n[2/10/26 UPDATE: See here for a more accurate way to assign RTW vs non-RTW labels that takes into account changes in status over time. The code below has not been updated to account for this new methodology.]\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nYou can edit this file (and the relevant code below) to change how states are grouped (e.g., by region).\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(here)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(openxlsx)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Comparing union density rates in right-to-work versus non-right-to-work states"
+      "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
   {
     "objectID": "rtw_union.html#set-up-your-workbook",
     "href": "rtw_union.html#set-up-your-workbook",
-    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "title": "Union density rates in right-to-work (RTW) versus non-RTW states",
     "section": "Set up your workbook",
     "text": "Set up your workbook\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll define the sheet function for the generated workbook and apply some formatting. This helps with readability and condenses the code.\n\n# Define sheet function\nsheet_fun &lt;- function(data, wb, s, format = NULL) {\n  # Add a worksheet to workbook object\n  # Note: The sheet name and wb object are anonymized\n  addWorksheet(wb, sheetName = paste0(s))\n  \n  # Write data to sheet\n  # Note: anonymize data for use in a piped method call\n  writeData(wb, sheet = paste0(s), x = data)\n  \n  # Format based on the value of format\n  if (!is.null(format)) {\n    lapply(format, function(f) {\n      switch(f,\n             \"PERCENTAGE\" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '0.0%'), cols = 2:ncol(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE),\n             \"NUMBER\" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '#,##0'), cols = 2:length(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE)\n      )\n    })\n  }\n  \n  # This line allows the output to return to the data.frame\n  # Note: removing this specification changes output to a list of attributes that are used to write to the wb object  \n  return(data)\n  \n}",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Comparing union density rates in right-to-work versus non-right-to-work states"
+      "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
   {
     "objectID": "rtw_union.html#import-and-clean-data",
     "href": "rtw_union.html#import-and-clean-data",
-    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "title": "Union density rates in right-to-work (RTW) versus non-RTW states",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union density. It will also use the geo_rtw_labels.csv file you downloaded to label each state as “RTW” or “Non-RTW.”\n\n# Set objects to download\nvar_list &lt;- c(\"year\", \"month\", \"age\", \"statefips\", \n              \"wage\", \"union\", \"lfstat\")\n\n# Load supplemental RTW label data\ngeo_rtw_labels &lt;- read.csv(\"./geo_rtw_labels.csv\")) %&gt;% \n  select(statefips, rtw, rtw_timeline_lab)\n\n# Import CPS ORG data\n# Note: make sure the years reflect your desired window!\ncps_org &lt;- load_org(1983:2024, all_of(c(var_list, \"orgwgt\"))) %&gt;%\n  # Filter out workers under 16 and self-employed workers. \n  filter(age &gt;= 16, lfstat == 1) %&gt;% \n  # Merge RTW status labels to states\n  left_join(geo_rtw_labels, by = \"statefips\")",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Comparing union density rates in right-to-work versus non-right-to-work states"
+      "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
   {
     "objectID": "rtw_union.html#run-analysis-and-download-your-output",
     "href": "rtw_union.html#run-analysis-and-download-your-output",
-    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "title": "Union density rates in right-to-work (RTW) versus non-RTW states",
     "section": "Run analysis and download your output",
     "text": "Run analysis and download your output\nHere you’ll run the analysis and produce the resulting Excel workbook output.\n\n# set wb object to bind to \nunion_wb &lt;- createWorkbook()\n\nunion &lt;- cps_org %&gt;% \n  # union membership rates by RTW\n  summarise(union = weighted.mean(union, w = orgwgt/12, na.rm = TRUE), .by = c(year, rtw_timeline_lab)) %&gt;% \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_timeline_lab, values_from = union) %&gt;% \n  # write to wb object\n  sheet_fun(union_wb, s = \"union_rtw\", format = \"PERCENTAGE\")\n\n# save workbooks; make sure to edit the file path!\nsaveWorkbook(union_wb, here(\"output/rtw_union.xlsx\"), overwrite = TRUE)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Comparing union density rates in right-to-work versus non-right-to-work states"
+      "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
   {
     "objectID": "rtw_union.html#bonus-generate-median-wages",
     "href": "rtw_union.html#bonus-generate-median-wages",
-    "title": "Comparing union density rates in right-to-work versus non-right-to-work states",
+    "title": "Union density rates in right-to-work (RTW) versus non-RTW states",
     "section": "Bonus: generate median wages",
     "text": "Bonus: generate median wages\nUse this chunk to generate median wages across all workers and compare to median wages in RTW vs non-RTW states.\nNote: This wage does not factor in any controls (e.g., demographics, occupation, education), so is best used for a relative comparison.\n\n# median wage for 2023 and 2024\nbinipolate(cps_org %&gt;% filter(year &gt;= 2023), wage, bin_size = 0.25, .by = year, w = orgwgt/12)\n\n# median wage by RTW status for 2024\nbinipolate(cps_org %&gt;% filter(year == 2024), wage, bin_size = 0.25, .by = c(year, rtw_timeline_lab), w = orgwgt/12)\n\nHappy coding!",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Comparing union density rates in right-to-work versus non-right-to-work states"
+      "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
   {
     "objectID": "union_premium.html",
     "href": "union_premium.html",
-    "title": "Calculate union wage premiums by state and year",
+    "title": "Union wage premiums by state",
     "section": "",
     "text": "Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the EPI CPS microdata extracts.\nSome utility notes:\nPlease reach out to ecohn@epi.org with any questions. Now let’s get coding!\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculate union wage premiums by state and year"
+      "Union wage premiums by state"
     ]
   },
   {
     "objectID": "union_premium.html#import-and-clean-data",
     "href": "union_premium.html#import-and-clean-data",
-    "title": "Calculate union wage premiums by state and year",
+    "title": "Union wage premiums by state",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.\n\n# Import CPS ORG data\n# Note: load as many years necessary to get sufficient sample sizes or desired time series.\ncps_org &lt;- load_org(2020:2024, \"year\", \"age\", \"statefips\", \"wage\", \"union\", \"orgwgt\", \"a_earnhour\", \"cow1\") %&gt;%\n  # Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.\n  filter(age &gt;= 16, cow1 &lt;= 5, a_earnhour != 1, !is.na(wage))",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculate union wage premiums by state and year"
+      "Union wage premiums by state"
     ]
   },
   {
     "objectID": "union_premium.html#method-1-point-in-time-comparisons",
     "href": "union_premium.html#method-1-point-in-time-comparisons",
-    "title": "Calculate union wage premiums by state and year",
+    "title": "Union wage premiums by state",
     "section": "Method 1: Point-in-time comparisons",
     "text": "Method 1: Point-in-time comparisons\nThis method produces union wage premiums for all fifty states, pooling five years of data to get sufficient sample sizes.\nNote: some of the sample sizes are still quite small, even with five years of data. E.g., South Carolina’s union-represented sample. Consider expanding the number of years pooled, but keep in mind that this will also alter what you can say about the results.\n\nCreate wage data\nThis code chunk uses EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per state.\n\n# Note: divide orgwgt by as many months are in your pool.\nwage_single &lt;- cps_org |&gt;\n  mutate(union = to_factor(union)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = wage, \n        w = orgwgt/60,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(union, statefips))\n\n\n\nCalculate union wage premium\nThis code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.\n\nwage_dif_single &lt;- wage_single |&gt;\n  mutate(union_stat = case_when(union == \"Not union represented\" ~ \"nonunion\", \n                                union == \"Union represented\" ~ \"union\")) |&gt;\n  pivot_wider(id_cols = statefips, names_from = union_stat, values_from = wage_median) |&gt;\n  mutate(diff = ((union-nonunion)/nonunion))|&gt;\nmutate(state = to_factor(statefips)) |&gt;\nselect(statefips, state, everything())",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculate union wage premiums by state and year"
+      "Union wage premiums by state"
     ]
   },
   {
     "objectID": "union_premium.html#method-2-time-series",
     "href": "union_premium.html#method-2-time-series",
-    "title": "Calculate union wage premiums by state and year",
+    "title": "Union wage premiums by state",
     "section": "Method 2: Time series",
     "text": "Method 2: Time series\nThis method produces inflation-adjusted union wage premiums for one state over time.\nNote: Because you can’t combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.\nYou can check sample sizes by running the code through the line noted below and checking the n column of wage_series.\n\nSet up inflation adjustment\nFor more information on inflation adjusting wages, see Inflation adjusting with Realtalk.\n\n# Calculate real wage over time: load CPI data from realtalk\ncpi_data &lt;- realtalk::c_cpi_u_annual\n\n# Set base year to 2024\ncpi2024 &lt;- cpi_data$c_cpi_u[cpi_data$year==2024]\n\n\n\nCreate wage data\nThis code chunk calculates median wages and adjusts them for inflation.\n\n# Note: change statefips to whichever state you prefer.\nwage_series &lt;- cps_org |&gt;\n  filter(statefips == 36) |&gt;\n  mutate(union = to_factor(union)) |&gt;\n  summarise(\n     wage_median = averaged_median(\n     x = wage, \n     w = orgwgt/12,  \n     quantiles_n = 9L, \n     quantiles_w = c(1:4, 5, 4:1)),\n     n=n(),\n     .by = c(year, union)) |&gt; #if you want to check the sample size, run your code through this line (exclude the |&gt; character)\n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') |&gt;\n  # Inflation adjust wages\n mutate(real_wage = wage_median * (cpi2024/c_cpi_u)) |&gt;\nselect(year, union, real_wage)\n\n\n\nCalculate union wage premium\nThis code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.\n\nwage_dif_series &lt;- wage_series |&gt;\n  mutate(union_stat = case_when(union == \"Not union represented\" ~ \"nonunion\", \n                                union == \"Union represented\" ~ \"union\")) |&gt;\n  pivot_wider(id_cols = year, names_from = union_stat, values_from = real_wage) |&gt;\n  mutate(diff = ((union-nonunion)/nonunion)) |&gt;\n  select(year, nonunion, union, diff)\n\nHappy coding!",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Calculate union wage premiums by state and year"
+      "Union wage premiums by state"
     ]
   },
   {
@@ -1153,37 +1153,37 @@
   {
     "objectID": "rtw_definitions.html",
     "href": "rtw_definitions.html",
-    "title": "Defining states by right-to-work status by year",
+    "title": "States’ right-to-work status by year",
     "section": "",
-    "text": "Use this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the EPI CPS microdata extracts.\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(labelled)",
+    "text": "Some states have adopted or–in the case of Michigan–repealed right-to-work laws at varying times over the last eighty years. These changes make it difficult to accurately compare economic conditions over time on the basis of a state’s right-to-work status.\nUse this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the EPI CPS microdata extracts.\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(labelled)",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Defining states by right-to-work status by year"
+      "States' right-to-work status by year"
     ]
   },
   {
     "objectID": "rtw_definitions.html#import-and-clean-data",
     "href": "rtw_definitions.html#import-and-clean-data",
-    "title": "Defining states by right-to-work status by year",
+    "title": "States’ right-to-work status by year",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll reformat the RTW label rtw_status_years.csv file into a format that’s easier to process in R.\n\n# read in RTW status by year\nrtw_status_year &lt;- read.csv(\"./input/rtw_status_year.csv\") |&gt; \n  pivot_longer(cols = -year, names_to = \"state\", values_to = \"rtw_status\") |&gt; \n  arrange(state, year)\n\nRunning this script chunk will call and clean the BLS Current Population Survey Basic data required to calculate prime age EPOPs. It will also join the rtw_status_years data frame you created to label each state as “RTW” or “Non-RTW” in a given year.\n\n# import CPS Basic data\ncps_basic &lt;- load_basic(2000:2025, \"year\", \"month\", \"selfemp\", \"selfinc\", \"age\", \"statefips\", \"emp\", \"lfstat\",\n              \"cow1\", \"female\", \"wbhao\", \"basicwgt\") |&gt; \n  # Age restrictions\n  filter(age &gt;= 16) |&gt; \n  # identify prime-age (for EPOPs)\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0), state=to_factor(statefips)) |&gt; \n  # merge RTW status\n  left_join(rtw_status_year, by = c(\"year\", \"state\")) |&gt; \n  # adjust for missing Oct data\n  mutate(weight = case_match(year, \n                             2025 ~ basicwgt / 11, \n                             .default = basicwgt / 12))",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Defining states by right-to-work status by year"
+      "States' right-to-work status by year"
     ]
   },
   {
     "objectID": "rtw_definitions.html#run-analysis",
     "href": "rtw_definitions.html#run-analysis",
-    "title": "Defining states by right-to-work status by year",
+    "title": "States’ right-to-work status by year",
     "section": "Run analysis",
     "text": "Run analysis\nHere you’ll run the analysis to calculate prime age EPOPs by RTW vs. non-RTW states over time.\n\nepop_rtw &lt;- cps_basic |&gt; \n  filter(prime_age == 1) |&gt; \n  # EPOP = weighted mean of employment\n  summarise(epop = weighted.mean(emp, w = weight, na.rm = TRUE), .by = c(year, rtw_status)) |&gt; \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_status, values_from = epop) |&gt; \n  rename(RTW = `1`, non_RTW = `0`)\n\nAnd that’s all! You can easily apply the first two code chunks to any CPS (or other survey) analysis you want to do.\nHappy coding!",
     "crumbs": [
       "R code",
       "Code Repository",
-      "Defining states by right-to-work status by year"
+      "States' right-to-work status by year"
     ]
   },
   {

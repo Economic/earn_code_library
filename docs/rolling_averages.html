@@ -8,7 +8,7 @@
 
 <meta name="author" content="Emma Cohn and Daniel Perez">
 
-<title>Calculating rolling averages – Code Library</title>
+<title>(Monthly) rolling averages – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_averages.html">Calculating rolling averages</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_averages.html">(Monthly) rolling averages</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -324,13 +324,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./rtw_union.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Comparing union density rates in right-to-work versus non-right-to-work states</span></a>
+ <span class="menu-text">Union density rates in right-to-work (RTW) versus non-RTW states</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./union_premium.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Calculate union wage premiums by state and year</span></a>
+ <span class="menu-text">Union wage premiums by state</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -342,13 +342,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./rolling_averages.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Calculating rolling averages</span></a>
+ <span class="menu-text">(Monthly) rolling averages</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./rtw_definitions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Defining states by right-to-work status by year</span></a>
+ <span class="menu-text">States’ right-to-work status by year</span></a>
   </div>
 </li>
       </ul>
@@ -395,9 +395,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_averages.html">Calculating rolling averages</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_averages.html">(Monthly) rolling averages</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Calculating rolling averages</h1>
+<h1 class="title">(Monthly) rolling averages</h1>
 </div>
 
 
@@ -420,7 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This script will teach you how to calculate simple rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.</p>
+<p>This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.</p>
 <section id="load-required-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h2>
 <p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>, complete that process before running this code.</p>
@@ -451,6 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="calculate-monthly-rolling-averages-for-epops" class="level2">
 <h2 class="anchored" data-anchor-id="calculate-monthly-rolling-averages-for-epops">Calculate monthly rolling averages for EPOPs</h2>
 <p>This code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable <code>emp</code> (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.</p>
+<p>In order to <strong>change the rolling length</strong>, change the <code>k</code> value. This code calculates 12-month rolling averages; a smaller number of months will be <em>more susceptible to short-term changes</em> such as business cycles or seasonal employment. On the flip side, a high number of months will <em>smooth out shorter-term or temporary changes</em>, like the effects of recent policy, but will include <em>more robust sample sizes</em>. Consider this when deciding how many months (or other measure) to include.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>epop_all <span class="ot">&lt;-</span> basic <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Optional: filter to calculate prime-age EPOPS</span></span>
@@ -459,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">epop =</span> <span class="fu">weighted.mean</span>(emp, <span class="at">w =</span> basicwgt),</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span>date) <span class="sc">|&gt;</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate rolling average of previous 12 months for both EPOP and sample size</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">all_epop12 =</span> <span class="fu">rollmean</span>(epop, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">all_sample12 =</span> <span class="fu">rollsum</span>(n, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, all_epop12, all_sample12) <span class="sc">|&gt;</span></span>
@@ -1086,8 +1087,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./rtw_definitions.html" class="pagination-link" aria-label="Defining states by right-to-work status by year">
-        <span class="nav-page-text">Defining states by right-to-work status by year</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./rtw_definitions.html" class="pagination-link" aria-label="States' right-to-work status by year">
+        <span class="nav-page-text">States’ right-to-work status by year</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
