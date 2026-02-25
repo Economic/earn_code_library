@@ -7,7 +7,7 @@ execute:
   eval: false
 ---
 
-Some states have adopted or–in the case of Michigan–repealed right-to-work laws at varying times over the last eighty years. These changes make it difficult to accurately compare economic conditions over time on the basis of a state's right-to-work status.
+Some states have adopted or, as in the case of Michigan, repealed right-to-work laws at varying times over the last eighty years. These changes make it difficult to accurately compare economic conditions over time on the basis of a state's right-to-work status.
 
 Use this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html).
 
