@@ -1,5 +1,5 @@
 ---
-title: "Using ipumsr to load immigrant statistics"
+title: "Immigrant statistics via ipumsr"
 author: "Daniel Perez and Emma Cohn"
 format: html
 editor: visual
@@ -58,7 +58,7 @@ Load the extract (the xml file) and clean it up before conducting analysis.
 
 **Note:** Your extract will likely have a different file name, double-check this and update the script accordingly before running the following chunk.
 
-```{r, Clean data, message=FALSE}
+```{r, Clean data, message=FALSE, eval=FALSE}
 
 # NOTE: Your project directory and xml file may look different!
 acs_raw <- read_ipums_micro(ddi = 'input/usa_00010.xml')
@@ -78,7 +78,7 @@ acs <- acs_raw |>
 
 Run a US population benchmark using the Census ACS table statistics to check your data before continuing.
 
-```{r Preliminaries}
+```{r Preliminaries, eval=FALSE}
 # Do your US population estimates benchmark with the Census ACS table statistics?
 #   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates
 
@@ -101,7 +101,7 @@ Don't forget to update the code to match your selection of years.
 
 This code can also be easily altered to filter for specific groups. For example, you can filter by state, specific industry, or for prime-age workers. See the commented-out commands for examples. Be sure to check for viable sample sizes when using a smaller data set.
 
-```{r Analysis}
+```{r Analysis, eval=FALSE}
 
 # Population by citizenship status and year 2000–2023
 foreign_born_total <- acs |> 

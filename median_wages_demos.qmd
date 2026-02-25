@@ -27,14 +27,14 @@ wb <- wb_workbook()
 
 ## Set up for inflation adjusting
 
-EPI uses the CPI-U-RS series to inflation adjust wages, so we'll select that series and assign it to a dataframe.
+EPI uses the chained CPI-U series to inflation adjust wages (use chained extended for analysis pre-2000), so we'll select that series and assign it to a dataframe.
 
 ```{r, Inflation set up, message=FALSE}
-# pulling in CPI-U-RS series
-cpi_data <- realtalk::cpi_u_rs_annual
+# pulling in chained CPI-U series
+cpi_data <- realtalk::c_cpi_u_extended_annual
 
 # set base year to 2024
-cpi2024 <- cpi_data$cpi_u_rs[cpi_data$year==2024]
+cpi2024 <- cpi_data$c_cpi_u_extended[cpi_data$year==2024]
 ```
 
 ## Import and clean data
@@ -57,7 +57,7 @@ cps_org <- load_cps("org", 1979:2024, year, orgwgt, wage, statefips, female, wbh
   # Merge annual CPI data to data frame by year
   left_join(cpi_data, by='year') %>%
   # Inflation adjust wages to 2024$
-  mutate(realwage = wage * (cpi2024/cpi_u_rs))
+  mutate(realwage = wage * (cpi2024/c_cpi_u_extended))
 ```
 
 ## Sheet 1: Wages by race, gender, and race and gender.

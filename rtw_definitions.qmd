@@ -1,5 +1,5 @@
 ---
-title: "States' right-to-work status by year"
+title: "Right-to-work status by state, over time"
 author: "Emma Cohn"
 format: html
 editor: visual

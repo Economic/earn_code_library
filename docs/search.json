@@ -6,7 +6,7 @@
     "section": "",
     "text": "This script uses Current Population Survey (CPS) microdata extracts to calculate sample weighted wage percentiles over time.",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Weighted percentiles"
     ]
   },
@@ -17,7 +17,7 @@
     "section": "Preliminaries",
     "text": "Preliminaries\nFirst, load the required packages:\n\nlibrary(tidyverse)\nlibrary(MetricsWeighted)\nlibrary(epiextractr)\n\nThen grab wage earner observations from the 1979-2022 CPS ORG data using epiextractr. If necessary, use the .extracts_dir argument of load_org() to point it to your downloaded CPS extracts.\n\ncps_data &lt;- epiextractr::load_org(1979:2022, year, orgwgt, wage) %&gt;% \n  filter(wage &gt; 0)",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Weighted percentiles"
     ]
   },
@@ -28,7 +28,7 @@
     "section": "Goal and quick solution",
     "text": "Goal and quick solution\nLet’s calculate the 10th, 50th, and 90th wage percentiles for each year, where these will be sample weighted percentiles using the orgwgt variable as the weight.\nFirst I’ll show you how you might do that and then I’ll break it down step-by-step.\n\n# percentiles of interest\np &lt;- c(10, 50, 90)\n\n# calculate percentiles\ncps_data %&gt;% \n  reframe(\n    percentile = p, \n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  )\n\n# A tibble: 132 × 3\n    year percentile value\n   &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;\n 1  1979         10  2.90\n 2  1979         50  5   \n 3  1979         90 10.1 \n 4  1980         10  3.10\n 5  1980         50  5.62\n 6  1980         90 11.2 \n 7  1981         10  3.35\n 8  1981         50  6.05\n 9  1981         90 12.5 \n10  1982         10  3.35\n# ℹ 122 more rows",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Weighted percentiles"
     ]
   },
@@ -39,7 +39,7 @@
     "section": "Step-by-step explanation",
     "text": "Step-by-step explanation\nA simple version of this problem would be to calculate the median wage in 2022.\n\ncps_data %&gt;% \n  filter(year == 2022) %&gt;% \n  summarize(p_50 = median(wage))\n\n# A tibble: 1 × 1\n   p_50\n  &lt;dbl&gt;\n1    23\n\n\nUse weighted_median() from the MetricsWeighted package to calculate a sample-weighted median.\n\ncps_data %&gt;% \n  filter(year == 2022) %&gt;% \n  summarize(p_50 = weighted_median(wage, w = orgwgt))\n\n# A tibble: 1 × 1\n   p_50\n  &lt;dbl&gt;\n1  22.9\n\n\nUse weighted_quantile() and the probs argument to calculate any weighted percentile. Note that probs ranges from 0 to 1.\n\ncps_data %&gt;% \n  filter(year == 2022) %&gt;% \n  summarize(p_10 = weighted_quantile(wage, w = orgwgt, probs = 0.10))\n\n# A tibble: 1 × 1\n   p_10\n  &lt;dbl&gt;\n1  12.5\n\n\nTo calculate multiple percentiles provide, provide a vector of percentiles and also switch from summarize() to reframe() to allow multiple rows of results, as opposed to a single summary row.\n\np &lt;- c(10, 50, 90)\n\ncps_data %&gt;% \n  filter(year == 2022) %&gt;% \n  reframe(\n    percentile = p, \n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100)\n  )\n\n# A tibble: 3 × 2\n  percentile value\n       &lt;dbl&gt; &lt;dbl&gt;\n1         10  12.5\n2         50  22.9\n3         90  57.7\n\n\nNotice how we used probs = p / 100 in the arguments to weighted_quantile().\nFinally, to calculate percentiles for each year, we can use the .by argument of reframe.\n\ncps_data %&gt;% \n  reframe(\n    percentile = p, \n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  ) \n\n# A tibble: 132 × 3\n    year percentile value\n   &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;\n 1  1979         10  2.90\n 2  1979         50  5   \n 3  1979         90 10.1 \n 4  1980         10  3.10\n 5  1980         50  5.62\n 6  1980         90 11.2 \n 7  1981         10  3.35\n 8  1981         50  6.05\n 9  1981         90 12.5 \n10  1982         10  3.35\n# ℹ 122 more rows\n\n\nObserve the shape of the resulting output dataset: it is long in both years and percentiles. Long data like this is useful for more data manipulation or for making plots.\nFor example, suppose you wanted to plot nominal wage growth since 2000.\n\n# construct the percentiles in long format\npercentile_data &lt;- cps_data %&gt;% \n  reframe(\n    percentile = p, \n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  )\n\n# grab the 2000 base values\nbase_values &lt;- percentile_data %&gt;% \n  filter(year == 2000) %&gt;% \n  select(percentile, base_value = value)\n\npercentile_data %&gt;% \n  filter(year &gt;= 2000) %&gt;% \n  full_join(base_values, by = \"percentile\") %&gt;% \n  mutate(\n    wage_growth = value / base_value - 1,\n    percentile = paste0(percentile, \"th percentile\")\n  ) %&gt;% \n  ggplot(aes(x = year, y = wage_growth, color = percentile)) + \n  geom_line() +\n  theme_minimal()\n\n\n\n\n\n\n\n\nWhile long data like that is useful for additional analysis, if you need to see more of the data at once, like for a table, you might want to make the data wider. With pivot_wider() you can reshape the data so that it is long in years and wide in percentiles.\n\ncps_data %&gt;%\n  reframe(\n    percentile = p,\n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  ) %&gt;%\n  pivot_wider(id_cols = year, names_from = percentile, values_from = value)\n\n# A tibble: 44 × 4\n    year  `10`  `50`  `90`\n   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n 1  1979  2.90  5     10.1\n 2  1980  3.10  5.62  11.2\n 3  1981  3.35  6.05  12.5\n 4  1982  3.35  6.5   13.1\n 5  1983  3.40  6.70  14  \n 6  1984  3.5   7     15.0\n 7  1985  3.5   7.47  15  \n 8  1986  3.60  7.5   16  \n 9  1987  3.75  8     16.8\n10  1988  4     8.02  17.5\n# ℹ 34 more rows\n\n\nOf course, the column names are pretty ugly. You could add a “th” to the column names from the get-go.\n\ncps_data %&gt;%\n  reframe(\n    percentile = paste0(p, \"th\"),\n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  ) %&gt;%\n  pivot_wider(id_cols = year, names_from = percentile, values_from = value)\n\n# A tibble: 44 × 4\n    year `10th` `50th` `90th`\n   &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;\n 1  1979   2.90   5      10.1\n 2  1980   3.10   5.62   11.2\n 3  1981   3.35   6.05   12.5\n 4  1982   3.35   6.5    13.1\n 5  1983   3.40   6.70   14  \n 6  1984   3.5    7      15.0\n 7  1985   3.5    7.47   15  \n 8  1986   3.60   7.5    16  \n 9  1987   3.75   8      16.8\n10  1988   4      8.02   17.5\n# ℹ 34 more rows\n\n\nOr you could make the column names more data analysis friendly with a “p_” prefix.\n\ncps_data %&gt;%\n  reframe(\n    percentile = p,\n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  ) %&gt;%\n  pivot_wider(\n    id_cols = year,\n    names_from = percentile,\n    values_from = value,\n    names_prefix = \"p_\"\n  )\n\n# A tibble: 44 × 4\n    year  p_10  p_50  p_90\n   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n 1  1979  2.90  5     10.1\n 2  1980  3.10  5.62  11.2\n 3  1981  3.35  6.05  12.5\n 4  1982  3.35  6.5   13.1\n 5  1983  3.40  6.70  14  \n 6  1984  3.5   7     15.0\n 7  1985  3.5   7.47  15  \n 8  1986  3.60  7.5   16  \n 9  1987  3.75  8     16.8\n10  1988  4     8.02  17.5\n# ℹ 34 more rows",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Weighted percentiles"
     ]
   },
@@ -50,7 +50,7 @@
     "section": "Extra credit",
     "text": "Extra credit\nConsider the concise code\n\ncps_data %&gt;%\n  reframe(\n    name = p,\n    value = weighted_quantile(wage, w = orgwgt, probs = p / 100),\n    .by = year\n  ) %&gt;%\n  pivot_wider(id_cols = year, names_prefix = \"p_\")\n\n# A tibble: 44 × 4\n    year  p_10  p_50  p_90\n   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n 1  1979  2.90  5     10.1\n 2  1980  3.10  5.62  11.2\n 3  1981  3.35  6.05  12.5\n 4  1982  3.35  6.5   13.1\n 5  1983  3.40  6.70  14  \n 6  1984  3.5   7     15.0\n 7  1985  3.5   7.47  15  \n 8  1986  3.60  7.5   16  \n 9  1987  3.75  8     16.8\n10  1988  4     8.02  17.5\n# ℹ 34 more rows\n\n\nWhy does it produce the same results as the longer code above?",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Weighted percentiles"
     ]
   },
@@ -111,8 +111,7 @@
     "section": "",
     "text": "Use this code to find median wages and sample sizes by various demographics (race, gender, race and gender, and educational attainment) using the EPI CPS microdata extracts.\nPlease note: these data are already available on the State of Working American Data Library. However, due to small sample sizes, some cuts of these data are suppressed. You can use this code to generate all data, regardless of sample size, but be careful when making claims about data with small sample sizes.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. We’ll also set up a wb value that will allow us to generate an Excel workbook.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)\nlibrary(openxlsx2)\n\n#Set up workbook\nwb &lt;- wb_workbook()",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -121,10 +120,9 @@
     "href": "median_wages_demos.html#set-up-for-inflation-adjusting",
     "title": "State-level median wages by demographic",
     "section": "Set up for inflation adjusting",
-    "text": "Set up for inflation adjusting\nEPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.\n\n# pulling in CPI-U-RS series\ncpi_data &lt;- realtalk::cpi_u_rs_annual\n\n# set base year to 2024\ncpi2024 &lt;- cpi_data$cpi_u_rs[cpi_data$year==2024]",
+    "text": "Set up for inflation adjusting\nEPI uses the chained CPI-U series to inflation adjust wages (use chained extended for analysis pre-2000), so we’ll select that series and assign it to a dataframe.\n\n# pulling in chained CPI-U series\ncpi_data &lt;- realtalk::c_cpi_u_extended_annual\n\n# set base year to 2024\ncpi2024 &lt;- cpi_data$c_cpi_u_extended[cpi_data$year==2024]",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -133,10 +131,9 @@
     "href": "median_wages_demos.html#import-and-clean-data",
     "title": "State-level median wages by demographic",
     "section": "Import and clean data",
-    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate median wages.\nWe’ll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We’ll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages.\n\n#load in CPS ORG data\ncps_org &lt;- load_cps(\"org\", 1979:2024, year, orgwgt, wage, statefips, female, wbho, age, \n                                      selfemp, emp, selfinc, cow1, educ, gradeatn) %&gt;%\n  # Standard labor force and age restrictions, restrict to only Wisconsin (statefips code = 55)\n  filter(age &gt;= 16, emp == 1, statefips == 55,\n         case_when(year &lt; 1989 ~ selfemp == 0,\n                   year &gt;= 1989 & year &lt; 1994 ~ selfemp == 0 | selfinc == 0,\n                   TRUE ~ cow1 &lt;= 5)) %&gt;% \n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') %&gt;%\n  # Inflation adjust wages to 2024$\n  mutate(realwage = wage * (cpi2024/cpi_u_rs))",
+    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate median wages.\nWe’ll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We’ll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages.\n\n#load in CPS ORG data\ncps_org &lt;- load_cps(\"org\", 1979:2024, year, orgwgt, wage, statefips, female, wbho, age, \n                                      selfemp, emp, selfinc, cow1, educ, gradeatn) %&gt;%\n  # Standard labor force and age restrictions, restrict to only Wisconsin (statefips code = 55)\n  filter(age &gt;= 16, emp == 1, statefips == 55,\n         case_when(year &lt; 1989 ~ selfemp == 0,\n                   year &gt;= 1989 & year &lt; 1994 ~ selfemp == 0 | selfinc == 0,\n                   TRUE ~ cow1 &lt;= 5)) %&gt;% \n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') %&gt;%\n  # Inflation adjust wages to 2024$\n  mutate(realwage = wage * (cpi2024/c_cpi_u_extended))",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -147,8 +144,7 @@
     "section": "Sheet 1: Wages by race, gender, and race and gender.",
     "text": "Sheet 1: Wages by race, gender, and race and gender.\nThis section of the script produces median wages by year and by various demographic cuts. Here we use EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per year per demographic cut.\n\nMedian wages by gender\n\nwages_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(female, year)) |&gt;\n  #Relabel for clarity\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = gender, values_from = wage_median)\n\n\n\nMedian wages by race\n\nwages_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, year)) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = wbho, values_from = wage_median)\n\n\n\nMedian wages by race and gender\n\nwages_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  #Relabel for clarity\n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = demographic, values_from = wage_median)\n\n\n\nFormat and save output\nHere we’ll join all three dataframes into one, order our variables, and save the new dataframe to a sheet in our Excel workbook.\n\n#Join the three dataframes by year\nwage_demos &lt;-  left_join(wages_gender, wages_race, by='year') |&gt;\n  left_join(wages_race_gender) |&gt; \n  #Order the columns\n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Create a new sheet and add data to sheet\nwb$add_worksheet(sheet = \"Race and gender_median wages\") $\n  add_data(x = wage_demos)",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -159,8 +155,7 @@
     "section": "Sheet 2: Sample sizes",
     "text": "Sheet 2: Sample sizes\nThis code chunk follows the exact same steps as the section above, except it generates sample sizes instead of median wages. It is extremely important to reference this sheet when making claims about the data. Avoid relying on data drawn from small sample sizes.\n\n#By gender\nsample_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(female, year)) |&gt;\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = gender, values_from = n)\n\n#By race\nsample_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarize(n=n(),\n            .by = c(wbho, year)) |&gt; \n  pivot_wider(id_cols = year, names_from = wbho, values_from = n)\n\n#By race and gender\nsample_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = demographic, values_from = n)\n\n#Join dataframes\nsample_sizes &lt;-  left_join(sample_gender, sample_race, by='year') |&gt;\n  left_join(sample_race_gender) |&gt; \n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Save to Excel\nwb$add_worksheet(sheet = \"Sample sizes\") $\n  add_data(x = sample_sizes)",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -171,8 +166,7 @@
     "section": "Sheet 3: Wages by educational attainment",
     "text": "Sheet 3: Wages by educational attainment\nFinally, this code chunk generates median wages by educational attainment. The code uses the same weighted median wage methodology as above.\nIt also includes two sets of custom educational categories, which you can exclude or modify as needed. See the EPI Microdata variables list to learn how the gradeatn variable is categorized by default.\n\nFilter the data\nThe gradeatn variable is only available from 1992, so first we need to filter the data to exclude irrelevant years.\n\nnew_cps_org &lt;- filter(cps_org, year &gt;= 1992)\n\n\n\nCalculate wages by education level\nNow we’ll run the code. The first part of both sections of code here creates custom educational attainment categories. The second part calulcates wages.\n\n#Single category Associate degree\nwages_sing_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 | gradeatn == 12 ~ \"Associate degree-all\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n#Two category Associate degree\nwages_two_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 ~ \"Associate degree-occupational/vocational\",\n                          gradeatn == 12 ~ \"Associate degree-academic program\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n\n\nFormat and save output\nHere we’ll save our two dataframes to a new Excel sheet, formatting the output so both dataframes fit on a single sheet.\n\nwb$add_worksheet(sheet = \"Education median wages\") $\n  add_data(x = wages_sing_assoc, start_col = 1) $\n  add_data(x = wages_two_assoc, start_col = 8)",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -183,8 +177,7 @@
     "section": "Save your workbook",
     "text": "Save your workbook\nNote: Don’t forget to file names and file paths to match your setup before running this code chunk.\n\nwb_save(wb, \"output/wisconsin_wages_2025.xlsx\")\n\nAll done! Happy coding!",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "State-level median wages by demographic"
     ]
   },
@@ -303,8 +296,7 @@
     "section": "",
     "text": "This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "(Monthly) rolling averages"
     ]
   },
@@ -315,8 +307,7 @@
     "section": "Load required libraries",
     "text": "Load required libraries\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run EPI CPS microdata extracts, complete that process before running this code.\n\n#Load necessary libraries\nlibrary(tidyverse) #this package contains most common R functions\nlibrary(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts\nlibrary(labelled) #allows you to easily clean data; includes functions like 'to_factor'\nlibrary(zoo) #contains functions like rollmean and rollsum\nlibrary(openxlsx2) #allows you to format and export data to an Excel workbook",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "(Monthly) rolling averages"
     ]
   },
@@ -327,8 +318,7 @@
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs. It will also create a variable that will allow you to calculate prime-age EPOPs and set up some date formatting for the rolling average calculation later.\n\n# Import CPS ORG data\nbasic &lt;- load_basic(2018:2024, \"year\", \"month\", \"basicwgt\", \"age\", \"wbhao\", \"selfinc\", \"emp\") |&gt;\n  #Filter to working age population with employment information\n  filter(age &gt;= 16, !is.na(emp)) |&gt; \n  # Create prime-age variable\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0)) |&gt; \n  # Create date in yyyy-mm-dd format\n  mutate(date = ymd(paste0(year,'-', month,'-1')))",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "(Monthly) rolling averages"
     ]
   },
@@ -339,8 +329,7 @@
     "section": "Calculate monthly rolling averages for EPOPs",
     "text": "Calculate monthly rolling averages for EPOPs\nThis code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable emp (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.\nIn order to change the rolling length, change the k value. This code calculates 12-month rolling averages; a smaller number of months will be more susceptible to short-term changes such as business cycles or seasonal employment. On the flip side, a high number of months will smooth out shorter-term or temporary changes, like the effects of recent policy, but will include more robust sample sizes. Consider this when deciding how many months (or other measure) to include.\n\nepop_all &lt;- basic |&gt;\n  # Optional: filter to calculate prime-age EPOPS\n  filter(prime_age == 1) |&gt; \n  # Calculate EPOP as the weighted mean of 'emp' variable\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=date) |&gt; \n# Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size\n  mutate(all_epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         all_sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  select(date, all_epop12, all_sample12) |&gt;\n  # Suppress data with sample size of &lt; 250\n  mutate(all_epop12 = if_else(is.na(all_sample12) | all_sample12 &lt; 250,\n                            NA_real_, all_epop12))\n\n\nCalculate EPOPs by race/ethnicity and format output\nThis section adds code that breaks out EPOPs by race/ethnicity, using the wbhao variable. It also pivots the data so that each race/ethnicity group is its own column.\n\nepop_race &lt;- basic |&gt;\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=c(wbhao, date)) |&gt; \n  mutate(race = to_factor(wbhao)) |&gt; \n  # Ensure correct order within each racial/ethnic category\n  arrange(race, date) |&gt;  \n  # Compute rolling mean per 'race' group\n  group_by(race) |&gt;       \n  mutate(epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  ungroup() |&gt; \n  select(date, race, epop12, sample12) |&gt;\n  # Pivot the data to display each race/ethnicity as its own column with appropriate label\n  pivot_wider(\n    names_from = race,\n    values_from = c(epop12, sample12),\n    names_glue = \"{race}_{.value}\"\n  )",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "(Monthly) rolling averages"
     ]
   },
@@ -351,8 +340,7 @@
     "section": "Export your data to a downloadable Excel",
     "text": "Export your data to a downloadable Excel\nUse openxlsx2 to create a downloadable Excel. Don’t forget to edit the file path to ensure it saves to the right location.\n\n#  Export epop tables to one workbook \nwb &lt;- wb_workbook()\n\nwb$ \n  # Add worksheet\n  add_worksheet(sheet = \"US EPOPs\")$\n  add_data(x = epop_all)$\n  add_worksheet(sheet = \"EPOPs by race\")$\n  add_data(x = epop_race)\n\nwb_save(wb, file = \"output/epop_tables.xlsx\", overwrite = TRUE)\n\nAnd that’s it! You can benchmark your data to the State of Working America Data Library before filtering to specific states or demographic cuts to ensure reliability. As always, be sure to keep an eye on those sample sizes!",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "(Monthly) rolling averages"
     ]
   },
@@ -392,49 +380,45 @@
   {
     "objectID": "foreign_born_stats_ipumsr.html",
     "href": "foreign_born_stats_ipumsr.html",
-    "title": "Using ipumsr to load immigrant statistics",
+    "title": "Immigrant statistics via ipumsr",
     "section": "",
     "text": "The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(ipumsr)\nlibrary(janitor)\nlibrary(labelled)\nlibrary(fs)",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "Using ipumsr to load immigrant statistics"
+      "R Code Repository",
+      "Immigrant statistics via ipumsr"
     ]
   },
   {
     "objectID": "foreign_born_stats_ipumsr.html#create-and-clean-an-extract-using-ipumsr.",
     "href": "foreign_born_stats_ipumsr.html#create-and-clean-an-extract-using-ipumsr.",
-    "title": "Using ipumsr to load immigrant statistics",
+    "title": "Immigrant statistics via ipumsr",
     "section": "Create and clean an extract using IPUMSR.",
     "text": "Create and clean an extract using IPUMSR.\nYou must set up an IPUMS API key before using the ipumsr package. For instructions on how to set up the IPUMS API, see “Introduction to the IPUMS API for R Users.”\nFor guidance on how to define an extract, see “Microdata API Requests.” You can view the list available IPUMS ACS samples and their IDs on the IPUMS sample IDs page.\nNote: You only need to run define_extract_micro() once, unless your extract parameters (e.g., years or variables) change. This command triggers an IPUMS API call, which may take several minutes depending on the extract size. If running this as part of a larger script, comment out this command to avoid repeated downloads.\n\n# Load samples\nacs_samps &lt;- ipumsr::get_sample_info('usa')\n\n# Create a vector of sample IDs to load\nyears &lt;- c('us2000a', 'us2001a', 'us2002a', 'us2003a', 'us2004a', 'us2005a',\n           'us2006a', 'us2007a', 'us2008a', 'us2009a', 'us2010a', 'us2011a',\n           'us2012a', 'us2013a', 'us2014a', 'us2015a', 'us2016a', 'us2017a',\n           'us2018a', 'us2019a', 'us2020a', 'us2021a', 'us2022a', 'us2023a')\n\nacs_extr &lt;- define_extract_micro(\n  \"usa\",\n  description = 'ACS extract for Immigration statistics',\n  samples = years,\n  # Select the variables to load\n  variables = list('STATEFIP','COUNTYFIP', 'SEX', 'AGE', 'RACE', 'HISPAN',\n                   'BPL', 'CITIZEN', 'YRNATUR', 'YRIMMIG', 'YRSUSA1',\n                   'LANGUAGE', 'EMPSTAT', 'LABFORCE', 'OCC', 'IND')) |&gt; \n  submit_extract() |&gt; \n  wait_for_extract()\n\n# Download extract to input folder\ndl_extr &lt;- download_extract(extract = acs_extr,\n                                      download_dir = 'input/',\n                                      overwrite = TRUE)\n\nLoad the extract (the xml file) and clean it up before conducting analysis.\nNote: Your extract will likely have a different file name, double-check this and update the script accordingly before running the following chunk.\n\n# NOTE: Your project directory and xml file may look different!\nacs_raw &lt;- read_ipums_micro(ddi = 'input/usa_00010.xml')\n\nacs &lt;- acs_raw |&gt; \n  # Use the janitor library to clean up names\n  janitor::clean_names() |&gt; \n  # Use labelled library to create custom value labels\n  # relabel citizen=0 to \"Not foreign born\" per https://usa.ipums.org/usa-action/variables/CITIZEN#comparability_section\n  labelled::set_value_labels(citizen = c('Not foreign born'=0, 'Born abroad of American parents'=1, 'Naturalized citizen'=2, 'Not a citizen'=3)) |&gt; \n  mutate(nativity = case_when(citizen %in% c(0,1) ~ 1,\n                              citizen %in% c(2,3) ~ 2)) |&gt; \n  add_value_labels(nativity = c('Native' = 1, 'Foreign-born'=2))",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "Using ipumsr to load immigrant statistics"
+      "R Code Repository",
+      "Immigrant statistics via ipumsr"
     ]
   },
   {
     "objectID": "foreign_born_stats_ipumsr.html#benchmark-your-data",
     "href": "foreign_born_stats_ipumsr.html#benchmark-your-data",
-    "title": "Using ipumsr to load immigrant statistics",
+    "title": "Immigrant statistics via ipumsr",
     "section": "Benchmark your data",
-    "text": "Benchmark your data\nRun a US population benchmark using the Census ACS table statistics to check your data before continuing.\n\n# Do your US population estimates benchmark with the Census ACS table statistics?\n#   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates\n\nus_pop &lt;- acs |&gt; \nsummarize(pop = sum(perwt, na.rm=TRUE),\n          .by=year)\n\nus_pop\n\n# A tibble: 24 × 2\n    year       pop\n   &lt;int&gt;     &lt;dbl&gt;\n 1  2000 281421906\n 2  2001 277075792\n 3  2002 280717370\n 4  2003 283051379\n 5  2004 285674993\n 6  2005 288398819\n 7  2006 299398485\n 8  2007 301621159\n 9  2008 304059728\n10  2009 307006556\n# ℹ 14 more rows",
+    "text": "Benchmark your data\nRun a US population benchmark using the Census ACS table statistics to check your data before continuing.\n\n# Do your US population estimates benchmark with the Census ACS table statistics?\n#   https://data.census.gov/table/ACSDP1Y2023.DP05?q=DP05:+ACS+Demographic+and+Housing+Estimates\n\nus_pop &lt;- acs |&gt; \nsummarize(pop = sum(perwt, na.rm=TRUE),\n          .by=year)\n\nus_pop",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "Using ipumsr to load immigrant statistics"
+      "R Code Repository",
+      "Immigrant statistics via ipumsr"
     ]
   },
   {
     "objectID": "foreign_born_stats_ipumsr.html#run-your-analysis",
     "href": "foreign_born_stats_ipumsr.html#run-your-analysis",
-    "title": "Using ipumsr to load immigrant statistics",
+    "title": "Immigrant statistics via ipumsr",
     "section": "Run your analysis!",
-    "text": "Run your analysis!\nHere you will run your analysis to find three statistics:\n\nPopulation by citizenship status and year\nPopulation count and share by nativity and year\nEmployment counts and shares of immigrant workers by industry (See a list of industry codes and their associated titles here)\n\nDon’t forget to update the code to match your selection of years.\nThis code can also be easily altered to filter for specific groups. For example, you can filter by state, specific industry, or for prime-age workers. See the commented-out commands for examples. Be sure to check for viable sample sizes when using a smaller data set.\n\n# Population by citizenship status and year 2000–2023\nforeign_born_total &lt;- acs |&gt; \n  ## filter to just North Carolina\n  # filter(statefip == 37) |&gt;\n  mutate(citizen = to_factor(citizen)) |&gt; \n  summarize(pop = sum(perwt, na.rm=TRUE),\n            .by=c(year, citizen)) |&gt; \n  pivot_wider(id_cols = year, names_from = citizen, values_from = pop)\n\nforeign_born_total\n\n# A tibble: 24 × 5\n    year `Not foreign born` `Not a citizen` `Naturalized citizen`\n   &lt;int&gt;              &lt;dbl&gt;           &lt;dbl&gt;                 &lt;dbl&gt;\n 1  2000          248371297        18599549              12533932\n 2  2001          243578016        18804708              12743420\n 3  2002          245639288        19565399              13530751\n 4  2003          247351604        19749916              13917762\n 5  2004          249429239        19857656              14400045\n 6  2005          250569155        20836032              14933571\n 7  2006          259759423        21696303              15773084\n 8  2007          261446898        21843559              16204897\n 9  2008          263619759        21685745              16330357\n10  2009          266132797        21640993              16811829\n# ℹ 14 more rows\n# ℹ 1 more variable: `Born abroad of American parents` &lt;dbl&gt;\n\n# Population by nativity and year 2000–2023\nnativity &lt;- acs |&gt; \n  mutate(nativity = to_factor(nativity)) |&gt; \n  summarize(pop = sum(perwt, na.rm=TRUE),\n            .by=c(year, nativity)) |&gt;\n  mutate(share = pop/sum(pop), .by=year) |&gt; \n  pivot_wider(id_cols = year, names_from = nativity, values_from = c(pop, share))\n\nnativity\n\n# A tibble: 24 × 5\n    year pop_Native `pop_Foreign-born` share_Native `share_Foreign-born`\n   &lt;int&gt;      &lt;dbl&gt;              &lt;dbl&gt;        &lt;dbl&gt;                &lt;dbl&gt;\n 1  2000  250288425           31133481        0.889                0.111\n 2  2001  245527664           31548128        0.886                0.114\n 3  2002  247621220           33096150        0.882                0.118\n 4  2003  249383701           33667678        0.881                0.119\n 5  2004  251417292           34257701        0.880                0.120\n 6  2005  252629216           35769603        0.876                0.124\n 7  2006  261929098           37469387        0.875                0.125\n 8  2007  263572703           38048456        0.874                0.126\n 9  2008  266043626           38016102        0.875                0.125\n10  2009  268553734           38452822        0.875                0.125\n# ℹ 14 more rows\n\n# Industries and occupations of immigrant workers\n# This analysis pools 5 years of data\nnativity_ind &lt;- acs |&gt; \n  filter(year %in% c(2019:2023), age&gt;=16, empstat==1) |&gt; \n  ## filter for prime-age EPOP\n  # filter(age &gt;= 25 & age &lt;= 54) |&gt;\n  mutate(nativity = to_factor(nativity)) |&gt; \n  # Adjust perwt, dividing it by 5.\n  summarize(total_emp = sum(empstat * perwt/5, na.rm=TRUE),\n            n=n(),\n            .by=c(nativity, ind)) |&gt;\n  mutate(share = total_emp/sum(total_emp), .by=nativity) |&gt; \n  pivot_wider(id_cols = ind, names_from = nativity, values_from = c(total_emp, share, n))\n\nnativity_ind\n\n# A tibble: 302 × 7\n   ind       total_emp_Native `total_emp_Foreign-born` share_Native\n   &lt;int+lbl&gt;            &lt;dbl&gt;                    &lt;dbl&gt;        &lt;dbl&gt;\n 1 9160              1018174.                  128856.     0.00767 \n 2 5170               682919                   139648.     0.00514 \n 3 7870              3681723.                  803696.     0.0277  \n 4 5570               100653                    15650.     0.000758\n 5 6480               135431                    17229.     0.00102 \n 6 3291               667545                   118284      0.00503 \n 7 8680              7329304.                 1796732.     0.0552  \n 8 9670               401908                    34028.     0.00303 \n 9 5391              1614827.                  217887.     0.0122  \n10 5490               176175                    27847      0.00133 \n# ℹ 292 more rows\n# ℹ 3 more variables: `share_Foreign-born` &lt;dbl&gt;, n_Native &lt;int&gt;,\n#   `n_Foreign-born` &lt;int&gt;\n\n# See a list of industry codes and their associated titles here: https://usa.ipums.org/usa/volii/ind2022.shtml\n\nHappy coding!",
+    "text": "Run your analysis!\nHere you will run your analysis to find three statistics:\n\nPopulation by citizenship status and year\nPopulation count and share by nativity and year\nEmployment counts and shares of immigrant workers by industry (See a list of industry codes and their associated titles here)\n\nDon’t forget to update the code to match your selection of years.\nThis code can also be easily altered to filter for specific groups. For example, you can filter by state, specific industry, or for prime-age workers. See the commented-out commands for examples. Be sure to check for viable sample sizes when using a smaller data set.\n\n# Population by citizenship status and year 2000–2023\nforeign_born_total &lt;- acs |&gt; \n  ## filter to just North Carolina\n  # filter(statefip == 37) |&gt;\n  mutate(citizen = to_factor(citizen)) |&gt; \n  summarize(pop = sum(perwt, na.rm=TRUE),\n            .by=c(year, citizen)) |&gt; \n  pivot_wider(id_cols = year, names_from = citizen, values_from = pop)\n\nforeign_born_total\n\n# Population by nativity and year 2000–2023\nnativity &lt;- acs |&gt; \n  mutate(nativity = to_factor(nativity)) |&gt; \n  summarize(pop = sum(perwt, na.rm=TRUE),\n            .by=c(year, nativity)) |&gt;\n  mutate(share = pop/sum(pop), .by=year) |&gt; \n  pivot_wider(id_cols = year, names_from = nativity, values_from = c(pop, share))\n\nnativity\n\n\n# Industries and occupations of immigrant workers\n# This analysis pools 5 years of data\nnativity_ind &lt;- acs |&gt; \n  filter(year %in% c(2019:2023), age&gt;=16, empstat==1) |&gt; \n  ## filter for prime-age EPOP\n  # filter(age &gt;= 25 & age &lt;= 54) |&gt;\n  mutate(nativity = to_factor(nativity)) |&gt; \n  # Adjust perwt, dividing it by 5.\n  summarize(total_emp = sum(empstat * perwt/5, na.rm=TRUE),\n            n=n(),\n            .by=c(nativity, ind)) |&gt;\n  mutate(share = total_emp/sum(total_emp), .by=nativity) |&gt; \n  pivot_wider(id_cols = ind, names_from = nativity, values_from = c(total_emp, share, n))\n\nnativity_ind\n\n# See a list of industry codes and their associated titles here: https://usa.ipums.org/usa/volii/ind2022.shtml\n\nHappy coding!",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "Using ipumsr to load immigrant statistics"
+      "R Code Repository",
+      "Immigrant statistics via ipumsr"
     ]
   },
   {
@@ -564,7 +548,7 @@
     "section": "",
     "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Downloading BLS data via blsR"
     ]
   },
@@ -575,7 +559,7 @@
     "section": "",
     "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Downloading BLS data via blsR"
     ]
   },
@@ -586,7 +570,7 @@
     "section": "Nominal average hourly earnings of production and non-supervisory employees",
     "text": "Nominal average hourly earnings of production and non-supervisory employees\nYou can import a single table using the blsR::get_n_series_table() function:\n\n## use blsR to pull in nominal wages\nnominal_wages &lt;- get_n_series_table(series = \"CEU0500000008\", api_key = bls_key, \n                                    start_year = 1965, end_year = 2023, \n                                    tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter for annual data\n  filter(month == 13)",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Downloading BLS data via blsR"
     ]
   },
@@ -597,7 +581,7 @@
     "section": "Real average hourly earnings of production and non-supervsory employees",
     "text": "Real average hourly earnings of production and non-supervsory employees\nYou can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.\n\n# set cpi codes\ncpi_codes &lt;- c(\"CUUR0000SA0\",\n               \"CEU0500000008\")\n\n# set cpi base\n#note: used to set base year for inflation-adjustment\ncpi_base &lt;- get_n_series_table(series_ids = \"CUUR0000SA0\", start_year = 2023, end_year = 2023, \n                               api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual 2023 data and pull CPI value as base\n  filter(month == 13) %&gt;% pull(CUUR0000SA0)\n\n# use blsR to pull CPI data\ncpi_output &lt;- get_n_series_table(series_ids = cpi_codes, start_year = 1947, end_year = 2023, \n                                 api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual data\n  filter(month == 13) %&gt;%\n  # rename for easier handling\n  rename(ahe = CEU0500000008, cpi = CUUR0000SA0) %&gt;% \n  # calculate real wages\n  mutate(ahe_real = ahe * (cpi_base/cpi)) %&gt;% \n  # export to delimited file\n  write.csv(here(\"ahe_real.csv\"))",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Downloading BLS data via blsR"
     ]
   },
@@ -608,7 +592,7 @@
     "section": "Pulling more than 50 series",
     "text": "Pulling more than 50 series\nThe BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:\n\n# read in bls series codes\n#note: this is a random selection of codes used in our Jobs and Unemployment figures\nbls_codes &lt;- read.csv(here(\"bls_codes.csv\"))\n# remove any blanks\nbls_codes &lt;- bls_codes$series_id[bls_codes$series_id != \"\"]\n\n\n# use map to iteratively call blsR api at max number of series id\n#note: BLS restricts to max 50 series in a single call\njobs_day_df &lt;- map(split(bls_codes, ceiling(seq_along(bls_codes) / 50)), # split codes into groups of 50\n             # call blsR using series ids sliced into groups of 50\n             ~ get_n_series_table(series_ids = .x, start_year = 1939, end_year = 2023, \n                                  api_key = bls_key, tidy = TRUE)) %&gt;% \n  # map returns list, flatten by joining data\n  reduce(., function(df1, df2) full_join(df1, df2, by = c(\"year\", \"month\"))) %&gt;%\n  # define date\n  mutate(date = as.POSIXct(paste(year,month,1, sep = \"-\")),\n         date = as.Date(date)) %&gt;% \n  write_csv(here(\"jobs_day_example.csv\"))",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Downloading BLS data via blsR"
     ]
   },
@@ -642,7 +626,7 @@
     "section": "",
     "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# Reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Load Census tables via Tidycensus"
     ]
   },
@@ -653,7 +637,7 @@
     "section": "Explore available variables in the ACS 5-year sample",
     "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Load Census tables via Tidycensus"
     ]
   },
@@ -664,7 +648,7 @@
     "section": "Examples",
     "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Load Census tables via Tidycensus"
     ]
   },
@@ -998,8 +982,7 @@
     "section": "",
     "text": "Use this code to find union density rates for right-to-work versus non-right-to-work states using the EPI CPS microdata extracts.\n[2/10/26 UPDATE: See here for a more accurate way to assign RTW vs non-RTW labels that takes into account changes in status over time. The code below has not been updated to account for this new methodology.]\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nYou can edit this file (and the relevant code below) to change how states are grouped (e.g., by region).\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(here)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(openxlsx)",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
@@ -1010,8 +993,7 @@
     "section": "Set up your workbook",
     "text": "Set up your workbook\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll define the sheet function for the generated workbook and apply some formatting. This helps with readability and condenses the code.\n\n# Define sheet function\nsheet_fun &lt;- function(data, wb, s, format = NULL) {\n  # Add a worksheet to workbook object\n  # Note: The sheet name and wb object are anonymized\n  addWorksheet(wb, sheetName = paste0(s))\n  \n  # Write data to sheet\n  # Note: anonymize data for use in a piped method call\n  writeData(wb, sheet = paste0(s), x = data)\n  \n  # Format based on the value of format\n  if (!is.null(format)) {\n    lapply(format, function(f) {\n      switch(f,\n             \"PERCENTAGE\" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '0.0%'), cols = 2:ncol(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE),\n             \"NUMBER\" = addStyle(wb, sheet = paste0(s), style = createStyle(numFmt = '#,##0'), cols = 2:length(data), rows = 2:(nrow(data) + 1), gridExpand = TRUE)\n      )\n    })\n  }\n  \n  # This line allows the output to return to the data.frame\n  # Note: removing this specification changes output to a list of attributes that are used to write to the wb object  \n  return(data)\n  \n}",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
@@ -1022,8 +1004,7 @@
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union density. It will also use the geo_rtw_labels.csv file you downloaded to label each state as “RTW” or “Non-RTW.”\n\n# Set objects to download\nvar_list &lt;- c(\"year\", \"month\", \"age\", \"statefips\", \n              \"wage\", \"union\", \"lfstat\")\n\n# Load supplemental RTW label data\ngeo_rtw_labels &lt;- read.csv(\"./geo_rtw_labels.csv\")) %&gt;% \n  select(statefips, rtw, rtw_timeline_lab)\n\n# Import CPS ORG data\n# Note: make sure the years reflect your desired window!\ncps_org &lt;- load_org(1983:2024, all_of(c(var_list, \"orgwgt\"))) %&gt;%\n  # Filter out workers under 16 and self-employed workers. \n  filter(age &gt;= 16, lfstat == 1) %&gt;% \n  # Merge RTW status labels to states\n  left_join(geo_rtw_labels, by = \"statefips\")",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
@@ -1034,8 +1015,7 @@
     "section": "Run analysis and download your output",
     "text": "Run analysis and download your output\nHere you’ll run the analysis and produce the resulting Excel workbook output.\n\n# set wb object to bind to \nunion_wb &lt;- createWorkbook()\n\nunion &lt;- cps_org %&gt;% \n  # union membership rates by RTW\n  summarise(union = weighted.mean(union, w = orgwgt/12, na.rm = TRUE), .by = c(year, rtw_timeline_lab)) %&gt;% \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_timeline_lab, values_from = union) %&gt;% \n  # write to wb object\n  sheet_fun(union_wb, s = \"union_rtw\", format = \"PERCENTAGE\")\n\n# save workbooks; make sure to edit the file path!\nsaveWorkbook(union_wb, here(\"output/rtw_union.xlsx\"), overwrite = TRUE)",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
@@ -1046,8 +1026,7 @@
     "section": "Bonus: generate median wages",
     "text": "Bonus: generate median wages\nUse this chunk to generate median wages across all workers and compare to median wages in RTW vs non-RTW states.\nNote: This wage does not factor in any controls (e.g., demographics, occupation, education), so is best used for a relative comparison.\n\n# median wage for 2023 and 2024\nbinipolate(cps_org %&gt;% filter(year &gt;= 2023), wage, bin_size = 0.25, .by = year, w = orgwgt/12)\n\n# median wage by RTW status for 2024\nbinipolate(cps_org %&gt;% filter(year == 2024), wage, bin_size = 0.25, .by = c(year, rtw_timeline_lab), w = orgwgt/12)\n\nHappy coding!",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union density rates in right-to-work (RTW) versus non-RTW states"
     ]
   },
@@ -1058,8 +1037,7 @@
     "section": "",
     "text": "Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the EPI CPS microdata extracts.\nSome utility notes:\nPlease reach out to ecohn@epi.org with any questions. Now let’s get coding!\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union wage premiums by state"
     ]
   },
@@ -1070,8 +1048,7 @@
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.\n\n# Import CPS ORG data\n# Note: load as many years necessary to get sufficient sample sizes or desired time series.\ncps_org &lt;- load_org(2020:2024, \"year\", \"age\", \"statefips\", \"wage\", \"union\", \"orgwgt\", \"a_earnhour\", \"cow1\") %&gt;%\n  # Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.\n  filter(age &gt;= 16, cow1 &lt;= 5, a_earnhour != 1, !is.na(wage))",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union wage premiums by state"
     ]
   },
@@ -1082,8 +1059,7 @@
     "section": "Method 1: Point-in-time comparisons",
     "text": "Method 1: Point-in-time comparisons\nThis method produces union wage premiums for all fifty states, pooling five years of data to get sufficient sample sizes.\nNote: some of the sample sizes are still quite small, even with five years of data. E.g., South Carolina’s union-represented sample. Consider expanding the number of years pooled, but keep in mind that this will also alter what you can say about the results.\n\nCreate wage data\nThis code chunk uses EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per state.\n\n# Note: divide orgwgt by as many months are in your pool.\nwage_single &lt;- cps_org |&gt;\n  mutate(union = to_factor(union)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = wage, \n        w = orgwgt/60,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(union, statefips))\n\n\n\nCalculate union wage premium\nThis code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.\n\nwage_dif_single &lt;- wage_single |&gt;\n  mutate(union_stat = case_when(union == \"Not union represented\" ~ \"nonunion\", \n                                union == \"Union represented\" ~ \"union\")) |&gt;\n  pivot_wider(id_cols = statefips, names_from = union_stat, values_from = wage_median) |&gt;\n  mutate(diff = ((union-nonunion)/nonunion))|&gt;\nmutate(state = to_factor(statefips)) |&gt;\nselect(statefips, state, everything())",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union wage premiums by state"
     ]
   },
@@ -1094,8 +1070,7 @@
     "section": "Method 2: Time series",
     "text": "Method 2: Time series\nThis method produces inflation-adjusted union wage premiums for one state over time.\nNote: Because you can’t combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.\nYou can check sample sizes by running the code through the line noted below and checking the n column of wage_series.\n\nSet up inflation adjustment\nFor more information on inflation adjusting wages, see Inflation adjusting with Realtalk.\n\n# Calculate real wage over time: load CPI data from realtalk\ncpi_data &lt;- realtalk::c_cpi_u_annual\n\n# Set base year to 2024\ncpi2024 &lt;- cpi_data$c_cpi_u[cpi_data$year==2024]\n\n\n\nCreate wage data\nThis code chunk calculates median wages and adjusts them for inflation.\n\n# Note: change statefips to whichever state you prefer.\nwage_series &lt;- cps_org |&gt;\n  filter(statefips == 36) |&gt;\n  mutate(union = to_factor(union)) |&gt;\n  summarise(\n     wage_median = averaged_median(\n     x = wage, \n     w = orgwgt/12,  \n     quantiles_n = 9L, \n     quantiles_w = c(1:4, 5, 4:1)),\n     n=n(),\n     .by = c(year, union)) |&gt; #if you want to check the sample size, run your code through this line (exclude the |&gt; character)\n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') |&gt;\n  # Inflation adjust wages\n mutate(real_wage = wage_median * (cpi2024/c_cpi_u)) |&gt;\nselect(year, union, real_wage)\n\n\n\nCalculate union wage premium\nThis code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.\n\nwage_dif_series &lt;- wage_series |&gt;\n  mutate(union_stat = case_when(union == \"Not union represented\" ~ \"nonunion\", \n                                union == \"Union represented\" ~ \"union\")) |&gt;\n  pivot_wider(id_cols = year, names_from = union_stat, values_from = real_wage) |&gt;\n  mutate(diff = ((union-nonunion)/nonunion)) |&gt;\n  select(year, nonunion, union, diff)\n\nHappy coding!",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Union wage premiums by state"
     ]
   },
@@ -1153,37 +1128,34 @@
   {
     "objectID": "rtw_definitions.html",
     "href": "rtw_definitions.html",
-    "title": "States’ right-to-work status by year",
+    "title": "Right-to-work status by state, over time",
     "section": "",
     "text": "Some states have adopted or, as in the case of Michigan, repealed right-to-work laws at varying times over the last eighty years. These changes make it difficult to accurately compare economic conditions over time on the basis of a state’s right-to-work status.\nUse this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the EPI CPS microdata extracts.\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(labelled)",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "States' right-to-work status by year"
+      "R Code Repository",
+      "Right-to-work status by state, over time"
     ]
   },
   {
     "objectID": "rtw_definitions.html#import-and-clean-data",
     "href": "rtw_definitions.html#import-and-clean-data",
-    "title": "States’ right-to-work status by year",
+    "title": "Right-to-work status by state, over time",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll reformat the RTW label rtw_status_years.csv file into a format that’s easier to process in R.\n\n# read in RTW status by year\nrtw_status_year &lt;- read.csv(\"./input/rtw_status_year.csv\") |&gt; \n  pivot_longer(cols = -year, names_to = \"state\", values_to = \"rtw_status\") |&gt; \n  arrange(state, year)\n\nRunning this script chunk will call and clean the BLS Current Population Survey Basic data required to calculate prime age EPOPs. It will also join the rtw_status_years data frame you created to label each state as “RTW” or “Non-RTW” in a given year.\n\n# import CPS Basic data\ncps_basic &lt;- load_basic(2000:2025, \"year\", \"month\", \"selfemp\", \"selfinc\", \"age\", \"statefips\", \"emp\", \"lfstat\",\n              \"cow1\", \"female\", \"wbhao\", \"basicwgt\") |&gt; \n  # Age restrictions\n  filter(age &gt;= 16) |&gt; \n  # identify prime-age (for EPOPs)\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0), state=to_factor(statefips)) |&gt; \n  # merge RTW status\n  left_join(rtw_status_year, by = c(\"year\", \"state\")) |&gt; \n  # adjust for missing Oct data\n  mutate(weight = case_match(year, \n                             2025 ~ basicwgt / 11, \n                             .default = basicwgt / 12))",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "States' right-to-work status by year"
+      "R Code Repository",
+      "Right-to-work status by state, over time"
     ]
   },
   {
     "objectID": "rtw_definitions.html#run-analysis",
     "href": "rtw_definitions.html#run-analysis",
-    "title": "States’ right-to-work status by year",
+    "title": "Right-to-work status by state, over time",
     "section": "Run analysis",
     "text": "Run analysis\nHere you’ll run the analysis to calculate prime age EPOPs by RTW vs. non-RTW states over time.\n\nepop_rtw &lt;- cps_basic |&gt; \n  filter(prime_age == 1) |&gt; \n  # EPOP = weighted mean of employment\n  summarise(epop = weighted.mean(emp, w = weight, na.rm = TRUE), .by = c(year, rtw_status)) |&gt; \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_status, values_from = epop) |&gt; \n  rename(RTW = `1`, non_RTW = `0`)\n\nAnd that’s all! You can easily apply the first two code chunks to any CPS (or other survey) analysis you want to do.\nHappy coding!",
     "crumbs": [
-      "R code",
-      "Code Repository",
-      "States' right-to-work status by year"
+      "R Code Repository",
+      "Right-to-work status by state, over time"
     ]
   },
   {
@@ -1193,7 +1165,7 @@
     "section": "",
     "text": "Note: Users will need to install epiextractr for this example. Refer to EPI packages for R for installation instructions.\n\nLoad required libraries\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\n\n\nDownload CPS files\n\n# download CPS ORG files  \ndownload_cps( sample = 'org', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS Basic (4085.3 MB) \ndownload_cps(sample='basic', extracts_dir ='C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS May (38.8 MB)\ndownload_cps(sample='may', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\nThis will download the latest EPI CPS ORG extracts in .feather format from https://microdata.epi.org and place them in the directory C:\\data\\cps.\n\n\nLoad your CPS extracts!\nAfter the data is downloaded, load a selection of CPS data for your analysis:\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho, \n                .extracts_dir = 'C:/YOUR_PATH/cps')\n\n\n\n(Optional) Set and forget CPS data files by creating/editing an .Renviron file\nTo simplify usage, you can omit the .extracts_dir argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.\n\n# Find the .Renviron file\nrenviron_path &lt;- file.path(Sys.getenv(\"HOME\"), \".Renviron\")\n\n# Open the file for editing\nfile.edit(renviron_path)\n\n# Paste the environment variable settings into your .Renviron file,\n# and make sure the paths are set to the location of your CPS files\n\nEPIEXTRACTS_CPSBASIC_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSMAY_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSORG_DIR=C:/YOUR_PATH/cps\n\nAfter editing your .Renviron file, save your changes and restart R to apply them.\nIf you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the .extracts_dir() command\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho)\n\n\n\n\n\n Back to top",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Load EPI CPS Extracts via epiextractr"
     ]
   },
@@ -1204,8 +1176,7 @@
     "section": "",
     "text": "This script uses Current Population Survey (CPS) microdata extracts from https://microdata.epi.org/ to calculate union density from 1983-Present.\n\nlibrary(tidyverse)\nlibrary(here)\nlibrary(epiextractr)\n\nLoad CPS data using epiextractr\n\nbasic &lt;- load_basic(1983:2022, year, month, statefips, basicwgt, union, unmem, age, emp, selfemp, selfinc) %&gt;%\n  filter(age&gt;=16, emp==1) %&gt;%\n  #remove self-employed and self-incorporated workers from sample\n  mutate(selfemp0 = ifelse(selfemp==1 & !is.na(selfemp), yes=1, no=0),\n         selfinc0 = ifelse(selfinc==1 & !is.na(selfinc), yes=1, no=0)) %&gt;%\n  filter(selfemp0==0, selfinc0==0)\n\nUsing EPI CPS Basic Monthly Extracts, Version 2025.9.11\n\n\nCalculate US union density 1983–2022\n\n#US union members and union represented by year, 1983-2022\n\ndensity_us &lt;- basic %&gt;% \n  group_by(year) %&gt;% \n  summarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),\n            rep_n = sum(union, na.rm=TRUE),\n            member_share = weighted.mean(unmem, w=basicwgt/12, na.rm=TRUE),\n            memb_n = sum(unmem, na.rm=TRUE),\n            wgt_memb = sum(unmem * basicwgt/12, na.rm=TRUE))\n\ndensity_us\n\n# A tibble: 40 × 6\n    year represented_share rep_n member_share memb_n wgt_memb\n   &lt;int&gt;             &lt;dbl&gt; &lt;int&gt;        &lt;dbl&gt;  &lt;int&gt;    &lt;dbl&gt;\n 1  1983           NaN         0        0.201  34258 4422628.\n 2  1984             0.216 38008        0.188  32921 4328307.\n 3  1985             0.205 36788        0.180  32185 4236957.\n 4  1986             0.199 35321        0.175  31013 4230555.\n 5  1987             0.192 34505        0.170  30488 4221013.\n 6  1988             0.190 32242        0.168  28406 4241194.\n 7  1989             0.186 32079        0.164  28261 4235755.\n 8  1990             0.182 34110        0.160  29898 4192916.\n 9  1991             0.181 32920        0.160  29051 4152415.\n10  1992             0.177 31725        0.157  28022 4098902.\n# ℹ 30 more rows\n\n\nCalculate state level union representation, 1983–2022\n\n#Union representation by year and state, 1983–Present\ndensity_state &lt;- basic %&gt;% \nsummarise(represented_share = weighted.mean(union, w=basicwgt/12, na.rm=TRUE),\n          .by = c(year, statefips)) %&gt;%\n  \n  #Turn statefips labels into strings\n  mutate(statefips = haven::as_factor(statefips)) %&gt;% \n  #sort by year and state\n  arrange(year, statefips) %&gt;% \n  #reshape data\n  pivot_wider(id_cols = year, names_from = statefips, values_from = represented_share)\n\ndensity_state\n\n# A tibble: 40 × 52\n    year      AL      AK       AZ      AR      CA      CO      CT      DE\n   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n 1  1983 NaN     NaN     NaN      NaN     NaN     NaN     NaN     NaN    \n 2  1984   0.179   0.279   0.120    0.120   0.248   0.146   0.222   0.193\n 3  1985   0.177   0.280   0.121    0.133   0.239   0.137   0.222   0.185\n 4  1986   0.181   0.267   0.109    0.123   0.231   0.148   0.207   0.190\n 5  1987   0.155   0.256   0.0825   0.133   0.223   0.138   0.200   0.180\n 6  1988   0.161   0.268   0.0863   0.117   0.216   0.124   0.205   0.167\n 7  1989   0.157   0.249   0.0877   0.121   0.218   0.113   0.193   0.173\n 8  1990   0.145   0.258   0.0941   0.121   0.209   0.120   0.196   0.168\n 9  1991   0.155   0.239   0.0979   0.125   0.206   0.118   0.200   0.185\n10  1992   0.162   0.221   0.0952   0.110   0.209   0.120   0.189   0.184\n# ℹ 30 more rows\n# ℹ 43 more variables: DC &lt;dbl&gt;, FL &lt;dbl&gt;, GA &lt;dbl&gt;, HI &lt;dbl&gt;, ID &lt;dbl&gt;,\n#   IL &lt;dbl&gt;, IN &lt;dbl&gt;, IA &lt;dbl&gt;, KS &lt;dbl&gt;, KY &lt;dbl&gt;, LA &lt;dbl&gt;, ME &lt;dbl&gt;,\n#   MD &lt;dbl&gt;, MA &lt;dbl&gt;, MI &lt;dbl&gt;, MN &lt;dbl&gt;, MS &lt;dbl&gt;, MO &lt;dbl&gt;, MT &lt;dbl&gt;,\n#   NE &lt;dbl&gt;, NV &lt;dbl&gt;, NH &lt;dbl&gt;, NJ &lt;dbl&gt;, NM &lt;dbl&gt;, NY &lt;dbl&gt;, NC &lt;dbl&gt;,\n#   ND &lt;dbl&gt;, OH &lt;dbl&gt;, OK &lt;dbl&gt;, OR &lt;dbl&gt;, PA &lt;dbl&gt;, RI &lt;dbl&gt;, SC &lt;dbl&gt;,\n#   SD &lt;dbl&gt;, TN &lt;dbl&gt;, TX &lt;dbl&gt;, UT &lt;dbl&gt;, VT &lt;dbl&gt;, VA &lt;dbl&gt;, WA &lt;dbl&gt;, …\n\n\n\n\n\n\n Back to top",
     "crumbs": [
-      "R code",
-      "Code Repository",
+      "R Code Repository",
       "Historical state union density"
     ]
   },
@@ -1216,7 +1187,7 @@
     "section": "",
     "text": "Note: Users will need to install realtalk and epiextractr for this example. Refer to EPI packages for R for installation instructions.",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Inflation adjusting with Realtalk"
     ]
   },
@@ -1225,9 +1196,9 @@
     "href": "inflation_adjusting.html#loading-cpi-indices-using-the-realtalk-library",
     "title": "Inflation adjusting with Realtalk",
     "section": "Loading CPI Indices using the realtalk library",
-    "text": "Loading CPI Indices using the realtalk library\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(realtalk)\nlibrary(epiextractr)\nlibrary(here)\n\nThe RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.\n\n#list available cpi series\nrealtalk::available_price_indexes\n\n# A tibble: 20 × 6\n   index_name        frequency seasonal min_date max_date package_data_name     \n   &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                 \n 1 C-CPI-U           annual    &lt;NA&gt;     2000     2024     c_cpi_u_annual        \n 2 C-CPI-U           monthly   NSA      Dec 1999 Jan 2025 c_cpi_u_monthly_nsa   \n 3 C-CPI-U           quarterly NSA      2000q1   2024q4   c_cpi_u_quarterly_nsa \n 4 C-CPI-U, extended annual    &lt;NA&gt;     1937     2024     c_cpi_u_extended_annu…\n 5 C-CPI-U, extended monthly   NSA      Jan 1937 Jan 2025 c_cpi_u_extended_mont…\n 6 C-CPI-U, extended monthly   SA       Jan 1947 Jan 2025 c_cpi_u_extended_mont…\n 7 C-CPI-U, extended quarterly NSA      1937q1   2024q4   c_cpi_u_extended_quar…\n 8 C-CPI-U, extended quarterly SA       1947q1   2024q4   c_cpi_u_extended_quar…\n 9 CPI-U             annual    &lt;NA&gt;     1937     2024     cpi_u_annual          \n10 CPI-U             monthly   NSA      Jan 1937 Jan 2025 cpi_u_monthly_nsa     \n11 CPI-U             monthly   SA       Jan 1947 Jan 2025 cpi_u_monthly_sa      \n12 CPI-U             quarterly NSA      1937q1   2024q4   cpi_u_quarterly_nsa   \n13 CPI-U             quarterly SA       1947q1   2024q4   cpi_u_quarterly_sa    \n14 CPI-U-RS          annual    &lt;NA&gt;     1978     2023     cpi_u_rs_annual       \n15 CPI-U-RS          monthly   NSA      Dec 1977 Dec 2023 cpi_u_rs_monthly_nsa  \n16 CPI-U-X1          annual    &lt;NA&gt;     1967     1982     cpi_u_x1_annual       \n17 CPI-U-X1          monthly   NSA      Jan 1967 Dec 1982 cpi_u_x1_monthly_nsa  \n18 PCE               annual    &lt;NA&gt;     1929     2024     pce_annual            \n19 PCE               monthly   SA       Jan 1959 Dec 2024 pce_monthly_sa        \n20 PCE               quarterly SA       1947q1   2024q4   pce_quarterly_sa      \n\n\nEPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.\n\n#this creates a dataframe with the annual CPI-U-RS index from 1937-2022\ncpi_data &lt;- realtalk::cpi_u_rs_annual\n\n#Set base year to 2022\ncpi2022 &lt;- cpi_data$cpi_u_rs[cpi_data$year==2022]",
+    "text": "Loading CPI Indices using the realtalk library\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(realtalk)\nlibrary(epiextractr)\nlibrary(here)\n\nThe RealTalk package includes several datasets of common US price indices. You may view those by executing the available_price_indexes() command.\n\n#list available cpi series\nrealtalk::available_price_indexes\n\n# A tibble: 20 × 6\n   index_name        frequency seasonal min_date max_date package_data_name     \n   &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                 \n 1 C-CPI-U           annual    &lt;NA&gt;     2000     2025     c_cpi_u_annual        \n 2 C-CPI-U           monthly   NSA      Dec 1999 Jan 2026 c_cpi_u_monthly_nsa   \n 3 C-CPI-U           quarterly NSA      2000q1   2025q4   c_cpi_u_quarterly_nsa \n 4 C-CPI-U, extended annual    &lt;NA&gt;     1937     2025     c_cpi_u_extended_annu…\n 5 C-CPI-U, extended monthly   NSA      Jan 1937 Jan 2026 c_cpi_u_extended_mont…\n 6 C-CPI-U, extended monthly   SA       Jan 1947 Jan 2026 c_cpi_u_extended_mont…\n 7 C-CPI-U, extended quarterly NSA      1937q1   2025q4   c_cpi_u_extended_quar…\n 8 C-CPI-U, extended quarterly SA       1947q1   2025q4   c_cpi_u_extended_quar…\n 9 CPI-U             annual    &lt;NA&gt;     1937     2025     cpi_u_annual          \n10 CPI-U             monthly   NSA      Jan 1937 Jan 2026 cpi_u_monthly_nsa     \n11 CPI-U             monthly   SA       Jan 1947 Jan 2026 cpi_u_monthly_sa      \n12 CPI-U             quarterly NSA      1937q1   2025q4   cpi_u_quarterly_nsa   \n13 CPI-U             quarterly SA       1947q1   2025q4   cpi_u_quarterly_sa    \n14 CPI-U-RS          annual    &lt;NA&gt;     1978     2024     cpi_u_rs_annual       \n15 CPI-U-RS          monthly   NSA      Dec 1977 Dec 2024 cpi_u_rs_monthly_nsa  \n16 CPI-U-X1          annual    &lt;NA&gt;     1967     1982     cpi_u_x1_annual       \n17 CPI-U-X1          monthly   NSA      Jan 1967 Dec 1982 cpi_u_x1_monthly_nsa  \n18 PCE               annual    &lt;NA&gt;     1929     2024     pce_annual            \n19 PCE               monthly   SA       Jan 1959 Nov 2025 pce_monthly_sa        \n20 PCE               quarterly SA       1947q1   2025q3   pce_quarterly_sa      \n\n\nEPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.\n\n#this creates a dataframe with the annual CPI-U-RS index from 1937-2022\ncpi_data &lt;- realtalk::cpi_u_rs_annual\n\n#Set base year to 2022\ncpi2022 &lt;- cpi_data$cpi_u_rs[cpi_data$year==2022]",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Inflation adjusting with Realtalk"
     ]
   },
@@ -1238,7 +1209,7 @@
     "section": "A refresher on inflation adjustment",
     "text": "A refresher on inflation adjustment\nBefore jumping into the full code. Let’s refresh on how to calculate inflation using the Consumer Price Index.\nInflation in a given year is calculated by dividing the price of a market basket in a particular year by the price of the same basket in the base year, like so:\n\\[\n\\frac{\\text{Given year}}{\\text{Base year}} * 100\n\\]\nFor example, let’s calculate how much the CPI-U-RS index has increased from 1978 to 2022.\n\\[\n\\frac{\\text{CPI}_{2022}}{\\text{CPI}_{1978}} = \\frac{431.5}{104} \\approx 4.149038 \\text{ or } 414.9\\%\n\\]\nAnd voila - we see that inflation has caused the basket of goods to increase 414.9% since 1978.",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Inflation adjusting with Realtalk"
     ]
   },
@@ -1247,9 +1218,9 @@
     "href": "inflation_adjusting.html#applying-inflation-adjustment-to-cps-org-wage-data",
     "title": "Inflation adjusting with Realtalk",
     "section": "Applying inflation adjustment to CPS ORG wage data",
-    "text": "Applying inflation adjustment to CPS ORG wage data\nThis section uses epiextractr to load Current Population Survey data. Refer to the Using EPI’s CPS Extracts to learn how to use this library.\nBelow, I load CPS ORG data and define my sample:\n\norg &lt;- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat) %&gt;% \n    #define sample universe\n    filter(age&gt;=16, lfstat %in% c(1,2))\n\nNext, calculate median wages in the CPS. and merge the annual CPI index to the dataframe using left_join()\n\n#Calculate median wages in the CPS ORG\nwage_data &lt;- org %&gt;% \n  #use MetricsWeighted package to calculate a weighted median\n  #Note: I am pooling 12 months of CPS data, \n  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.\n  summarize(nominal_median_wage = \n               MetricsWeighted::weighted_median(wage, w=orgwgt/12, na.rm=TRUE),\n            .by=year) %&gt;% \n\n#Merge annual CPI data to dataframe by year.\n  left_join(cpi_data, by='year') \n\nwage_data\n\n# A tibble: 11 × 3\n    year nominal_median_wage cpi_u_rs\n   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;\n 1  2012                16       337.\n 2  2013                16.4     342 \n 3  2014                16.8     348.\n 4  2015                17       348.\n 5  2016                17.5     353.\n 6  2017                18       360.\n 7  2018                18.8     369.\n 8  2019                19.2     376.\n 9  2020                21       381.\n10  2021                21.4     399.\n11  2022                22.9     432.\n\n\nFinally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:\n\nadjusted_data &lt;- wage_data %&gt;% \n \n  #This mutate command calculates inflation in a given year, relative to 2022\n  #and multiplies nominal median wages by the inflation quotient\n  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),\n         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %&gt;% \n  \n  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)\n  \nadjusted_data\n\n# A tibble: 11 × 5\n    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022\n   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n 1  2012     337.            0.28                 16             20.5\n 2  2013     342             0.26                 16.4           20.7\n 3  2014     348.            0.24                 16.8           20.8\n 4  2015     348.            0.24                 17             21.1\n 5  2016     353.            0.22                 17.5           21.4\n 6  2017     360.            0.2                  18             21.6\n 7  2018     369.            0.17                 18.8           21.9\n 8  2019     376.            0.15                 19.2           22.1\n 9  2020     381.            0.13                 21             23.8\n10  2021     399.            0.081                21.4           23.1\n11  2022     432.            0                    22.9           22.9",
+    "text": "Applying inflation adjustment to CPS ORG wage data\nThis section uses epiextractr to load Current Population Survey data. Refer to the Using EPI’s CPS Extracts to learn how to use this library.\nBelow, I load CPS ORG data and define my sample:\n\norg &lt;- load_org(2012:2022, year, month, orgwgt, wage, age, lfstat) %&gt;% \n    #define sample universe\n    filter(age&gt;=16, lfstat %in% c(1,2))\n\nNext, calculate median wages in the CPS and merge the annual CPI index to the dataframe using left_join()\n\n#Calculate median wages in the CPS ORG\nwage_data &lt;- org %&gt;% \n  #use MetricsWeighted package to calculate a weighted median\n  #Note: I am pooling 12 months of CPS data, \n  #so I adjust orgwgt—the survey weight— variable, dividing it by 12.\n  summarize(nominal_median_wage = \n               MetricsWeighted::weighted_median(wage, w=orgwgt/12, na.rm=TRUE),\n            .by=year) %&gt;% \n\n#Merge annual CPI data to dataframe by year.\n  left_join(cpi_data, by='year') \n\nwage_data\n\n# A tibble: 11 × 3\n    year nominal_median_wage cpi_u_rs\n   &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;\n 1  2012                16       337.\n 2  2013                16.4     342 \n 3  2014                16.8     348.\n 4  2015                17       348.\n 5  2016                17.5     353.\n 6  2017                18       360.\n 7  2018                18.8     369.\n 8  2019                19.2     376.\n 9  2020                21       381.\n10  2021                21.4     399.\n11  2022                22.9     432.\n\n\nFinally, calculate the inflation rate relative to 2022, and the inflation adjusted median wage using the CPI index as follows:\n\nadjusted_data &lt;- wage_data %&gt;% \n \n  #This mutate command calculates inflation in a given year, relative to 2022\n  #and multiplies nominal median wages by the inflation quotient\n  mutate(infl_rel_to_2022 = signif(x = ((cpi2022/cpi_u_rs)-1), digits=2),\n         real_wage_2022 = nominal_median_wage*(cpi2022/cpi_u_rs)) %&gt;% \n  \n  relocate(infl_rel_to_2022, nominal_median_wage, .after=cpi_u_rs)\n  \nadjusted_data\n\n# A tibble: 11 × 5\n    year cpi_u_rs infl_rel_to_2022 nominal_median_wage real_wage_2022\n   &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n 1  2012     337.            0.28                 16             20.5\n 2  2013     342             0.26                 16.4           20.7\n 3  2014     348.            0.24                 16.8           20.8\n 4  2015     348.            0.24                 17             21.1\n 5  2016     353.            0.22                 17.5           21.4\n 6  2017     360.            0.2                  18             21.6\n 7  2018     369.            0.17                 18.8           21.9\n 8  2019     376.            0.15                 19.2           22.1\n 9  2020     381.            0.13                 21             23.8\n10  2021     399.            0.081                21.4           23.1\n11  2022     432.            0                    22.9           22.9",
     "crumbs": [
-      "R code",
+      "R Code Repository",
       "Inflation adjusting with Realtalk"
     ]
   }

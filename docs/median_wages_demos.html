@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./rolling_averages.html" rel="next">
-<link href="./union_premium.html" rel="prev">
+<link href="./rtw_union.html" rel="next">
+<link href="./rtw_definitions.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./median_wages_demos.html">State-level median wages by demographic</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./median_wages_demos.html">State-level median wages by demographic</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -263,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">R code</span></a>
+ <span class="menu-text">R Code Repository</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -271,20 +271,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Load Census tables via Tidycensus</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./blsR_example.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Downloading BLS data via blsR</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -300,15 +288,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
           <li class="px-0"><hr class="sidebar-divider hi "></li>
-          <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Code Repository</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./union_density.html" class="sidebar-item-text sidebar-link">
@@ -318,7 +297,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./foreign_born_stats_ipumsr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Using ipumsr to load immigrant statistics</span></a>
+ <span class="menu-text">Immigrant statistics via ipumsr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tidycensus_example.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Load Census tables via Tidycensus</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rolling_averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">(Monthly) rolling averages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rtw_definitions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Right-to-work status by state, over time</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./median_wages_demos.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">State-level median wages by demographic</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -335,35 +338,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./median_wages_demos.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">State-level median wages by demographic</span></a>
+  <a href="./weighted_percentiles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./rolling_averages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">(Monthly) rolling averages</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./rtw_definitions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">States’ right-to-work status by year</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">Stata code</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
@@ -405,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tidycensus_example.html">R code</a></li><li class="breadcrumb-item"><a href="./union_density.html">Code Repository</a></li><li class="breadcrumb-item"><a href="./median_wages_demos.html">State-level median wages by demographic</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./median_wages_demos.html">State-level median wages by demographic</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">State-level median wages by demographic</h1>
 </div>
@@ -447,13 +436,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="set-up-for-inflation-adjusting" class="level2">
 <h2 class="anchored" data-anchor-id="set-up-for-inflation-adjusting">Set up for inflation adjusting</h2>
-<p>EPI uses the CPI-U-RS series to inflation adjust wages, so we’ll select that series and assign it to a dataframe.</p>
+<p>EPI uses the chained CPI-U series to inflation adjust wages (use chained extended for analysis pre-2000), so we’ll select that series and assign it to a dataframe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pulling in CPI-U-RS series</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>cpi_u_rs_annual</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pulling in chained CPI-U series</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>c_cpi_u_extended_annual</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set base year to 2024</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>cpi2024 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>cpi_u_rs[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2024</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>cpi2024 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>c_cpi_u_extended[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2024</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-and-clean-data" class="level2">
@@ -473,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge annual CPI data to data frame by year</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cpi_data, <span class="at">by=</span><span class="st">'year'</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inflation adjust wages to 2024$</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">realwage =</span> wage <span class="sc">*</span> (cpi2024<span class="sc">/</span>cpi_u_rs))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">realwage =</span> wage <span class="sc">*</span> (cpi2024<span class="sc">/</span>c_cpi_u_extended))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sheet-1-wages-by-race-gender-and-race-and-gender." class="level2">
@@ -1242,13 +1231,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./union_premium.html" class="pagination-link" aria-label="Union wage premiums by state">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Union wage premiums by state</span>
+      <a href="./rtw_definitions.html" class="pagination-link" aria-label="Right-to-work status by state, over time">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Right-to-work status by state, over time</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./rolling_averages.html" class="pagination-link" aria-label="(Monthly) rolling averages">
-        <span class="nav-page-text">(Monthly) rolling averages</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./rtw_union.html" class="pagination-link" aria-label="Union density rates in right-to-work (RTW) versus non-RTW states">
+        <span class="nav-page-text">Union density rates in right-to-work (RTW) versus non-RTW states</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
