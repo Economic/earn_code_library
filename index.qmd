@@ -10,6 +10,8 @@ This library is intended to be a hub for generating and sharing research ideas, 
 
 On this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!
 
+*Please note: code samples on this site are not generally updated once published. As a result, they may not reflect current package versions or newer coding practices. Please reach out to ecohn (at) epi (dot) org if you have any questions or are encountering errors with a published script.*
+
 ## User code submissions
 
 Have a coding sample you would like to submit to the EARN code library? Contact ecohn (at) epi (dot) org
