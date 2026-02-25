@@ -1,6 +1,8 @@
 ---
 title: "Right-to-work status by state, over time"
 author: "Emma Cohn"
+date: "2026-01"
+date-modified: "last-modified"
 format: html
 editor: visual
 execute: 
