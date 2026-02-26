@@ -1,6 +1,7 @@
 ---
 title: "(Monthly) rolling averages"
 author: "Emma Cohn and Daniel Perez"
+date: "2026-01-26"
 format: html
 editor: visual
 ---
