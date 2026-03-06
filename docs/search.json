@@ -1046,7 +1046,7 @@
     "href": "union_premium.html#import-and-clean-data",
     "title": "Union wage premiums by state",
     "section": "Import and clean data",
-    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.\n\n# Import CPS ORG data\n# Note: load as many years necessary to get sufficient sample sizes or desired time series.\ncps_org &lt;- load_org(2020:2024, \"year\", \"age\", \"statefips\", \"wage\", \"union\", \"orgwgt\", \"a_earnhour\", \"cow1\") %&gt;%\n  # Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.\n  filter(age &gt;= 16, cow1 &lt;= 5, a_earnhour != 1, !is.na(wage))",
+    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.\n\n# Import CPS ORG data\n# Note: load as many years necessary to get sufficient sample sizes or desired time series.\ncps_org &lt;- load_org(2020:2024, \"year\", \"age\", \"statefips\", \"wage\", \"union\", \"orgwgt\", \"a_earnhour\", \"a_weekpay\", \"cow1\") %&gt;%\n  # Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.\n  filter(age &gt;= 16, cow1 &lt;= 5, a_earnhour != 1, a_weekpay != 1, !is.na(wage))",
     "crumbs": [
       "R Code Repository",
       "Union wage premiums by state"
