@@ -430,10 +430,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="import-and-clean-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-and-clean-data">Import and clean data</h2>
 <p><strong>Note:</strong> Don’t forget to <strong>update years, file names,</strong> and <strong>file paths</strong> to match your setup before running the script.</p>
-<p>In this chunk, you’ll reformat the RTW label <strong>state_rtw_defintions.csv</strong> file into a format that’s easier to process in R.</p>
+<p>In this chunk, you’ll reformat the RTW label <strong>state_rtw_definitions.csv</strong> file into a format that’s easier to process in R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in RTW status by year</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rtw_status_year <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./input/state_rtw_defintions.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rtw_status_year <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./input/state_rtw_definitions.csv"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>year, <span class="at">names_to =</span> <span class="st">"state"</span>, <span class="at">values_to =</span> <span class="st">"rtw_status"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(state, year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

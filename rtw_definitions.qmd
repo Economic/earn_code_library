@@ -29,12 +29,12 @@ library(labelled)
 
 **Note:** Don't forget to **update years, file names,** and **file paths** to match your setup before running the script.
 
-In this chunk, you'll reformat the RTW label **state_rtw_defintions.csv** file into a format that's easier to process in R.
+In this chunk, you'll reformat the RTW label **state_rtw_definitions.csv** file into a format that's easier to process in R.
 
 ```{r, RTW status CSV, message=FALSE}
 
 # read in RTW status by year
-rtw_status_year <- read.csv("./input/state_rtw_defintions.csv") |> 
+rtw_status_year <- read.csv("./input/state_rtw_definitions.csv") |> 
   pivot_longer(cols = -year, names_to = "state", values_to = "rtw_status") |> 
   arrange(state, year)
 ```
