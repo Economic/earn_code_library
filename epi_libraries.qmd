@@ -26,14 +26,14 @@ title: "EPI packages for R"
 You can install any of these packages from the EPI R-universe [repository](https://economic.r-universe.dev/). For example, the `epiverse` package can be installed with:
 
 ```{r epiverse, eval=FALSE, message=FALSE}
-install.packages("epiverse", repos = c("https://economic.r-universe.dev",) getOption("repos")))
+install.packages("epiverse", repos = c("https://economic.r-universe.dev", getOption("repos")))
 ```
 
 Similar code is available on each package's GitHub page.
 
 However, for easier syntax and updates, consider adding the repository to the "repos" option in your `.Rprofile` file:
 
-```{r renviron, eval=FALSE, message=FALSE}
+```{r rprofile, eval=FALSE, message=FALSE}
 # Example .Rprofile  
 options(repos = c(
     epi = "https://economic.r-universe.dev",

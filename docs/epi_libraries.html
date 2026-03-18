@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="to-install">To install:</h3>
 <p>You can install any of these packages from the EPI R-universe <a href="https://economic.r-universe.dev/">repository</a>. For example, the <code>epiverse</code> package can be installed with:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"epiverse"</span>, <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://economic.r-universe.dev"</span>,) <span class="fu">getOption</span>(<span class="st">"repos"</span>))<span class="er">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"epiverse"</span>, <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://economic.r-universe.dev"</span>, <span class="fu">getOption</span>(<span class="st">"repos"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Similar code is available on each package’s GitHub page.</p>
 <p>However, for easier syntax and updates, consider adding the repository to the “repos” option in your <code>.Rprofile</code>&nbsp;file:</p>
