@@ -61,8 +61,8 @@ website:
       - union_density.qmd
       - foreign_born_stats_ipumsr.qmd
       - tidycensus_example.qmd
-      - rtw_definitions.qmd
       - rolling_average.qmd
+      - rtw_definitions.qmd
       - median_wages_demos.qmd
       - rtw_union.qmd
       - union_premium.qmd
