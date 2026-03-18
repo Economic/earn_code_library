@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Emma Cohn and Daniel Perez">
-<meta name="dcterms.date" content="2026-01-26">
+<meta name="author" content="Zane Mokhiber and Emma Cohn">
+<meta name="dcterms.date" content="2026-03-18">
 
-<title>(Monthly) rolling averages – Code Library</title>
+<title>(Monthly) Rolling averages – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,8 +66,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./rtw_definitions.html" rel="next">
-<link href="./tidycensus_example.html" rel="prev">
+<link href="./median_wages_demos.html" rel="next">
+<link href="./rtw_definitions.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_averages.html">(Monthly) rolling averages</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_average.html">(Monthly) Rolling averages</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -309,14 +309,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rolling_averages.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">(Monthly) rolling averages</span></a>
+  <a href="./rtw_definitions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Right-to-work status by state, over time</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rtw_definitions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Right-to-work status by state, over time</span></a>
+  <a href="./rolling_average.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">(Monthly) Rolling averages</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -343,17 +343,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Weighted percentiles</span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
- <span class="menu-text">Stata code</span></a>
+ <span class="menu-text">Archive</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./old_rolling_averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">(Monthly) rolling averages - ARCHIVED</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Stata code</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bin_wage_deciles.html" class="sidebar-item-text sidebar-link">
@@ -374,20 +391,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
   <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link" data-scroll-target="#import-and-clean-data">Import and clean data</a></li>
-  <li><a href="#calculate-monthly-rolling-averages-for-epops" id="toc-calculate-monthly-rolling-averages-for-epops" class="nav-link" data-scroll-target="#calculate-monthly-rolling-averages-for-epops">Calculate monthly rolling averages for EPOPs</a>
+  <li><a href="#calculate-epops" id="toc-calculate-epops" class="nav-link" data-scroll-target="#calculate-epops">Calculate EPOPs</a>
   <ul class="collapse">
-  <li><a href="#calculate-epops-by-raceethnicity-and-format-output" id="toc-calculate-epops-by-raceethnicity-and-format-output" class="nav-link" data-scroll-target="#calculate-epops-by-raceethnicity-and-format-output">Calculate EPOPs by race/ethnicity and format output</a></li>
+  <li><a href="#calculate-rolling-average" id="toc-calculate-rolling-average" class="nav-link" data-scroll-target="#calculate-rolling-average">Calculate rolling average</a></li>
   </ul></li>
-  <li><a href="#export-your-data-to-a-downloadable-excel" id="toc-export-your-data-to-a-downloadable-excel" class="nav-link" data-scroll-target="#export-your-data-to-a-downloadable-excel">Export your data to a downloadable Excel</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_averages.html">(Monthly) rolling averages</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./rolling_average.html">(Monthly) Rolling averages</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">(Monthly) rolling averages</h1>
+<h1 class="title">(Monthly) Rolling averages</h1>
 </div>
 
 
@@ -397,14 +413,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Emma Cohn and Daniel Perez </p>
+             <p>Zane Mokhiber and Emma Cohn </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 26, 2026</p>
+      <p class="date">March 18, 2026</p>
     </div>
   </div>
   
@@ -416,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.</p>
+<p>This script will teach you how to calculate simple monthly rolling averages using CPS data and employment-to-population ratios (EPOPs). It accounts for missing months of data, such as the October 2025 gap due to the government shutdown and resulting lapse in Bureau of Labor Statistics appropriations.</p>
 <section id="load-required-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h2>
 <p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>, complete that process before running this code.</p>
@@ -424,91 +440,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#this package contains most common R functions</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr) <span class="co">#allows you to get CPS (e.g., Basic, ORG) extracts</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled) <span class="co">#allows you to easily clean data; includes functions like 'to_factor'</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo) <span class="co">#contains functions like rollmean and rollsum</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2) <span class="co">#allows you to format and export data to an Excel workbook</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(slider) <span class="co">#contains the sliding mean function</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-and-clean-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-and-clean-data">Import and clean data</h2>
 <p><strong>Note:</strong> Don’t forget to <strong>update years</strong> to match your setup before running the script.</p>
-<p>Running this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs. It will also create a variable that will allow you to calculate prime-age EPOPs and set up some date formatting for the rolling average calculation later.</p>
+<p>Running this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import CPS ORG data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>basic <span class="ot">&lt;-</span> <span class="fu">load_basic</span>(<span class="dv">2018</span><span class="sc">:</span><span class="dv">2024</span>, <span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"basicwgt"</span>, <span class="st">"age"</span>, <span class="st">"wbhao"</span>, <span class="st">"selfinc"</span>, <span class="st">"emp"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Filter to working age population with employment information</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, <span class="sc">!</span><span class="fu">is.na</span>(emp)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create prime-age variable</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prime_age =</span> <span class="fu">case_when</span>(<span class="fu">between</span>(age, <span class="dv">25</span>, <span class="dv">54</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create date in yyyy-mm-dd format</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(<span class="fu">paste0</span>(year,<span class="st">'-'</span>, month,<span class="st">'-1'</span>))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Import CPS Basic data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cps_data <span class="ot">&lt;-</span> <span class="fu">load_basic</span>(<span class="dv">2023</span><span class="sc">:</span><span class="dv">2026</span>, year, month, basicwgt, emp, age, cow1) <span class="sc">|&gt;</span>  </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">weight =</span> basicwgt) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="calculate-monthly-rolling-averages-for-epops" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-monthly-rolling-averages-for-epops">Calculate monthly rolling averages for EPOPs</h2>
-<p>This code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable <code>emp</code> (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.</p>
-<p>In order to <strong>change the rolling length</strong>, change the <code>k</code> value. This code calculates 12-month rolling averages; a smaller number of months will be <em>more susceptible to short-term changes</em> such as business cycles or seasonal employment. On the flip side, a high number of months will <em>smooth out shorter-term or temporary changes</em>, like the effects of recent policy, but will include <em>more robust sample sizes</em>. Consider this when deciding how many months (or other measure) to include.</p>
+<section id="calculate-epops" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-epops">Calculate EPOPs</h2>
+<p>This code chunk creates a universe variable that restrictions the data to observations with employment data (i.e., excludes NA responses). The the code divides the total weighted number of employed people (<code>count</code>) by the total universe count. The output lists EPOPs, total counts, and sample sizes by month and year.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>epop_all <span class="ot">&lt;-</span> basic <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Optional: filter to calculate prime-age EPOPS</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(prime_age <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate EPOP as the weighted mean of 'emp' variable</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">epop =</span> <span class="fu">weighted.mean</span>(emp, <span class="at">w =</span> basicwgt),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span>date) <span class="sc">|&gt;</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">all_epop12 =</span> <span class="fu">rollmean</span>(epop, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">all_sample12 =</span> <span class="fu">rollsum</span>(n, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, all_epop12, all_sample12) <span class="sc">|&gt;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Suppress data with sample size of &lt; 250</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">all_epop12 =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(all_sample12) <span class="sc">|</span> all_sample12 <span class="sc">&lt;</span> <span class="dv">250</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">NA_real_</span>, all_epop12))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: calculate monthly weighted counts, universe, and sample size </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>monthly_data <span class="ot">&lt;-</span> cps_data <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">universe =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(emp), <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">#swap out emp here for another variable to calculate a different statistic</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">sum</span>(emp <span class="sc">*</span> weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">universe_total =</span> <span class="fu">sum</span>(universe <span class="sc">*</span> weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sample_size =</span> <span class="fu">sum</span>(universe, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> <span class="fu">c</span>(year, month)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">percent =</span> count <span class="sc">/</span> universe_total) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="calculate-epops-by-raceethnicity-and-format-output" class="level3">
-<h3 class="anchored" data-anchor-id="calculate-epops-by-raceethnicity-and-format-output">Calculate EPOPs by race/ethnicity and format output</h3>
-<p>This section adds code that breaks out EPOPs by race/ethnicity, using the <code>wbhao</code> variable. It also pivots the data so that each race/ethnicity group is its own column.</p>
+<section id="calculate-rolling-average" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-rolling-average">Calculate rolling average</h3>
+<p>This section smooths the data over a calendar year. The <code>slide_index</code> function takes a certain number of <strong>calendar months</strong> as an input, rather than a fixed number of rows (in this case, months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. Alternative methods often only accept a constant number of rows, and so will look back farther (i.e., at extra months) if any are missing.</p>
+<p>In other words, a 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This method will adapt to any gaps in the data and maintain a consistent average.</p>
+<p>In order to <strong>change the rolling length</strong>, change the <code>months(x)</code> value. This code calculates 12-month rolling averages; a smaller number of months will be <em>more susceptible to short-term changes</em> such as business cycles or seasonal employment. On the flip side, a high number of months will <em>smooth out shorter-term or temporary changes</em>, like the effects of recent policy, but will include <em>more robust sample sizes</em>. Consider this when deciding how many months (or other measure) to include.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>epop_race <span class="ot">&lt;-</span> basic <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">epop =</span> <span class="fu">weighted.mean</span>(emp, <span class="at">w =</span> basicwgt),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(wbhao, date)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">to_factor</span>(wbhao)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure correct order within each racial/ethnic category</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(race, date) <span class="sc">|&gt;</span>  </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute rolling mean per 'race' group</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(race) <span class="sc">|&gt;</span>       </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">epop12 =</span> <span class="fu">rollmean</span>(epop, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">sample12 =</span> <span class="fu">rollsum</span>(n, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, race, epop12, sample12) <span class="sc">|&gt;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pivot the data to display each race/ethnicity as its own column with appropriate label</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> race,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> <span class="fu">c</span>(epop12, sample12),</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_glue =</span> <span class="st">"{race}_{.value}"</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>smoothed_monthly_data <span class="ot">&lt;-</span> monthly_data <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(year, month, <span class="st">"01"</span>, <span class="at">sep =</span> <span class="st">"-"</span>))) <span class="sc">|&gt;</span>  <span class="co">#format date label               </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(date) <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="fu">slide_index_dbl</span>(percent, date, mean, <span class="at">.before =</span> <span class="fu">months</span>(<span class="dv">11</span>), <span class="at">.complete =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">count =</span> <span class="fu">slide_index_dbl</span>(count, date, mean, <span class="at">.before =</span> <span class="fu">months</span>(<span class="dv">11</span>), <span class="at">.complete =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">sample_size =</span> <span class="fu">slide_index_dbl</span>(sample_size, date, sum, <span class="at">.before =</span> <span class="fu">months</span>(<span class="dv">11</span>), <span class="at">.complete =</span> <span class="cn">TRUE</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-</section>
-<section id="export-your-data-to-a-downloadable-excel" class="level2">
-<h2 class="anchored" data-anchor-id="export-your-data-to-a-downloadable-excel">Export your data to a downloadable Excel</h2>
-<p>Use <code>openxlsx2</code> to create a downloadable Excel. Don’t forget to <strong>edit the file path</strong> to ensure it saves to the right location.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  Export epop tables to one workbook </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">wb_workbook</span>()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>wb<span class="sc">$</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add worksheet</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_worksheet</span>(<span class="at">sheet =</span> <span class="st">"US EPOPs"</span>)<span class="sc">$</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_data</span>(<span class="at">x =</span> epop_all)<span class="sc">$</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_worksheet</span>(<span class="at">sheet =</span> <span class="st">"EPOPs by race"</span>)<span class="sc">$</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_data</span>(<span class="at">x =</span> epop_race)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">wb_save</span>(wb, <span class="at">file =</span> <span class="st">"output/epop_tables.xlsx"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>And that’s it! You can benchmark your data to the <a href="https://data.epi.org/labor_force/labor_force_emp/line/month/national/percent_emp_12_month/overall?timeStart=1976-12-01&amp;timeEnd=2025-12-01&amp;dateString=2024-11-01&amp;highlightedLines=overall">State of Working America Data Library</a> before filtering to specific states or demographic cuts to ensure reliability. As always, be sure to keep an eye on those sample sizes!</p>
+<p>And that’s it! You can alter this code to look at specific demographic cuts, such as filtering to specific racial/ethnic groups or to prime-age (24-54 year old) workers. You can also use this code to look at other variables–the rolling average section is written ambigously enough to allow for many different variables.</p>
+<p>I’d also recommend benchmarking your data to the <a href="https://data.epi.org/labor_force/labor_force_emp/line/month/national/percent_emp_12_month/overall?timeStart=1976-12-01&amp;timeEnd=2025-12-01&amp;dateString=2024-11-01&amp;highlightedLines=overall">State of Working America Data Library</a> to ensure reliability. As always, be sure to keep an eye on those sample sizes!</p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1078,13 +1053,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./tidycensus_example.html" class="pagination-link" aria-label="Load Census tables via Tidycensus">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Load Census tables via Tidycensus</span>
+      <a href="./rtw_definitions.html" class="pagination-link" aria-label="Right-to-work status by state, over time">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Right-to-work status by state, over time</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./rtw_definitions.html" class="pagination-link" aria-label="Right-to-work status by state, over time">
-        <span class="nav-page-text">Right-to-work status by state, over time</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./median_wages_demos.html" class="pagination-link" aria-label="State-level median wages by demographic">
+        <span class="nav-page-text">State-level median wages by demographic</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

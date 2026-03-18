@@ -127,5 +127,11 @@
   },
   "rtw_definitions.qmd": {
     "rtw_definitions.html": "45bf019b"
+  },
+  "rolling_average.qmd": {
+    "rolling_average.html": "1b3b3727"
+  },
+  "old_rolling_averages.qmd": {
+    "old_rolling_averages.html": "da57e930"
   }
 }

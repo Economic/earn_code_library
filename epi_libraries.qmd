@@ -4,6 +4,13 @@ title: "EPI packages for R"
 
 Installation instructions are available on each package’s Github page.
 
+[epiverse](https://economic.github.io/epiverse/)
+
+-   now you can load all of EPI's R packages in one go! `epiverse` includes the libraries you know and love (realtalk, epidatatools, and epiextractr), as well as two hot new packages!
+    -   [prefab](https://economic.github.io/prefab/) is an opinionated theme system for R project scaffolding
+
+    -   [swadlr](https://economic.github.io/swadlr/) allows users to pull and manipulate data from the [State of Working America Data Library](https://data.epi.org/)
+
 [realtalk](https://economic.github.io/realtalk/)
 
 -   realtalk makes it easy to load and use common US price indexes in R.

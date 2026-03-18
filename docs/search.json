@@ -91,257 +91,147 @@
     ]
   },
   {
-    "objectID": "bootcamp_preview.html",
-    "href": "bootcamp_preview.html",
-    "title": "EARNCon 2023 Bootcamp Preview",
+    "objectID": "old_rolling_averages.html",
+    "href": "old_rolling_averages.html",
+    "title": "(Monthly) rolling averages - ARCHIVED",
     "section": "",
-    "text": "Welcome to the EARNCon 2023 data bootcamp preview page!\nThis step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization."
-  },
-  {
-    "objectID": "bootcamp_preview.html#agenda",
-    "href": "bootcamp_preview.html#agenda",
-    "title": "EARNCon 2023 Bootcamp Preview",
-    "section": "Agenda",
-    "text": "Agenda\nFacilitators: Daniel Perez & Sebastian Hickey\nEARNTalk date: Thursday, September 21st, 2023. 2-3:00 p.m. ET\nProcess:\n\nEARN Code Library preview\nDownloading and installing R and RStudio Desktop\nExploring the RStudio user interface\n\nDemonstrate\n\nSetting a working directory\nCreating a project\nDownloading packages that will be used at EARNCon\nCreating a script\n\n\nRegistering for Tableau Public\n\n\nEARN Code Library preview\nWe’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.\n\n\nDownloading and installing R and Rstudio desktop\nInstalling R and RStudio on work machines can sometimes be challenging due to a variety of reasons.\n\nSome common issues (and resolutions):\n\nAdministrative Privileges: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.\n\nResolution: Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.\n\nFirewall and Network Restrictions: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).\n\nResolution: Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.\n\nDependency Issues: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.\n\nResolution: Ensure that all required dependencies are installed. You can use the install.packages() function with the dependencies=TRUE argument in R to automatically install package dependencies.\n\nOperating System Specific Issues: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.\n\nResolution: Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like apt-get or yum can be used to install the necessary libraries.\n\nPackage Binary vs. Source Installation: On some systems, users might encounter issues when trying to install package binaries.\n\nResolution: Ensure you have the necessary development tools installed (like gcc on Linux or Xcode on macOS). When installing a package in R, you can use the type=\"source\" argument with install.packages() to install from source.\n\nMismatched Versions: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.\n\nResolution: Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.\n\nRtools Installation (Windows only): Rtools is essential for building and installing some R packages from source on Windows.\n\nResolution: Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.\n\n\n\n\nEnough talk, time to download!\n\nNavigate to https://posit.co/downloads/"
-  },
-  {
-    "objectID": "median_wages_demos.html",
-    "href": "median_wages_demos.html",
-    "title": "State-level median wages by demographic",
-    "section": "",
-    "text": "Use this code to find median wages and sample sizes by various demographics (race, gender, race and gender, and educational attainment) using the EPI CPS microdata extracts.\nPlease note: these data are already available on the State of Working American Data Library. However, due to small sample sizes, some cuts of these data are suppressed. You can use this code to generate all data, regardless of sample size, but be careful when making claims about data with small sample sizes.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. We’ll also set up a wb value that will allow us to generate an Excel workbook.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)\nlibrary(openxlsx2)\n\n#Set up workbook\nwb &lt;- wb_workbook()",
+    "text": "Note: this code is outdated and does not account for missing October 2025 CPS data. For the new rolling calculation methodology, see here.\nThis script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs).",
     "crumbs": [
       "R Code Repository",
-      "State-level median wages by demographic"
+      "Archive",
+      "(Monthly) rolling averages - ARCHIVED"
     ]
   },
   {
-    "objectID": "median_wages_demos.html#set-up-for-inflation-adjusting",
-    "href": "median_wages_demos.html#set-up-for-inflation-adjusting",
-    "title": "State-level median wages by demographic",
-    "section": "Set up for inflation adjusting",
-    "text": "Set up for inflation adjusting\nEPI uses the chained CPI-U series to inflation adjust wages (use chained extended for analysis pre-2000), so we’ll select that series and assign it to a dataframe.\n\n# pulling in chained CPI-U series\ncpi_data &lt;- realtalk::c_cpi_u_extended_annual\n\n# set base year to 2024\ncpi2024 &lt;- cpi_data$c_cpi_u_extended[cpi_data$year==2024]",
-    "crumbs": [
-      "R Code Repository",
-      "State-level median wages by demographic"
-    ]
-  },
-  {
-    "objectID": "median_wages_demos.html#import-and-clean-data",
-    "href": "median_wages_demos.html#import-and-clean-data",
-    "title": "State-level median wages by demographic",
-    "section": "Import and clean data",
-    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate median wages.\nWe’ll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We’ll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages.\n\n#load in CPS ORG data\ncps_org &lt;- load_cps(\"org\", 1979:2024, year, orgwgt, wage, statefips, female, wbho, age, \n                                      selfemp, emp, selfinc, cow1, educ, gradeatn) %&gt;%\n  # Standard labor force and age restrictions, restrict to only Wisconsin (statefips code = 55)\n  filter(age &gt;= 16, emp == 1, statefips == 55,\n         case_when(year &lt; 1989 ~ selfemp == 0,\n                   year &gt;= 1989 & year &lt; 1994 ~ selfemp == 0 | selfinc == 0,\n                   TRUE ~ cow1 &lt;= 5)) %&gt;% \n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') %&gt;%\n  # Inflation adjust wages to 2024$\n  mutate(realwage = wage * (cpi2024/c_cpi_u_extended))",
-    "crumbs": [
-      "R Code Repository",
-      "State-level median wages by demographic"
-    ]
-  },
-  {
-    "objectID": "median_wages_demos.html#sheet-1-wages-by-race-gender-and-race-and-gender.",
-    "href": "median_wages_demos.html#sheet-1-wages-by-race-gender-and-race-and-gender.",
-    "title": "State-level median wages by demographic",
-    "section": "Sheet 1: Wages by race, gender, and race and gender.",
-    "text": "Sheet 1: Wages by race, gender, and race and gender.\nThis section of the script produces median wages by year and by various demographic cuts. Here we use EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per year per demographic cut.\n\nMedian wages by gender\n\nwages_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(female, year)) |&gt;\n  #Relabel for clarity\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = gender, values_from = wage_median)\n\n\n\nMedian wages by race\n\nwages_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, year)) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = wbho, values_from = wage_median)\n\n\n\nMedian wages by race and gender\n\nwages_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  #Relabel for clarity\n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = demographic, values_from = wage_median)\n\n\n\nFormat and save output\nHere we’ll join all three dataframes into one, order our variables, and save the new dataframe to a sheet in our Excel workbook.\n\n#Join the three dataframes by year\nwage_demos &lt;-  left_join(wages_gender, wages_race, by='year') |&gt;\n  left_join(wages_race_gender) |&gt; \n  #Order the columns\n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Create a new sheet and add data to sheet\nwb$add_worksheet(sheet = \"Race and gender_median wages\") $\n  add_data(x = wage_demos)",
-    "crumbs": [
-      "R Code Repository",
-      "State-level median wages by demographic"
-    ]
-  },
-  {
-    "objectID": "median_wages_demos.html#sheet-2-sample-sizes",
-    "href": "median_wages_demos.html#sheet-2-sample-sizes",
-    "title": "State-level median wages by demographic",
-    "section": "Sheet 2: Sample sizes",
-    "text": "Sheet 2: Sample sizes\nThis code chunk follows the exact same steps as the section above, except it generates sample sizes instead of median wages. It is extremely important to reference this sheet when making claims about the data. Avoid relying on data drawn from small sample sizes.\n\n#By gender\nsample_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(female, year)) |&gt;\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = gender, values_from = n)\n\n#By race\nsample_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarize(n=n(),\n            .by = c(wbho, year)) |&gt; \n  pivot_wider(id_cols = year, names_from = wbho, values_from = n)\n\n#By race and gender\nsample_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = demographic, values_from = n)\n\n#Join dataframes\nsample_sizes &lt;-  left_join(sample_gender, sample_race, by='year') |&gt;\n  left_join(sample_race_gender) |&gt; \n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Save to Excel\nwb$add_worksheet(sheet = \"Sample sizes\") $\n  add_data(x = sample_sizes)",
-    "crumbs": [
-      "R Code Repository",
-      "State-level median wages by demographic"
-    ]
-  },
-  {
-    "objectID": "median_wages_demos.html#sheet-3-wages-by-educational-attainment",
-    "href": "median_wages_demos.html#sheet-3-wages-by-educational-attainment",
-    "title": "State-level median wages by demographic",
-    "section": "Sheet 3: Wages by educational attainment",
-    "text": "Sheet 3: Wages by educational attainment\nFinally, this code chunk generates median wages by educational attainment. The code uses the same weighted median wage methodology as above.\nIt also includes two sets of custom educational categories, which you can exclude or modify as needed. See the EPI Microdata variables list to learn how the gradeatn variable is categorized by default.\n\nFilter the data\nThe gradeatn variable is only available from 1992, so first we need to filter the data to exclude irrelevant years.\n\nnew_cps_org &lt;- filter(cps_org, year &gt;= 1992)\n\n\n\nCalculate wages by education level\nNow we’ll run the code. The first part of both sections of code here creates custom educational attainment categories. The second part calulcates wages.\n\n#Single category Associate degree\nwages_sing_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 | gradeatn == 12 ~ \"Associate degree-all\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n#Two category Associate degree\nwages_two_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 ~ \"Associate degree-occupational/vocational\",\n                          gradeatn == 12 ~ \"Associate degree-academic program\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n\n\nFormat and save output\nHere we’ll save our two dataframes to a new Excel sheet, formatting the output so both dataframes fit on a single sheet.\n\nwb$add_worksheet(sheet = \"Education median wages\") $\n  add_data(x = wages_sing_assoc, start_col = 1) $\n  add_data(x = wages_two_assoc, start_col = 8)",
-    "crumbs": [
-      "R Code Repository",
-      "State-level median wages by demographic"
-    ]
-  },
-  {
-    "objectID": "median_wages_demos.html#save-your-workbook",
-    "href": "median_wages_demos.html#save-your-workbook",
-    "title": "State-level median wages by demographic",
-    "section": "Save your workbook",
-    "text": "Save your workbook\nNote: Don’t forget to file names and file paths to match your setup before running this code chunk.\n\nwb_save(wb, \"output/wisconsin_wages_2025.xlsx\")\n\nAll done! Happy coding!",
-    "crumbs": [
-      "R Code Repository",
-      "State-level median wages by demographic"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html",
-    "href": "viz_workshop.html",
-    "title": "Visualizing Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#welcome-to-the-visualizing-data-training",
-    "href": "viz_workshop.html#welcome-to-the-visualizing-data-training",
-    "title": "Visualizing Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#introduction",
-    "href": "viz_workshop.html#introduction",
-    "title": "Visualizing Data",
-    "section": "1. Introduction",
-    "text": "1. Introduction\n\n\n\n1.1 Brief overview of ggplot2\n\n\nggplot2 is a data visualization package for R that allows users to create complex plots in a structured manner. It’s based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.\n\n\n1.2 Philosophy behind ggplot2\n\n\nAt the core of ggplot2 is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#basic-chart-creation",
-    "href": "viz_workshop.html#basic-chart-creation",
-    "title": "Visualizing Data",
-    "section": "2. Basic chart creation",
-    "text": "2. Basic chart creation\n\n2.1. Basic syntax: The Big Three\n\n\n\nggplot()\naes()\ngeom_point()\n\nThe foundation of any ggplot2 visualization starts with the ggplot() function. Within ggplot(), we call aes() to designate aesthetic mappings, and then append geometries like geom_point() to visually represent data points.\n\n\n2.2. Practical example\n\n\nUsing the mtcars dataset, we’ll illustrate the relationship between a car’s horsepower (hp) and its fuel efficiency (mpg).\n\n#First thing first, install Tidyverse using\n\n# install.packages('tidyverse')\n# install.packages('highcharter')\n\n#Load tidyverse library\nlibrary(tidyverse)\nlibrary(here)\n\nmtcars &lt;- mtcars\n\nA simple scatter plot:\n\n# A simple scatter\nggplot(data = mtcars, aes(x=mpg, y=hp)) +\n  geom_point()\n\n\n\n\n\n\n\n\nA simple histogram using geom_histogram()\n\nggplot(mtcars, aes(x=mpg)) + \n  geom_histogram(binwidth=3)",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#adding-layers-and-customizations",
-    "href": "viz_workshop.html#adding-layers-and-customizations",
-    "title": "Visualizing Data",
-    "section": "3. Adding layers and customizations",
-    "text": "3. Adding layers and customizations\n\n\n\n# Load some data from Github. \n# Major industries, union density, real median wages, and employment. 2000 to 2022\nind_data &lt;- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))\n\n# ind_data &lt;- read_csv(file = here('data/industry_union_wage_emp.csv'), col_names = TRUE)\n\n#Keep 2022 data\nind_data2022 &lt;- ind_data %&gt;%  \n  filter(year==2022)\n\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\n3.1 Adding geometries\n\n\nAn insightful visualization often arises from combining various layers and customizing aesthetics.\nBuilding on our scatter plot from earlier, let’s include a smoothed line to better discern the relationship between mpg and hp:\n\nggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point() +\n  # Add a smoothed line with customized aesthetics\n  geom_smooth(method = 'lm', se = FALSE, col = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\nThe geom_smooth() with method=“lm” adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we’ve chosen a distinct red color for the line.\n\n\n3.2 Customizing Aesthetics\n\n\nA major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.\nFor instance, modifying the scatter plot by adjusting point properties:\n\n#Bar chart with colors\nggplot(data=ind_data2022, aes(x=mind16, y=real_med_wage, fill=mind16))+\n  geom_col()\n\n\n\n\n\n\n\n#Bubble scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, size=(total_emp/1000))) +\n  geom_point()\n\n\n\n\n\n\n\n#Bubble color scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + \n  geom_point()\n\n\n\n\n\n\n\n\nLayering and customization in ggplot2 ensures your visualizations are both visually appealing and insightful.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#customizing-plots-with-labels-and-themes",
-    "href": "viz_workshop.html#customizing-plots-with-labels-and-themes",
-    "title": "Visualizing Data",
-    "section": "4. Customizing Plots with labels and themes",
-    "text": "4. Customizing Plots with labels and themes\n\n4.1. Labeling and Titling\n\n\nLabeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.\nHere’s how to add a title, x-axis label, and y-axis label to our scatter plot with the labs() function:\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who \\n are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.')\n\n\n\n\n\n\n\n\n\n\n4.2. Adjusting Text Elements\n\n\nText elements such as titles, axis labels, and annotations can be modified to better fit your plot’s aesthetic or to match specific publication requirements.\nHere’s an example of adjusting the legend’s size and position\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  # labs() function to add labels\n\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\n\n\n4.3. Themes in ggplot2\n\n\nggplot2 offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.\nFor instance, let’s take the line chart we’ve been working with and apply a black and white theme:\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Note: Every subsequent theme() will supersede the previous. So be mindful!\n  theme_bw() +\n  # theme_dark() + \n  # theme_light() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\nNow, let’s try using pre-made theme. ThemePark by Matthew B. Jane\n\ninstall.packages(\"remotes\")\n\nInstalling package into '/home/ecohn/R/x86_64-pc-linux-gnu-library/4.4'\n(as 'lib' is unspecified)\n\nremotes::install_github(\"MatthewBJane/ThemePark\")\n\nSkipping install of 'ThemePark' from a github remote, the SHA1 (30989dac) has not changed since last install.\n  Use `force = TRUE` to force installation\n\nlibrary(ThemePark)\n\nthemepark_themes\n\n              theme                     creator\n1            barbie             Matthew B. Jané\n2       oppenheimer Matthew B. Jané & Toki Liam\n3          starwars             Matthew B. Jané\n4             zelda               Alex Slavenko\n5        terminator               Alex Slavenko\n6         spiderman           Velu P.K. Immonen\n7            avatar           Velu P.K. Immonen\n8        gryffindor                Begum Ozemek\n9        hufflepuff                Begum Ozemek\n10        ravenclaw                Begum Ozemek\n11        slytherin                Begum Ozemek\n12         futurama             Tylor J. Harlow\n13         simpsons             Tylor J. Harlow\n14   lordoftherings                 Ethan Milne\n15    gameofthrones              Brennan Antone\n16        godfather      Francisco Garre-Frutos\n17             nemo        Christopher T. Kenny\n18          friends         Alexis van STRAATEN\n19            alien                Luke Pilling\n20   grand_budapest               Katya Kustova\n21    asteroid_city               Katya Kustova\n22  french_dispatch               Katya Kustova\n23 moonrise_kingdom               Katya Kustova\n24              elf        Christopher T. Kenny\n\n\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Theme\n  theme_minimal()+\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))+\n  \n  theme_barbie()\n\n\n\n\n\n\n\n\n[Insert EARN/EPI/CGI example]?\nMastering these customization techniques will make your plots informative, engaging, and tailored for their intended audience!",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#exporting-your-plot",
-    "href": "viz_workshop.html#exporting-your-plot",
-    "title": "Visualizing Data",
-    "section": "5. Exporting your plot",
-    "text": "5. Exporting your plot\n\n\nNow to export your ggplot for the refrigerator\n\nfinal_plot &lt;- ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  theme_minimal() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n5.1 Saving your ggplot\n\n# Our chart object\nfinal_plot\n\n\n\n\n\n\n\nggsave(plot = final_plot,\n       #name of our chart\n       filename = 'final_union_industry_scatter.png',\n       # Save location for our chart\n       path = here('output/'), \n       # Dots per inch (300+ is considered high-res)\n       dpi = 300)\n\nSaving 7 x 5 in image",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#advanced-plot-types",
-    "href": "viz_workshop.html#advanced-plot-types",
-    "title": "Visualizing Data",
-    "section": "6. Advanced Plot Types",
-    "text": "6. Advanced Plot Types\n\n6.1. Faceting and Multi-panel Plots\n\n\nFaceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.\nLet’s view scatter plots of mpg vs. hp but facet them by the number of cylinders:\n\nggplot(mtcars, aes(y=hp, x=mpg))+\n  geom_point()+\n  facet_wrap(~cyl)\n\n\n\n\n\n\n\nind_data_years &lt;- ind_data %&gt;% \n  filter(year %in% c(2000, 2008, 2022))\n\nggplot(ind_data_years, aes(x=union_density, y=real_med_wage)) + \n  geom_point() + \n  facet_wrap(~year) +\n  theme_bw()\n\n\n\n\n\n\n\n\n\n\n6.3. Interactive charts\n\n#install.packages('highcharter')\nlibrary(highcharter)\n\n\n#Line chart with colors\n\nlinechart &lt;- highchart() %&gt;%\n  \n  hc_add_series(data = ind_data, hcaes(x = year, y = union_density, group = mind16), \n                type = 'line')\n\nlinechart\n\n\n\n\n\nAdvanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "viz_workshop.html#resources-for-layer-based-chart-visualization",
-    "href": "viz_workshop.html#resources-for-layer-based-chart-visualization",
-    "title": "Visualizing Data",
-    "section": "7.0 Resources for layer-based chart visualization!",
-    "text": "7.0 Resources for layer-based chart visualization!\n\nOfficial Tidyverse page for ggplot2 https://ggplot2.tidyverse.org/index.html\nR Graphics Cookbook\nHighcharter package for interactive charts",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Visualizing Data"
-    ]
-  },
-  {
-    "objectID": "rolling_averages.html",
-    "href": "rolling_averages.html",
-    "title": "(Monthly) rolling averages",
-    "section": "",
-    "text": "This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.",
-    "crumbs": [
-      "R Code Repository",
-      "(Monthly) rolling averages"
-    ]
-  },
-  {
-    "objectID": "rolling_averages.html#load-required-libraries",
-    "href": "rolling_averages.html#load-required-libraries",
-    "title": "(Monthly) rolling averages",
+    "objectID": "old_rolling_averages.html#load-required-libraries",
+    "href": "old_rolling_averages.html#load-required-libraries",
+    "title": "(Monthly) rolling averages - ARCHIVED",
     "section": "Load required libraries",
     "text": "Load required libraries\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run EPI CPS microdata extracts, complete that process before running this code.\n\n#Load necessary libraries\nlibrary(tidyverse) #this package contains most common R functions\nlibrary(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts\nlibrary(labelled) #allows you to easily clean data; includes functions like 'to_factor'\nlibrary(zoo) #contains functions like rollmean and rollsum\nlibrary(openxlsx2) #allows you to format and export data to an Excel workbook",
     "crumbs": [
       "R Code Repository",
-      "(Monthly) rolling averages"
+      "Archive",
+      "(Monthly) rolling averages - ARCHIVED"
     ]
   },
   {
-    "objectID": "rolling_averages.html#import-and-clean-data",
-    "href": "rolling_averages.html#import-and-clean-data",
-    "title": "(Monthly) rolling averages",
+    "objectID": "old_rolling_averages.html#import-and-clean-data",
+    "href": "old_rolling_averages.html#import-and-clean-data",
+    "title": "(Monthly) rolling averages - ARCHIVED",
     "section": "Import and clean data",
     "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs. It will also create a variable that will allow you to calculate prime-age EPOPs and set up some date formatting for the rolling average calculation later.\n\n# Import CPS ORG data\nbasic &lt;- load_basic(2018:2024, \"year\", \"month\", \"basicwgt\", \"age\", \"wbhao\", \"selfinc\", \"emp\") |&gt;\n  #Filter to working age population with employment information\n  filter(age &gt;= 16, !is.na(emp)) |&gt; \n  # Create prime-age variable\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0)) |&gt; \n  # Create date in yyyy-mm-dd format\n  mutate(date = ymd(paste0(year,'-', month,'-1')))",
     "crumbs": [
       "R Code Repository",
-      "(Monthly) rolling averages"
+      "Archive",
+      "(Monthly) rolling averages - ARCHIVED"
     ]
   },
   {
-    "objectID": "rolling_averages.html#calculate-monthly-rolling-averages-for-epops",
-    "href": "rolling_averages.html#calculate-monthly-rolling-averages-for-epops",
-    "title": "(Monthly) rolling averages",
+    "objectID": "old_rolling_averages.html#calculate-monthly-rolling-averages-for-epops",
+    "href": "old_rolling_averages.html#calculate-monthly-rolling-averages-for-epops",
+    "title": "(Monthly) rolling averages - ARCHIVED",
     "section": "Calculate monthly rolling averages for EPOPs",
     "text": "Calculate monthly rolling averages for EPOPs\nThis code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable emp (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.\nIn order to change the rolling length, change the k value. This code calculates 12-month rolling averages; a smaller number of months will be more susceptible to short-term changes such as business cycles or seasonal employment. On the flip side, a high number of months will smooth out shorter-term or temporary changes, like the effects of recent policy, but will include more robust sample sizes. Consider this when deciding how many months (or other measure) to include.\n\nepop_all &lt;- basic |&gt;\n  # Optional: filter to calculate prime-age EPOPS\n  filter(prime_age == 1) |&gt; \n  # Calculate EPOP as the weighted mean of 'emp' variable\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=date) |&gt; \n# Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size\n  mutate(all_epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         all_sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  select(date, all_epop12, all_sample12) |&gt;\n  # Suppress data with sample size of &lt; 250\n  mutate(all_epop12 = if_else(is.na(all_sample12) | all_sample12 &lt; 250,\n                            NA_real_, all_epop12))\n\n\nCalculate EPOPs by race/ethnicity and format output\nThis section adds code that breaks out EPOPs by race/ethnicity, using the wbhao variable. It also pivots the data so that each race/ethnicity group is its own column.\n\nepop_race &lt;- basic |&gt;\n  summarise(epop = weighted.mean(emp, w = basicwgt),\n            n=n(),\n            .by=c(wbhao, date)) |&gt; \n  mutate(race = to_factor(wbhao)) |&gt; \n  # Ensure correct order within each racial/ethnic category\n  arrange(race, date) |&gt;  \n  # Compute rolling mean per 'race' group\n  group_by(race) |&gt;       \n  mutate(epop12 = rollmean(epop, k = 12, align = \"right\", fill = NA),\n         sample12 = rollsum(n, k = 12, align = \"right\", fill = NA)) |&gt; \n  ungroup() |&gt; \n  select(date, race, epop12, sample12) |&gt;\n  # Pivot the data to display each race/ethnicity as its own column with appropriate label\n  pivot_wider(\n    names_from = race,\n    values_from = c(epop12, sample12),\n    names_glue = \"{race}_{.value}\"\n  )",
     "crumbs": [
       "R Code Repository",
-      "(Monthly) rolling averages"
+      "Archive",
+      "(Monthly) rolling averages - ARCHIVED"
     ]
   },
   {
-    "objectID": "rolling_averages.html#export-your-data-to-a-downloadable-excel",
-    "href": "rolling_averages.html#export-your-data-to-a-downloadable-excel",
-    "title": "(Monthly) rolling averages",
+    "objectID": "old_rolling_averages.html#export-your-data-to-a-downloadable-excel",
+    "href": "old_rolling_averages.html#export-your-data-to-a-downloadable-excel",
+    "title": "(Monthly) rolling averages - ARCHIVED",
     "section": "Export your data to a downloadable Excel",
     "text": "Export your data to a downloadable Excel\nUse openxlsx2 to create a downloadable Excel. Don’t forget to edit the file path to ensure it saves to the right location.\n\n#  Export epop tables to one workbook \nwb &lt;- wb_workbook()\n\nwb$ \n  # Add worksheet\n  add_worksheet(sheet = \"US EPOPs\")$\n  add_data(x = epop_all)$\n  add_worksheet(sheet = \"EPOPs by race\")$\n  add_data(x = epop_race)\n\nwb_save(wb, file = \"output/epop_tables.xlsx\", overwrite = TRUE)\n\nAnd that’s it! You can benchmark your data to the State of Working America Data Library before filtering to specific states or demographic cuts to ensure reliability. As always, be sure to keep an eye on those sample sizes!",
     "crumbs": [
       "R Code Repository",
-      "(Monthly) rolling averages"
+      "Archive",
+      "(Monthly) rolling averages - ARCHIVED"
+    ]
+  },
+  {
+    "objectID": "epi_microdata.html",
+    "href": "epi_microdata.html",
+    "title": "Load EPI CPS Extracts via epiextractr",
+    "section": "",
+    "text": "Note: Users will need to install epiextractr for this example. Refer to EPI packages for R for installation instructions.\n\nLoad required libraries\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\n\n\nDownload CPS files\n\n# download CPS ORG files  \ndownload_cps( sample = 'org', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS Basic (4085.3 MB) \ndownload_cps(sample='basic', extracts_dir ='C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS May (38.8 MB)\ndownload_cps(sample='may', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\nThis will download the latest EPI CPS ORG extracts in .feather format from https://microdata.epi.org and place them in the directory C:\\data\\cps.\n\n\nLoad your CPS extracts!\nAfter the data is downloaded, load a selection of CPS data for your analysis:\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho, \n                .extracts_dir = 'C:/YOUR_PATH/cps')\n\n\n\n(Optional) Set and forget CPS data files by creating/editing an .Renviron file\nTo simplify usage, you can omit the .extracts_dir argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.\n\n# Find the .Renviron file\nrenviron_path &lt;- file.path(Sys.getenv(\"HOME\"), \".Renviron\")\n\n# Open the file for editing\nfile.edit(renviron_path)\n\n# Paste the environment variable settings into your .Renviron file,\n# and make sure the paths are set to the location of your CPS files\n\nEPIEXTRACTS_CPSBASIC_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSMAY_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSORG_DIR=C:/YOUR_PATH/cps\n\nAfter editing your .Renviron file, save your changes and restart R to apply them.\nIf you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the .extracts_dir() command\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho)\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "R Code Repository",
+      "Load EPI CPS Extracts via epiextractr"
+    ]
+  },
+  {
+    "objectID": "rtw_definitions.html",
+    "href": "rtw_definitions.html",
+    "title": "Right-to-work status by state, over time",
+    "section": "",
+    "text": "Some states have adopted or, as in the case of Michigan, repealed right-to-work laws at varying times over the last eighty years. These changes make it difficult to accurately compare economic conditions over time on the basis of a state’s right-to-work status.\nUse this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the EPI CPS microdata extracts.\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(labelled)",
+    "crumbs": [
+      "R Code Repository",
+      "Right-to-work status by state, over time"
+    ]
+  },
+  {
+    "objectID": "rtw_definitions.html#import-and-clean-data",
+    "href": "rtw_definitions.html#import-and-clean-data",
+    "title": "Right-to-work status by state, over time",
+    "section": "Import and clean data",
+    "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll reformat the RTW label state_rtw_definitions.csv file into a format that’s easier to process in R.\n\n# read in RTW status by year\nrtw_status_year &lt;- read.csv(\"./input/state_rtw_definitions.csv\") |&gt; \n  pivot_longer(cols = -year, names_to = \"state\", values_to = \"rtw_status\") |&gt; \n  arrange(state, year)\n\nRunning this script chunk will call and clean the BLS Current Population Survey Basic data required to calculate prime age EPOPs. It will also join the rtw_status_years data frame you created to label each state as “RTW” or “Non-RTW” in a given year.\n\n# import CPS Basic data\ncps_basic &lt;- load_basic(2000:2025, \"year\", \"month\", \"selfemp\", \"selfinc\", \"age\", \"statefips\", \"emp\", \"lfstat\",\n              \"cow1\", \"female\", \"wbhao\", \"basicwgt\") |&gt; \n  # Age restrictions\n  filter(age &gt;= 16) |&gt; \n  # identify prime-age (for EPOPs)\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0), state=to_factor(statefips)) |&gt; \n  # merge RTW status\n  left_join(rtw_status_year, by = c(\"year\", \"state\")) |&gt; \n  # adjust for missing Oct data\n  mutate(weight = case_match(year, \n                             2025 ~ basicwgt / 11, \n                             .default = basicwgt / 12))",
+    "crumbs": [
+      "R Code Repository",
+      "Right-to-work status by state, over time"
+    ]
+  },
+  {
+    "objectID": "rtw_definitions.html#run-analysis",
+    "href": "rtw_definitions.html#run-analysis",
+    "title": "Right-to-work status by state, over time",
+    "section": "Run analysis",
+    "text": "Run analysis\nHere you’ll run the analysis to calculate prime age EPOPs by RTW vs. non-RTW states over time.\n\nepop_rtw &lt;- cps_basic |&gt; \n  filter(prime_age == 1) |&gt; \n  # EPOP = weighted mean of employment\n  summarise(epop = weighted.mean(emp, w = weight, na.rm = TRUE), .by = c(year, rtw_status)) |&gt; \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_status, values_from = epop) |&gt; \n  rename(RTW = `1`, non_RTW = `0`)\n\nAnd that’s all! You can easily apply the first two code chunks to any CPS (or other survey) analysis you want to do.\nHappy coding!",
+    "crumbs": [
+      "R Code Repository",
+      "Right-to-work status by state, over time"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!\nPlease note: code samples on this site are not generally updated once published. As a result, they may not reflect current package versions or newer coding practices. Please reach out to ecohn (at) epi (dot) org if you have any questions or are encountering errors with a published script.",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "index.html#about-this-site",
+    "href": "index.html#about-this-site",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!\nPlease note: code samples on this site are not generally updated once published. As a result, they may not reflect current package versions or newer coding practices. Please reach out to ecohn (at) epi (dot) org if you have any questions or are encountering errors with a published script.",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "index.html#user-code-submissions",
+    "href": "index.html#user-code-submissions",
+    "title": "About",
+    "section": "User code submissions",
+    "text": "User code submissions\nHave a coding sample you would like to submit to the EARN code library? Contact ecohn (at) epi (dot) org.\nComponents of a code library submission are:\n\nDescription​\nCode file(s)​\nSupplementary data​\nOutput example\nAuthor contact information",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "index.html#happy-coding",
+    "href": "index.html#happy-coding",
+    "title": "About",
+    "section": "Happy coding!",
+    "text": "Happy coding!\n\n\n# A heart-shaped scatterplot\n\n# Load highcharter library\nlibrary(highcharter)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2 * pi, by = 0.01)\nx &lt;- 16 * sin(t)^3\ny &lt;- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)\n\n# Create our data frame\ndf &lt;- data.frame(x, y)\n\n# Create highcharter plot\nhighchart(type = \"chart\") %&gt;% \n  hc_add_series(data = df, type = \"scatter\", color = \"red\", marker = list(radius = 2)) %&gt;% \n  hc_xAxis(min = -20, max = 20) %&gt;% \n  hc_yAxis(min = -20, max = 15) %&gt;% \n  hc_chart(backgroundColor = \"transparent\") %&gt;% \n  hc_legend(enabled = FALSE)",
+    "crumbs": [
+      "About"
     ]
   },
   {
@@ -422,245 +312,191 @@
     ]
   },
   {
-    "objectID": "prev_bootcamps.html",
-    "href": "prev_bootcamps.html",
-    "title": "EARNCon data bootcamp files",
+    "objectID": "rolling_average.html",
+    "href": "rolling_average.html",
+    "title": "(Monthly) Rolling averages",
     "section": "",
-    "text": "EPI Bootcamp Website",
+    "text": "This script will teach you how to calculate simple monthly rolling averages using CPS data and employment-to-population ratios (EPOPs). It accounts for missing months of data, such as the October 2025 gap due to the government shutdown and resulting lapse in Bureau of Labor Statistics appropriations.",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
+      "R Code Repository",
+      "(Monthly) Rolling averages"
     ]
   },
   {
-    "objectID": "prev_bootcamps.html#data-analysis-in-r-first-steps",
-    "href": "prev_bootcamps.html#data-analysis-in-r-first-steps",
-    "title": "EARNCon data bootcamp files",
-    "section": "Data analysis in R: First steps",
-    "text": "Data analysis in R: First steps\nFirst steps to data analysis in R slides (pdf)\nEPI national wage percentiles data (csv)\n2022 EPI CPS ORG extracts data (zipped .dta)",
+    "objectID": "rolling_average.html#load-required-libraries",
+    "href": "rolling_average.html#load-required-libraries",
+    "title": "(Monthly) Rolling averages",
+    "section": "Load required libraries",
+    "text": "Load required libraries\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run EPI CPS microdata extracts, complete that process before running this code.\n\n#Load necessary libraries\nlibrary(tidyverse) #this package contains most common R functions\nlibrary(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts\nlibrary(slider) #contains the sliding mean function",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
+      "R Code Repository",
+      "(Monthly) Rolling averages"
     ]
   },
   {
-    "objectID": "prev_bootcamps.html#using-apis-to-access-data-in-r",
-    "href": "prev_bootcamps.html#using-apis-to-access-data-in-r",
-    "title": "EARNCon data bootcamp files",
-    "section": "Using APIs to access data in R",
-    "text": "Using APIs to access data in R\nAccessing BLS and Census data (code)",
+    "objectID": "rolling_average.html#import-and-clean-data",
+    "href": "rolling_average.html#import-and-clean-data",
+    "title": "(Monthly) Rolling averages",
+    "section": "Import and clean data",
+    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs.\n\n# Step 1: Import CPS Basic data\ncps_data &lt;- load_basic(2023:2026, year, month, basicwgt, emp, age, cow1) |&gt;  \n    mutate(weight = basicwgt)",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
+      "R Code Repository",
+      "(Monthly) Rolling averages"
     ]
   },
   {
-    "objectID": "prev_bootcamps.html#data-analysis-in-r-video",
-    "href": "prev_bootcamps.html#data-analysis-in-r-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "Data analysis in R (Video)",
-    "text": "Data analysis in R (Video)\nData analysis in R slides\nHistorical minimum wage data\nCPI-U-RS data\nEPI CPS ORG data",
+    "objectID": "rolling_average.html#calculate-epops",
+    "href": "rolling_average.html#calculate-epops",
+    "title": "(Monthly) Rolling averages",
+    "section": "Calculate EPOPs",
+    "text": "Calculate EPOPs\nThis code chunk creates a universe variable that restrictions the data to observations with employment data (i.e., excludes NA responses). The the code divides the total weighted number of employed people (count) by the total universe count. The output lists EPOPs, total counts, and sample sizes by month and year.\n\n# Step 2: calculate monthly weighted counts, universe, and sample size \nmonthly_data &lt;- cps_data |&gt; \n    mutate(universe = if_else(!is.na(emp), 1, 0)) |&gt; \n        #swap out emp here for another variable to calculate a different statistic\n        summarize(count = sum(emp * weight, na.rm = TRUE), \n                  universe_total = sum(universe * weight, na.rm = TRUE), \n                  sample_size = sum(universe, na.rm = TRUE), .by = c(year, month)) |&gt; \n    mutate(percent = count / universe_total) \n\n\nCalculate rolling average\nThis section smooths the data over a calendar year. The slide_index function takes a certain number of calendar months as an input, rather than a fixed number of rows (in this case, months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. Alternative methods often only accept a constant number of rows, and so will look back farther (i.e., at extra months) if any are missing.\nIn other words, a 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This method will adapt to any gaps in the data and maintain a consistent average.\nIn order to change the rolling length, change the months(x) value. This code calculates 12-month rolling averages; a smaller number of months will be more susceptible to short-term changes such as business cycles or seasonal employment. On the flip side, a high number of months will smooth out shorter-term or temporary changes, like the effects of recent policy, but will include more robust sample sizes. Consider this when deciding how many months (or other measure) to include.\n\nsmoothed_monthly_data &lt;- monthly_data |&gt; \n    mutate(date = as.Date(paste(year, month, \"01\", sep = \"-\"))) |&gt;  #format date label               \n    arrange(date) |&gt; \n    mutate(percent = slide_index_dbl(percent, date, mean, .before = months(11), .complete = TRUE), \n          count = slide_index_dbl(count, date, mean, .before = months(11), .complete = TRUE), \n          sample_size = slide_index_dbl(sample_size, date, sum, .before = months(11), .complete = TRUE))  \n\nAnd that’s it! You can alter this code to look at specific demographic cuts, such as filtering to specific racial/ethnic groups or to prime-age (24-54 year old) workers. You can also use this code to look at other variables–the rolling average section is written ambigously enough to allow for many different variables.\nI’d also recommend benchmarking your data to the State of Working America Data Library to ensure reliability. As always, be sure to keep an eye on those sample sizes!",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
+      "R Code Repository",
+      "(Monthly) Rolling averages"
     ]
   },
   {
-    "objectID": "prev_bootcamps.html#code-library-presentation-video",
-    "href": "prev_bootcamps.html#code-library-presentation-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "Code Library Presentation (Video)",
-    "text": "Code Library Presentation (Video)\nCode library powerpoint",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "prev_bootcamps.html#data-analysis-in-stata-video",
-    "href": "prev_bootcamps.html#data-analysis-in-stata-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "Data analysis in Stata (Video)",
-    "text": "Data analysis in Stata (Video)\nData analysis in Stata slides\nStata session do file",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "prev_bootcamps.html#first-steps-in-stata-video",
-    "href": "prev_bootcamps.html#first-steps-in-stata-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "2021 First steps in Stata (Video)",
-    "text": "2021 First steps in Stata (Video)\nStata session 1 slides\nStata session 1 do file\nEPI CPS ORG 2020 stata data file",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "prev_bootcamps.html#using-stata-effectively-video",
-    "href": "prev_bootcamps.html#using-stata-effectively-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "2021 Using Stata effectively (Video)",
-    "text": "2021 Using Stata effectively (Video)\nStata session 2 slides\nStata session 2 do file\nCPI-U-RS data\nEPI CPS ORG 2020 stata data file\nFull EPI CPS ORG (zipped data files)",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "prev_bootcamps.html#first-steps-in-r-video",
-    "href": "prev_bootcamps.html#first-steps-in-r-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "2021 First steps in R (Video)",
-    "text": "2021 First steps in R (Video)\nSlides\nacs_2019.dta\nepi_wage_percentiles.csv\nacs_wage_analysis.R",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "prev_bootcamps.html#using-r-effectively-video",
-    "href": "prev_bootcamps.html#using-r-effectively-video",
-    "title": "EARNCon data bootcamp files",
-    "section": "2021 Using R effectively (Video)",
-    "text": "2021 Using R effectively (Video)\nSlides\nacs_2019.dta\ngeocorr2018.csv\nacs_wage_analysis_LAST_TIME.R\nacs_wage_analysis_FINAL.R",
-    "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "EARNCon data bootcamp files"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html",
-    "href": "blsR_example.html",
-    "title": "Downloading BLS data via blsR",
+    "objectID": "intro_to_r.html",
+    "href": "intro_to_r.html",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "",
-    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
-    "crumbs": [
-      "R Code Repository",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#loading-blsr-and-setting-api-key",
-    "href": "blsR_example.html#loading-blsr-and-setting-api-key",
-    "title": "Downloading BLS data via blsR",
-    "section": "",
-    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
-    "crumbs": [
-      "R Code Repository",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
-    "href": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
-    "title": "Downloading BLS data via blsR",
-    "section": "Nominal average hourly earnings of production and non-supervisory employees",
-    "text": "Nominal average hourly earnings of production and non-supervisory employees\nYou can import a single table using the blsR::get_n_series_table() function:\n\n## use blsR to pull in nominal wages\nnominal_wages &lt;- get_n_series_table(series = \"CEU0500000008\", api_key = bls_key, \n                                    start_year = 1965, end_year = 2023, \n                                    tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter for annual data\n  filter(month == 13)",
-    "crumbs": [
-      "R Code Repository",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
-    "href": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
-    "title": "Downloading BLS data via blsR",
-    "section": "Real average hourly earnings of production and non-supervsory employees",
-    "text": "Real average hourly earnings of production and non-supervsory employees\nYou can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.\n\n# set cpi codes\ncpi_codes &lt;- c(\"CUUR0000SA0\",\n               \"CEU0500000008\")\n\n# set cpi base\n#note: used to set base year for inflation-adjustment\ncpi_base &lt;- get_n_series_table(series_ids = \"CUUR0000SA0\", start_year = 2023, end_year = 2023, \n                               api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual 2023 data and pull CPI value as base\n  filter(month == 13) %&gt;% pull(CUUR0000SA0)\n\n# use blsR to pull CPI data\ncpi_output &lt;- get_n_series_table(series_ids = cpi_codes, start_year = 1947, end_year = 2023, \n                                 api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual data\n  filter(month == 13) %&gt;%\n  # rename for easier handling\n  rename(ahe = CEU0500000008, cpi = CUUR0000SA0) %&gt;% \n  # calculate real wages\n  mutate(ahe_real = ahe * (cpi_base/cpi)) %&gt;% \n  # export to delimited file\n  write.csv(here(\"ahe_real.csv\"))",
-    "crumbs": [
-      "R Code Repository",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "blsR_example.html#pulling-more-than-50-series",
-    "href": "blsR_example.html#pulling-more-than-50-series",
-    "title": "Downloading BLS data via blsR",
-    "section": "Pulling more than 50 series",
-    "text": "Pulling more than 50 series\nThe BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:\n\n# read in bls series codes\n#note: this is a random selection of codes used in our Jobs and Unemployment figures\nbls_codes &lt;- read.csv(here(\"bls_codes.csv\"))\n# remove any blanks\nbls_codes &lt;- bls_codes$series_id[bls_codes$series_id != \"\"]\n\n\n# use map to iteratively call blsR api at max number of series id\n#note: BLS restricts to max 50 series in a single call\njobs_day_df &lt;- map(split(bls_codes, ceiling(seq_along(bls_codes) / 50)), # split codes into groups of 50\n             # call blsR using series ids sliced into groups of 50\n             ~ get_n_series_table(series_ids = .x, start_year = 1939, end_year = 2023, \n                                  api_key = bls_key, tidy = TRUE)) %&gt;% \n  # map returns list, flatten by joining data\n  reduce(., function(df1, df2) full_join(df1, df2, by = c(\"year\", \"month\"))) %&gt;%\n  # define date\n  mutate(date = as.POSIXct(paste(year,month,1, sep = \"-\")),\n         date = as.Date(date)) %&gt;% \n  write_csv(here(\"jobs_day_example.csv\"))",
-    "crumbs": [
-      "R Code Repository",
-      "Downloading BLS data via blsR"
-    ]
-  },
-  {
-    "objectID": "benchmarking_workshop.html",
-    "href": "benchmarking_workshop.html",
-    "title": "Benchmarking Data",
-    "section": "",
-    "text": "This training was originally presented as a workshop at EARNCon 2023.\nBenchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars)) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 2025.9.11\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
+    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode: Prep4R2025!\nPresentation slides",
     "crumbs": [
       "Learn R",
       "Tutorials",
-      "Benchmarking Data"
+      "Installing R & RStudio EARN Talk"
     ]
   },
   {
-    "objectID": "epi_libraries.html",
-    "href": "epi_libraries.html",
-    "title": "EPI packages for R",
+    "objectID": "intro_to_r.html#welcome-to-the-preparing-for-analysis-with-r-landing-page",
+    "href": "intro_to_r.html#welcome-to-the-preparing-for-analysis-with-r-landing-page",
+    "title": "Installing R & RStudio EARN Talk",
     "section": "",
-    "text": "Installation instructions are available on each package’s Github page.\nrealtalk\n\nrealtalk makes it easy to load and use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nuse epiextractr to download CPS data from the EPI microdata site.\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Code Packages",
-      "R Packages"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html",
-    "href": "tidycensus_example.html",
-    "title": "Load Census tables via Tidycensus",
-    "section": "",
-    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# Reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
-    "crumbs": [
-      "R Code Repository",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
-    "href": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
-    "title": "Load Census tables via Tidycensus",
-    "section": "Explore available variables in the ACS 5-year sample",
-    "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
-    "crumbs": [
-      "R Code Repository",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "tidycensus_example.html#examples",
-    "href": "tidycensus_example.html#examples",
-    "title": "Load Census tables via Tidycensus",
-    "section": "Examples",
-    "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
-    "crumbs": [
-      "R Code Repository",
-      "Load Census tables via Tidycensus"
-    ]
-  },
-  {
-    "objectID": "resources.html",
-    "href": "resources.html",
-    "title": "Other Resources",
-    "section": "",
-    "text": "If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to ecohn@epi.org.\nR@Urban\n\nR@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.\n\nR for Data Science by Garrett Grolemund and Hadley Wickham\n\nR for Data Science is a popular book that covers many basic concepts in R, aimed specifically at beginners.\n\nDataScienceR Github\n\nThis Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).\n\nCausal Inference: The Mixtape\n\nThis ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.\n\nCausal Inference in R\n\nThis book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.\n\n\n\n\n Back to top",
+    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode: Prep4R2025!\nPresentation slides",
     "crumbs": [
       "Learn R",
-      "Other Resources"
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#workflow-example",
+    "href": "intro_to_r.html#workflow-example",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Workflow example",
+    "text": "Workflow example\nThis example demonstrates a simple data analysis workflow.\nIn short, we will use the Tidyverse package to load a dataset from a .csv file, describe and analyze the dataset, and export a final analysis to a new .csv file.",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#load-a-library",
+    "href": "intro_to_r.html#load-a-library",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Load a library",
+    "text": "Load a library\nRecall, you can install R packages using the install.packages() command.\n\ninstall.packages('tidyverse')\n\nAfter installing a package, you can load it using the library() command.\n\n# Loading a library \nlibrary(tidyverse)",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#read-data-from-a-csv-file",
+    "href": "intro_to_r.html#read-data-from-a-csv-file",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Read data from a csv file",
+    "text": "Read data from a csv file\n\nDownload the dataset at this link: counties_per_capita_income.csv\nPlace the dataset in your root directory In this case, our data lives in a folder named “data” within this root directory. You can name your folder whatever you’d like!\nUse the read.csv() function to load the data into R.\n\n\ncounties_income &lt;- read.csv(\"data/counties_per_capita_income.csv\")",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#descriptive-analysis",
+    "href": "intro_to_r.html#descriptive-analysis",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Descriptive analysis",
+    "text": "Descriptive analysis\nSome useful commands to describe your dataset\n\n# Print the number of rows and columns in your table \ndim(counties_income)\n\n[1] 3231    8\n\n# View the top 5 rows of your dataset\nhead(counties_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households\n1    1628706            759460\n2     214861             94454\n3      12731              5020\n4     254643            102912\n5    1927852            640215\n6     143684             65369\n\n# List the variable names of your dataset\nnames(counties_income)\n\n[1] \"county\"            \"states\"            \"statefips\"        \n[4] \"pci\"               \"household_income\"  \"family_income\"    \n[7] \"population\"        \"num_of_households\"\n\n# View a transposed table of your data\nglimpse(counties_income)\n\nRows: 3,231\nColumns: 8\n$ county            &lt;chr&gt; \"New York County\", \"Arlington\", \"Falls Church City\",…\n$ states            &lt;chr&gt; \"New York\", \"Virginia\", \"Virginia\", \"California\", \"C…\n$ statefips         &lt;chr&gt; \"36\", \"51\", \"51\", \"6\", \"6\", \"51\", \"8\", \"35\", \"51\", \"…\n$ pci               &lt;int&gt; 76592, 62018, 59088, 56791, 56248, 54608, 51814, 510…\n$ household_income  &lt;int&gt; 69659, 103208, 120000, 90839, 124055, 85706, 72745, …\n$ family_income     &lt;int&gt; 86553, 139244, 152857, 117357, 124055, 107511, 93981…\n$ population        &lt;int&gt; 1628706, 214861, 12731, 254643, 1927852, 143684, 171…\n$ num_of_households &lt;int&gt; 759460, 94454, 5020, 102912, 640215, 65369, 7507, 75…\n\n# Generate summaries for each of your variables\nsummary(counties_income)\n\n    county             states           statefips              pci       \n Length:3231        Length:3231        Length:3231        Min.   : 5441  \n Class :character   Class :character   Class :character   1st Qu.:19674  \n Mode  :character   Mode  :character   Mode  :character   Median :22782  \n                                                          Mean   :23268  \n                                                          3rd Qu.:26136  \n                                                          Max.   :76592  \n household_income family_income      population      num_of_households\n Min.   : 11680   Min.   : 13582   Min.   :     17   Min.   :      6  \n 1st Qu.: 37622   1st Qu.: 46942   1st Qu.:  11232   1st Qu.:   4302  \n Median : 43853   Median : 54461   Median :  25975   Median :   9792  \n Mean   : 45220   Mean   : 55752   Mean   :  97552   Mean   :  36130  \n 3rd Qu.: 50854   3rd Qu.: 62850   3rd Qu.:  65806   3rd Qu.:  25014  \n Max.   :124055   Max.   :152857   Max.   :9893481   Max.   :3230383  \n\n# Generate a summary of one variable in your datset using the $ operator\nsummary(counties_income$household_income)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  11680   37622   43853   45220   50854  124055",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#simple-summary-statistics",
+    "href": "intro_to_r.html#simple-summary-statistics",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Simple summary statistics",
+    "text": "Simple summary statistics\nNow that we’ve loaded our dataset, let’s run a simple analysis.\nThe following code block uses the summarize() function to “collapse” variables from the counties_income dataset into a smaller table with summary statistics. Specifically, we calculate the median household income and a count of counties for each state.\nIn this example\n\nmedian(household_income) calculates the median income.\nn() is a function that counts the number of observations in our sample.\n\n\nsummarize(counties_income,\n            med_hhinc = median(household_income),\n            n=n())\n\n  med_hhinc    n\n1     43853 3231\n\n\nWe can also create summary statistics by specific groupings. For example, if we want to calculate the median household income for each state, we can use the .by= argument inside summarize()\n\nsummarize(counties_income, \n          med_hhinc = median(household_income), \n          n = n(), \n          .by = states)\n\n                     states med_hhinc   n\n1                  New York   50467.5  62\n2                  Virginia   47549.0 134\n3                California   53532.0  58\n4                  Colorado   46793.5  64\n5                New Mexico   37933.0  33\n6                New Jersey   70912.0  21\n7                     Texas   44150.5 254\n8                  Maryland   66587.5  24\n9               Connecticut   68960.5   8\n10            Massachusetts   63225.0  14\n11                   Alaska   62519.0  29\n12                   Hawaii   62052.0   5\n13                  Wyoming   55347.0  23\n14                     Utah   49506.0  29\n15             Pennsylvania   46044.0  67\n16                Wisconsin   48709.5  72\n17                Tennessee   37618.0  95\n18             Rhode Island   71238.0   5\n19                     Ohio   44654.5  88\n20               Washington   47195.0  39\n21                  Indiana   46746.0  92\n22                   Kansas   45830.0 105\n23             North Dakota   50274.0  53\n24                 Illinois   47385.0 102\n25            New Hampshire   56904.5  10\n26                Minnesota   50030.0  87\n27                  Florida   43413.0  67\n28                  Georgia   37487.0 159\n29                 Michigan   41759.0  83\n30             South Dakota   47043.5  66\n31                     Iowa   48601.0  99\n32                    Idaho   42072.0  44\n33                 Missouri   39519.0 115\n34           North Carolina   41030.5 100\n35                   Nevada   52101.0  17\n36                 Kentucky   38776.0 120\n37                  Alabama   36447.0  67\n38                  Vermont   52470.0  14\n39              Mississippi   33562.0  82\n40                  Montana   43368.0  56\n41                    Maine   44327.5  16\n42                   Oregon   43524.5  36\n43           South Carolina   39271.0  46\n44                 Delaware   55149.0   3\n45                 Nebraska   45610.0  93\n46                Louisiana   40792.0  64\n47            West Virginia   37895.0  55\n48                 Oklahoma   42751.0  77\n49                 Arkansas   35153.0  75\n50                  Arizona   42987.0  15\n51      U.S. Virgin Islands   38232.0   3\n52              Puerto Rico   17434.0  78\n53                     Guam   48274.0   1\n54 Northern Mariana Islands   23125.0   3\n55           American Samoa   24027.5   4\n\n\nThis tells R to calculate the summary statistics separately for each unique value in the states column",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#creating-new-variables-with-mutate",
+    "href": "intro_to_r.html#creating-new-variables-with-mutate",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Creating new variables with mutate",
+    "text": "Creating new variables with mutate\nThe mutate() function adds new variables to a dataset without collapsing it, unlike summarize() which reduces the dataset to summary rows.\nIn the example below, we use mutate() to create a new column called rank, which ranks counties from highest to lowest based on their per capita income (pci).\n\nrank(-pci) ranks the values of pci in descending order (the minus sign indicates descending).\nThe result is a new dataset ranked_income where each county keeps its original data, now with an added rank column.\n\n\nranked_income &lt;- mutate(counties_income, rank = rank(-pci))\n\n# Print the top 5 rows of our new dataframe/table\nhead(ranked_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households rank\n1    1628706            759460    1\n2     214861             94454    2\n3      12731              5020    3\n4     254643            102912    4\n5    1927852            640215    5\n6     143684             65369    6",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#how-to-look-up-a-functions-arguments",
+    "href": "intro_to_r.html#how-to-look-up-a-functions-arguments",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "How to look up a function’s arguments",
+    "text": "How to look up a function’s arguments\nNot sure what a function does or what arguments it accepts? You can use the help command in R to look it up!\nType a question mark (?) followed by the function name in your console or code chunk:\n\n?mutate\n\n?summarize\n\n# alternatively, you can type\nhelp(summarize)\n\nThis opens the help file for the function, which includes a short description of what the function does, a list of arguments you can use, and examples showing how to apply it. This is a great habit to adopt when trying new functions!",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#using-pipes-to-create-multi-line-commands",
+    "href": "intro_to_r.html#using-pipes-to-create-multi-line-commands",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Using pipes to create multi-line commands",
+    "text": "Using pipes to create multi-line commands\nIn R, the pipe operator |&gt; allows you to chain together multiple steps of a data transformation in a readable, top-to-bottom format. Each step passes its result to the next command. This makes your code easier to read and avoids creating lots of intermediate objects.\nHere’s an example using the |&gt; pipe to filter and summarize data across multiple lines:\n\n# Executing a multi-line command using pipes \ncleaned_data &lt;- counties_income |&gt;\n    # Here we use the filter() command to restrict our sample to a few states\n    filter(states %in% c('New York', 'California', 'North Carolina' )) |&gt;\n    # Use summarise (Note, summarize() and summarise() are interchangeable. British spelling fans, rejoice!)\n    summarise(mean_hhinc = mean(household_income), \n              n = n(), \n              .by = states)\n\nWhat this code does:\n\nStarts with the counties_income dataset\nFilters it to only include counties in New York, California, and North Carolina\nSummarizes the data by state, calculating:\n\nThe mean household income\nThe number of counties",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#exporting-your-results",
+    "href": "intro_to_r.html#exporting-your-results",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Exporting your results",
+    "text": "Exporting your results\nOnce you’ve created a cleaned or summarized dataset, you may want to save it to a file. The write.csv() function lets you export your data to a .csv file that you can open in Excel or share with others.\n\n# Writing a csv to a path\nwrite.csv(cleaned_data, \"output/state_incomes.csv\")\n\nThis line:\n\nWrites the cleaned_data dataset to a file called state_incomes.csv\nSaves it in the output/ folder within your project directory\n\nNote: Make sure the \"output\" folder already exists in your project. R will return an error if the folder doesn’t exist.",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
+    ]
+  },
+  {
+    "objectID": "intro_to_r.html#additional-resources",
+    "href": "intro_to_r.html#additional-resources",
+    "title": "Installing R & RStudio EARN Talk",
+    "section": "Additional resources",
+    "text": "Additional resources\nAs you embark on your R journey, check out the Other Resources page for additional materials!\nHappy coding!",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Installing R & RStudio EARN Talk"
     ]
   },
   {
@@ -832,147 +668,245 @@
     ]
   },
   {
-    "objectID": "intro_to_r.html",
-    "href": "intro_to_r.html",
-    "title": "Installing R & RStudio EARN Talk",
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Other Resources",
     "section": "",
-    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode: Prep4R2025!\nPresentation slides",
+    "text": "If you can’t find the answers you’re looking for in our tutorials or elsewhere on our site, check out these external resources. If you’re still stuck, feel free to reach out to ecohn@epi.org.\nR@Urban\n\nR@Urban is a great resource from the Urban Institute. This site covers analysis, visualization, mapping, and more.\n\nR for Data Science by Garrett Grolemund and Hadley Wickham\n\nR for Data Science is a popular book that covers many basic concepts in R, aimed specifically at beginners.\n\nDataScienceR Github\n\nThis Github repository contains a list of R tutorials and packages for Data Science, NLP and Machine Learning. It also serves as a reference guide for several common data analysis tasks (though most are minimally annotated).\n\nCausal Inference: The Mixtape\n\nThis ebook provides an introduction to causal inference using a range of modeling techniques and coding instructions for both R and Stata.\n\nCausal Inference in R\n\nThis book focuses explicitly on causal inference in R and is aimed at intermediate coders. The preface outlines what level of comfort with R the reader should have before using this book.\n\n\n\n\n Back to top",
     "crumbs": [
       "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "Other Resources"
     ]
   },
   {
-    "objectID": "intro_to_r.html#welcome-to-the-preparing-for-analysis-with-r-landing-page",
-    "href": "intro_to_r.html#welcome-to-the-preparing-for-analysis-with-r-landing-page",
-    "title": "Installing R & RStudio EARN Talk",
+    "objectID": "tidycensus_example.html",
+    "href": "tidycensus_example.html",
+    "title": "Load Census tables via Tidycensus",
     "section": "",
-    "text": "This training and code workflow was originally delivered as an EARN Talk on July 29th, 2025.\nMissed this talk? See the recording here: Preparing for Analysis with R: A guided tutorial for installing R and RStudio.\nPasscode: Prep4R2025!\nPresentation slides",
+    "text": "This script provides a few examples of how to load ACS tables from https://data.census.gov using the Tidycensus package.\nlibrary(tidycensus)\nlibrary(tidyverse)\nNote: A census API key is required to use tidycensus. Register for a Census API key at https://api.census.gov/data/key_signup.html. Once you’ve obtained a key, you can copy it to your .Renviron file by using the census_api_key() function.\n#sets Census API key (optional but encouraged)\ncensus_api_key(\"YOUR CENSUS API KEY HERE\", install = TRUE)\n\n# Reload your environment so you can use the key without restarting R.\nreadRenviron(\"~/.Renviron\")\n\n# You can check it with:\nSys.getenv(\"CENSUS_API_KEY\")",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Load Census tables via Tidycensus"
     ]
   },
   {
-    "objectID": "intro_to_r.html#workflow-example",
-    "href": "intro_to_r.html#workflow-example",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Workflow example",
-    "text": "Workflow example\nThis example demonstrates a simple data analysis workflow.\nIn short, we will use the Tidyverse package to load a dataset from a .csv file, describe and analyze the dataset, and export a final analysis to a new .csv file.",
+    "objectID": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
+    "href": "tidycensus_example.html#explore-available-variables-in-the-acs-5-year-sample",
+    "title": "Load Census tables via Tidycensus",
+    "section": "Explore available variables in the ACS 5-year sample",
+    "text": "Explore available variables in the ACS 5-year sample\nUse the load_variables() function to load available tables derived from the 2021 ACS 5-year survey.\n\nSee a full list of available Census tables at https://www.census.gov/programs-surveys/acs/technical-documentation/table-shells.html\n\n\n# Show all available tables\n\nacs_2021_variables &lt;- load_variables(2021, \"acs5\", cache = TRUE)\n\nacs_2021_variables\n\n# A tibble: 27,886 × 4\n   name        label                                    concept        geography\n   &lt;chr&gt;       &lt;chr&gt;                                    &lt;chr&gt;          &lt;chr&gt;    \n 1 B01001A_001 Estimate!!Total:                         SEX BY AGE (W… tract    \n 2 B01001A_002 Estimate!!Total:!!Male:                  SEX BY AGE (W… tract    \n 3 B01001A_003 Estimate!!Total:!!Male:!!Under 5 years   SEX BY AGE (W… tract    \n 4 B01001A_004 Estimate!!Total:!!Male:!!5 to 9 years    SEX BY AGE (W… tract    \n 5 B01001A_005 Estimate!!Total:!!Male:!!10 to 14 years  SEX BY AGE (W… tract    \n 6 B01001A_006 Estimate!!Total:!!Male:!!15 to 17 years  SEX BY AGE (W… tract    \n 7 B01001A_007 Estimate!!Total:!!Male:!!18 and 19 years SEX BY AGE (W… tract    \n 8 B01001A_008 Estimate!!Total:!!Male:!!20 to 24 years  SEX BY AGE (W… tract    \n 9 B01001A_009 Estimate!!Total:!!Male:!!25 to 29 years  SEX BY AGE (W… tract    \n10 B01001A_010 Estimate!!Total:!!Male:!!30 to 34 years  SEX BY AGE (W… tract    \n# ℹ 27,876 more rows",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Load Census tables via Tidycensus"
     ]
   },
   {
-    "objectID": "intro_to_r.html#load-a-library",
-    "href": "intro_to_r.html#load-a-library",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Load a library",
-    "text": "Load a library\nRecall, you can install R packages using the install.packages() command.\n\ninstall.packages('tidyverse')\n\nAfter installing a package, you can load it using the library() command.\n\n# Loading a library \nlibrary(tidyverse)",
+    "objectID": "tidycensus_example.html#examples",
+    "href": "tidycensus_example.html#examples",
+    "title": "Load Census tables via Tidycensus",
+    "section": "Examples",
+    "text": "Examples\n\nDemographic data\nThis example loads demographic data from the 2017-2021 ACS for counties in Michigan.\n\n# This option will retrieve geographic data from the Census\noptions(tigris_use_cache = TRUE)\n\n# Table B01001: Sex by Age\nMI_demographics &lt;- get_acs(table = \"B01001\",\n                           geography = \"county\",\n                           year = 2021,\n                           state = \"MI\",\n                           survey = \"acs5\")\n\nGetting data from the 2017-2021 5-year ACS\n\nMI_demographics\n\n# A tibble: 4,067 × 5\n   GEOID NAME                    variable   estimate   moe\n   &lt;chr&gt; &lt;chr&gt;                   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;\n 1 26001 Alcona County, Michigan B01001_001    10138    NA\n 2 26001 Alcona County, Michigan B01001_002     5127    38\n 3 26001 Alcona County, Michigan B01001_003      169    12\n 4 26001 Alcona County, Michigan B01001_004      176    40\n 5 26001 Alcona County, Michigan B01001_005      190    36\n 6 26001 Alcona County, Michigan B01001_006      132    12\n 7 26001 Alcona County, Michigan B01001_007       68    17\n 8 26001 Alcona County, Michigan B01001_008       28    20\n 9 26001 Alcona County, Michigan B01001_009       47    18\n10 26001 Alcona County, Michigan B01001_010      110    24\n# ℹ 4,057 more rows\n\n\n\n\nMap of median household income in MI, by county\nThis example creates a map of median household income in Michigan from the 2017-2021 ACS, by county.\n\n# Plot household income by county\nMI_income &lt;- get_acs(\n  geography = \"county\", \n  state = \"MI\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(MI_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nMap of median household income for Wayne County, MI, by tract\n\ndetroit_income &lt;- get_acs(\n  geography = \"tract\", \n  state = \"MI\",\n  county = \"Wayne\",\n  variables = \"B19013_001\",\n  year = 2021,\n  geometry = TRUE,\n)\n\nplot(detroit_income[\"estimate\"])\n\n\n\n\n\n\n\n\n\n\nTotal income below poverty level in Rhode Island by gender, 2009–2021\nThis example defines function to load multiple years and multiple demographic groups for table b17001\n\n# Poverty in Rhode Island: https://data.census.gov/table?q=B17001B\n\n#  Function to load multiple years of acs data\nload_acs_tables &lt;- function(x){\n  get_acs(geography = \"state\", \n          variables = c(total_count = \"B17001_001\",  \n                        count_income_below_poverty = \"B17001_002\",  \n                        count_income_below_poverty_level_male = \"B17001_003\",  \n                        count_income_below_poverty_level_female = \"B17001_017\"), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create year variable\n    mutate(year = x)\n}\n\n#load 2009:2018 5yr datasets with map_dfr()\nRI_Poverty_B &lt;- map_dfr(2009:2021, load_acs_tables)\n\nRI_Poverty_B\n\n# A tibble: 13 × 11\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island      1019380          497                      118618\n 2 44    Rhode Island      1014029          440                      123396\n 3 44    Rhode Island      1012044          459                      129454\n 4 44    Rhode Island      1011137          430                      133462\n 5 44    Rhode Island      1010872          463                      137244\n 6 44    Rhode Island      1012806          364                      143996\n 7 44    Rhode Island      1013455          398                      144223\n 8 44    Rhode Island      1013916          310                      140161\n 9 44    Rhode Island      1015923          402                      136126\n10 44    Rhode Island      1016029          462                      133055\n11 44    Rhode Island      1016506          463                      125826\n12 44    Rhode Island      1017028          481                      117785\n13 44    Rhode Island      1050314          707                      118257\n# ℹ 6 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;\n\n\nA more complex function to load multiple demographic groups\n\nload_acs_tables2 &lt;- function(x,y){\n  get_acs(geography = \"state\", \n          variables = c(total_count = paste0(\"B17001\",y,\"_001\"),  \n                        count_income_below_poverty = paste0(\"B17001\",y,\"_002\"),  \n                        count_income_below_poverty_level_male = paste0(\"B17001\",y,\"_003\"),  \n                        count_income_below_poverty_level_female = paste0(\"B17001\",y,\"_017\")), \n          state = \"RI\", \n          year = x, \n          output = \"wide\") %&gt;% \n    #create variables to identify years and demographic groups\n    mutate(year = x,\n           group = y)\n}\n\n#create list of arguments to pass to function\ncrossargs &lt;- expand.grid(x=2009:2021, y=LETTERS[1:9])\n\n#load all data 2009 to 2021\nRI_Poverty &lt;- map2_dfr(crossargs$x, crossargs$y, load_acs_tables2)\n\nRI_Poverty\n\n# A tibble: 117 × 12\n   GEOID NAME         total_countE total_countM count_income_below_povertyE\n   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;        &lt;dbl&gt;                       &lt;dbl&gt;\n 1 44    Rhode Island       844002         2476                       74676\n 2 44    Rhode Island       832540         2445                       76711\n 3 44    Rhode Island       831102         2675                       80691\n 4 44    Rhode Island       827707         2583                       84578\n 5 44    Rhode Island       824245         3051                       86232\n 6 44    Rhode Island       825456         2895                       92849\n 7 44    Rhode Island       823532         2843                       93988\n 8 44    Rhode Island       822275         3089                       92245\n 9 44    Rhode Island       823518         3001                       89596\n10 44    Rhode Island       823420         2950                       89282\n# ℹ 107 more rows\n# ℹ 7 more variables: count_income_below_povertyM &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_maleM &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleE &lt;dbl&gt;,\n#   count_income_below_poverty_level_femaleM &lt;dbl&gt;, year &lt;int&gt;, group &lt;fct&gt;\n\n\nSee more examples from Tidycensus at https://walker-data.com/tidycensus/articles/basic-usage.html",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Load Census tables via Tidycensus"
     ]
   },
   {
-    "objectID": "intro_to_r.html#read-data-from-a-csv-file",
-    "href": "intro_to_r.html#read-data-from-a-csv-file",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Read data from a csv file",
-    "text": "Read data from a csv file\n\nDownload the dataset at this link: counties_per_capita_income.csv\nPlace the dataset in your root directory In this case, our data lives in a folder named “data” within this root directory. You can name your folder whatever you’d like!\nUse the read.csv() function to load the data into R.\n\n\ncounties_income &lt;- read.csv(\"data/counties_per_capita_income.csv\")",
+    "objectID": "epi_libraries.html",
+    "href": "epi_libraries.html",
+    "title": "EPI packages for R",
+    "section": "",
+    "text": "Installation instructions are available on each package’s Github page.\nepiverse\n\nnow you can load all of EPI’s R packages in one go! epiverse includes the libraries you know and love (realtalk, epidatatools, and epiextractr), as well as two hot new packages!\n\nprefab is an opinionated theme system for R project scaffolding\nswadlr allows users to pull and manipulate data from the State of Working America Data Library\n\n\nrealtalk\n\nrealtalk makes it easy to load and use common US price indexes in R.\n\nepidatatools\n\nepidatatools contains functions we find useful at EPI that don’t have exact analogues elsewhere in the R package ecosystem.\n\nepiextractr\n\nuse epiextractr to download CPS data from the EPI microdata site.\n\n\n\n\n Back to top",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "Code Packages",
+      "R Packages"
     ]
   },
   {
-    "objectID": "intro_to_r.html#descriptive-analysis",
-    "href": "intro_to_r.html#descriptive-analysis",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Descriptive analysis",
-    "text": "Descriptive analysis\nSome useful commands to describe your dataset\n\n# Print the number of rows and columns in your table \ndim(counties_income)\n\n[1] 3231    8\n\n# View the top 5 rows of your dataset\nhead(counties_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households\n1    1628706            759460\n2     214861             94454\n3      12731              5020\n4     254643            102912\n5    1927852            640215\n6     143684             65369\n\n# List the variable names of your dataset\nnames(counties_income)\n\n[1] \"county\"            \"states\"            \"statefips\"        \n[4] \"pci\"               \"household_income\"  \"family_income\"    \n[7] \"population\"        \"num_of_households\"\n\n# View a transposed table of your data\nglimpse(counties_income)\n\nRows: 3,231\nColumns: 8\n$ county            &lt;chr&gt; \"New York County\", \"Arlington\", \"Falls Church City\",…\n$ states            &lt;chr&gt; \"New York\", \"Virginia\", \"Virginia\", \"California\", \"C…\n$ statefips         &lt;chr&gt; \"36\", \"51\", \"51\", \"6\", \"6\", \"51\", \"8\", \"35\", \"51\", \"…\n$ pci               &lt;int&gt; 76592, 62018, 59088, 56791, 56248, 54608, 51814, 510…\n$ household_income  &lt;int&gt; 69659, 103208, 120000, 90839, 124055, 85706, 72745, …\n$ family_income     &lt;int&gt; 86553, 139244, 152857, 117357, 124055, 107511, 93981…\n$ population        &lt;int&gt; 1628706, 214861, 12731, 254643, 1927852, 143684, 171…\n$ num_of_households &lt;int&gt; 759460, 94454, 5020, 102912, 640215, 65369, 7507, 75…\n\n# Generate summaries for each of your variables\nsummary(counties_income)\n\n    county             states           statefips              pci       \n Length:3231        Length:3231        Length:3231        Min.   : 5441  \n Class :character   Class :character   Class :character   1st Qu.:19674  \n Mode  :character   Mode  :character   Mode  :character   Median :22782  \n                                                          Mean   :23268  \n                                                          3rd Qu.:26136  \n                                                          Max.   :76592  \n household_income family_income      population      num_of_households\n Min.   : 11680   Min.   : 13582   Min.   :     17   Min.   :      6  \n 1st Qu.: 37622   1st Qu.: 46942   1st Qu.:  11232   1st Qu.:   4302  \n Median : 43853   Median : 54461   Median :  25975   Median :   9792  \n Mean   : 45220   Mean   : 55752   Mean   :  97552   Mean   :  36130  \n 3rd Qu.: 50854   3rd Qu.: 62850   3rd Qu.:  65806   3rd Qu.:  25014  \n Max.   :124055   Max.   :152857   Max.   :9893481   Max.   :3230383  \n\n# Generate a summary of one variable in your datset using the $ operator\nsummary(counties_income$household_income)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  11680   37622   43853   45220   50854  124055",
+    "objectID": "benchmarking_workshop.html",
+    "href": "benchmarking_workshop.html",
+    "title": "Benchmarking Data",
+    "section": "",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nBenchmarking PowerPoint slides\n\nPublication: Older workers were devastated by the pandemic downturn and continue to face adverse employment outcomes\n\n\nimport packages\n\n# import packages\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(here)\n\n\n\nDefine CPS years\n\ncps_years &lt;- 2007:2020\n\n\ncps_vars &lt;- c(\"year\", \"month\", \"age\", \"female\", \"emp\", \"basicwgt\")\n\n\n# import basic CPS data\ncps_data &lt;- load_basic(cps_years, all_of(cps_vars)) %&gt;% \n  # restrict to 16+\n  filter(age &gt;= 16) %&gt;% \n  # create age categories\n  mutate(age_group = case_when(\n    age &lt;= 24 ~ \"16–24 years old\",\n    age &gt;= 25 & age &lt;= 54 ~ \"25–54 years old\",\n    age &gt;= 55 & age &lt;= 64 ~ \"55–64 years old\",\n    age &gt;= 65 ~ \"65+ years old\"),\n    # adjust weight\n    wgt = basicwgt/12)\n\nUsing EPI CPS Basic Monthly Extracts, Version 2025.9.11\n\n\nhttps://www.bls.gov/cps/aa2020/cpsaat18b.htm\n\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000)\n\n# A tibble: 1 × 2\n   year       n\n  &lt;int&gt;   &lt;dbl&gt;\n1  2020 147795.\n\n\n\n# age category benchmark: https://www.bls.gov/cps/aa2020/cpsaat03.htm\ncps_data %&gt;% \n  # restrict to employed\n  filter(emp == 1, year == 2020) %&gt;% \n  # weighted employment count by year\n  group_by(year, age_group) %&gt;% tally(wt = wgt) %&gt;% mutate(n = n/1000) %&gt;% \n  # reshape data\n  pivot_wider(id_cols = year, names_from = age_group, values_from = n)\n\n# A tibble: 1 × 5\n# Groups:   year [1]\n   year `16–24 years old` `25–54 years old` `55–64 years old` `65+ years old`\n  &lt;int&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;\n1  2020            17192.            95310.            25469.           9824.\n\n\n\n\nFigure C: change in employment-to-population ratio across age categories\n\nemp &lt;- cps_data %&gt;%\n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # weighted employment * population count by year and age group\n  group_by(year, age_group) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate EPOPs\n  mutate(epop = emp/pop) %&gt;% pivot_wider(id_cols = age_group, names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, `2007–2011` = `2011`-`2007`, `2019–2020` = `2020`-`2019`) %&gt;%\n  # output to output folder\n  write_csv(here(\"output/older_worker_epop.csv\"))\n\n`summarise()` has grouped output by 'year'. You can override using the\n`.groups` argument.\n\n\nFigure D: Change in employment-population ratios during the Great Recession and the COVID-19 recession, 2007–2011 and 2019–2020, by gender and older age group\n\nepop_gender &lt;- cps_data %&gt;% \n  # isolate recession beginning and end years\n  filter(!is.na(emp),\n      year %in% c(2007, 2011, 2019, 2020)) %&gt;% \n  # assign value of female as character label (\"Female\" instead of 1 and \"Male\" instead of 0)\n  #note: requires the installation of haven\n  #note: using double \":\" is a way of referencing functions in a package without importing entire package\n  mutate(female = as.character(haven::as_factor(female))) %&gt;% \n  # weighted employment * population count by year and age group AND female\n  group_by(year, age_group, female) %&gt;% summarise(emp = sum(emp * wgt), pop = sum(wgt)) %&gt;% \n  # calculate epops\n  mutate(epop = emp/pop) %&gt;% ungroup() %&gt;% \n  # reshape wider to calculate change in EPOPs over recession time perios\n  pivot_wider(id_cols = c(\"age_group\", \"female\"), names_from = year, values_from = epop) %&gt;% \n  # calculate percent change in EPOPs\n  transmute(age_group = age_group, female = female, \n            `2007-2011` = `2011` - `2007`, `2019-2020` = `2020` - `2019`) %&gt;% \n  # reshape data longer for ggplot2\n  #note: change in epop by age group will group bars by recession time period, create panels by gender,\n  #       reshape long for each dimension\n  pivot_longer(cols = c(`2007-2011`, `2019-2020`), names_to = \"recession\", values_to = \"epop_change\")\n\n`summarise()` has grouped output by 'year', 'age_group'. You can override using\nthe `.groups` argument.\n\n\n\n\nCreate mock of Figure D using ggplot2\n\n# change in epop by age group and recession time periods\nggplot(epop_gender, aes(x = age_group, y = epop_change, fill = recession)) +\n  # use position \"dodge\" to group bars instead of stacking\n  geom_col(position = \"dodge\") +\n  # use to create side-by-side panels for easier viewing\n  facet_wrap(~female)\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
     "crumbs": [
       "Learn R",
       "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "Benchmarking Data"
     ]
   },
   {
-    "objectID": "intro_to_r.html#simple-summary-statistics",
-    "href": "intro_to_r.html#simple-summary-statistics",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Simple summary statistics",
-    "text": "Simple summary statistics\nNow that we’ve loaded our dataset, let’s run a simple analysis.\nThe following code block uses the summarize() function to “collapse” variables from the counties_income dataset into a smaller table with summary statistics. Specifically, we calculate the median household income and a count of counties for each state.\nIn this example\n\nmedian(household_income) calculates the median income.\nn() is a function that counts the number of observations in our sample.\n\n\nsummarize(counties_income,\n            med_hhinc = median(household_income),\n            n=n())\n\n  med_hhinc    n\n1     43853 3231\n\n\nWe can also create summary statistics by specific groupings. For example, if we want to calculate the median household income for each state, we can use the .by= argument inside summarize()\n\nsummarize(counties_income, \n          med_hhinc = median(household_income), \n          n = n(), \n          .by = states)\n\n                     states med_hhinc   n\n1                  New York   50467.5  62\n2                  Virginia   47549.0 134\n3                California   53532.0  58\n4                  Colorado   46793.5  64\n5                New Mexico   37933.0  33\n6                New Jersey   70912.0  21\n7                     Texas   44150.5 254\n8                  Maryland   66587.5  24\n9               Connecticut   68960.5   8\n10            Massachusetts   63225.0  14\n11                   Alaska   62519.0  29\n12                   Hawaii   62052.0   5\n13                  Wyoming   55347.0  23\n14                     Utah   49506.0  29\n15             Pennsylvania   46044.0  67\n16                Wisconsin   48709.5  72\n17                Tennessee   37618.0  95\n18             Rhode Island   71238.0   5\n19                     Ohio   44654.5  88\n20               Washington   47195.0  39\n21                  Indiana   46746.0  92\n22                   Kansas   45830.0 105\n23             North Dakota   50274.0  53\n24                 Illinois   47385.0 102\n25            New Hampshire   56904.5  10\n26                Minnesota   50030.0  87\n27                  Florida   43413.0  67\n28                  Georgia   37487.0 159\n29                 Michigan   41759.0  83\n30             South Dakota   47043.5  66\n31                     Iowa   48601.0  99\n32                    Idaho   42072.0  44\n33                 Missouri   39519.0 115\n34           North Carolina   41030.5 100\n35                   Nevada   52101.0  17\n36                 Kentucky   38776.0 120\n37                  Alabama   36447.0  67\n38                  Vermont   52470.0  14\n39              Mississippi   33562.0  82\n40                  Montana   43368.0  56\n41                    Maine   44327.5  16\n42                   Oregon   43524.5  36\n43           South Carolina   39271.0  46\n44                 Delaware   55149.0   3\n45                 Nebraska   45610.0  93\n46                Louisiana   40792.0  64\n47            West Virginia   37895.0  55\n48                 Oklahoma   42751.0  77\n49                 Arkansas   35153.0  75\n50                  Arizona   42987.0  15\n51      U.S. Virgin Islands   38232.0   3\n52              Puerto Rico   17434.0  78\n53                     Guam   48274.0   1\n54 Northern Mariana Islands   23125.0   3\n55           American Samoa   24027.5   4\n\n\nThis tells R to calculate the summary statistics separately for each unique value in the states column",
+    "objectID": "blsR_example.html",
+    "href": "blsR_example.html",
+    "title": "Downloading BLS data via blsR",
+    "section": "",
+    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Downloading BLS data via blsR"
     ]
   },
   {
-    "objectID": "intro_to_r.html#creating-new-variables-with-mutate",
-    "href": "intro_to_r.html#creating-new-variables-with-mutate",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Creating new variables with mutate",
-    "text": "Creating new variables with mutate\nThe mutate() function adds new variables to a dataset without collapsing it, unlike summarize() which reduces the dataset to summary rows.\nIn the example below, we use mutate() to create a new column called rank, which ranks counties from highest to lowest based on their per capita income (pci).\n\nrank(-pci) ranks the values of pci in descending order (the minus sign indicates descending).\nThe result is a new dataset ranked_income where each county keeps its original data, now with an added rank column.\n\n\nranked_income &lt;- mutate(counties_income, rank = rank(-pci))\n\n# Print the top 5 rows of our new dataframe/table\nhead(ranked_income)\n\n             county     states statefips   pci household_income family_income\n1   New York County   New York        36 76592            69659         86553\n2         Arlington   Virginia        51 62018           103208        139244\n3 Falls Church City   Virginia        51 59088           120000        152857\n4             Marin California         6 56791            90839        117357\n5       Santa Clara California         6 56248           124055        124055\n6   Alexandria City   Virginia        51 54608            85706        107511\n  population num_of_households rank\n1    1628706            759460    1\n2     214861             94454    2\n3      12731              5020    3\n4     254643            102912    4\n5    1927852            640215    5\n6     143684             65369    6",
+    "objectID": "blsR_example.html#loading-blsr-and-setting-api-key",
+    "href": "blsR_example.html#loading-blsr-and-setting-api-key",
+    "title": "Downloading BLS data via blsR",
+    "section": "",
+    "text": "blsR is the R package written and maintained by the Bureau of Labor Statistics to provide users with BLS data, including Current Employment Statistics (CES), Worker characteristics data (CPS), inflation & prices (CPI), and Job Openings Layoff and Turnover Survey (JOLTS), among others.\nBLS provides this data through the use of an Application Programming Interface (API), which allows R to directly import data from BLS using the series IDs which are extensively documented by BLS. This process automates the manual retrieval of data using the BLS series report and delivers the tidied data.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n\n# download blsR\n#install.library(\"blsR\")\n\n# import relevant libraries\nlibrary(tidyverse)\nlibrary(blsR)\nlibrary(here)\n\nIn order to access BLS data you must register for a unique API key. Save your key as an environmental object to be used later.\n\n# set key for BLS api\n#note: each user must register for unique BLS API key here: https://www.bls.gov/developers/home.htm\nbls_key &lt;- Sys.getenv(\"your-key-goes-here\")",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Downloading BLS data via blsR"
     ]
   },
   {
-    "objectID": "intro_to_r.html#how-to-look-up-a-functions-arguments",
-    "href": "intro_to_r.html#how-to-look-up-a-functions-arguments",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "How to look up a function’s arguments",
-    "text": "How to look up a function’s arguments\nNot sure what a function does or what arguments it accepts? You can use the help command in R to look it up!\nType a question mark (?) followed by the function name in your console or code chunk:\n\n?mutate\n\n?summarize\n\n# alternatively, you can type\nhelp(summarize)\n\nThis opens the help file for the function, which includes a short description of what the function does, a list of arguments you can use, and examples showing how to apply it. This is a great habit to adopt when trying new functions!",
+    "objectID": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
+    "href": "blsR_example.html#nominal-average-hourly-earnings-of-production-and-non-supervisory-employees",
+    "title": "Downloading BLS data via blsR",
+    "section": "Nominal average hourly earnings of production and non-supervisory employees",
+    "text": "Nominal average hourly earnings of production and non-supervisory employees\nYou can import a single table using the blsR::get_n_series_table() function:\n\n## use blsR to pull in nominal wages\nnominal_wages &lt;- get_n_series_table(series = \"CEU0500000008\", api_key = bls_key, \n                                    start_year = 1965, end_year = 2023, \n                                    tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter for annual data\n  filter(month == 13)",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Downloading BLS data via blsR"
     ]
   },
   {
-    "objectID": "intro_to_r.html#using-pipes-to-create-multi-line-commands",
-    "href": "intro_to_r.html#using-pipes-to-create-multi-line-commands",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Using pipes to create multi-line commands",
-    "text": "Using pipes to create multi-line commands\nIn R, the pipe operator |&gt; allows you to chain together multiple steps of a data transformation in a readable, top-to-bottom format. Each step passes its result to the next command. This makes your code easier to read and avoids creating lots of intermediate objects.\nHere’s an example using the |&gt; pipe to filter and summarize data across multiple lines:\n\n# Executing a multi-line command using pipes \ncleaned_data &lt;- counties_income |&gt;\n    # Here we use the filter() command to restrict our sample to a few states\n    filter(states %in% c('New York', 'California', 'North Carolina' )) |&gt;\n    # Use summarise (Note, summarize() and summarise() are interchangeable. British spelling fans, rejoice!)\n    summarise(mean_hhinc = mean(household_income), \n              n = n(), \n              .by = states)\n\nWhat this code does:\n\nStarts with the counties_income dataset\nFilters it to only include counties in New York, California, and North Carolina\nSummarizes the data by state, calculating:\n\nThe mean household income\nThe number of counties",
+    "objectID": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
+    "href": "blsR_example.html#real-average-hourly-earnings-of-production-and-non-supervsory-employees",
+    "title": "Downloading BLS data via blsR",
+    "section": "Real average hourly earnings of production and non-supervsory employees",
+    "text": "Real average hourly earnings of production and non-supervsory employees\nYou can also import multiple series at once. For example, we can import AHE and CPI in order to calculate real wages.\n\n# set cpi codes\ncpi_codes &lt;- c(\"CUUR0000SA0\",\n               \"CEU0500000008\")\n\n# set cpi base\n#note: used to set base year for inflation-adjustment\ncpi_base &lt;- get_n_series_table(series_ids = \"CUUR0000SA0\", start_year = 2023, end_year = 2023, \n                               api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual 2023 data and pull CPI value as base\n  filter(month == 13) %&gt;% pull(CUUR0000SA0)\n\n# use blsR to pull CPI data\ncpi_output &lt;- get_n_series_table(series_ids = cpi_codes, start_year = 1947, end_year = 2023, \n                                 api_key = bls_key, tidy = TRUE, annualaverage = TRUE) %&gt;% \n  # filter annual data\n  filter(month == 13) %&gt;%\n  # rename for easier handling\n  rename(ahe = CEU0500000008, cpi = CUUR0000SA0) %&gt;% \n  # calculate real wages\n  mutate(ahe_real = ahe * (cpi_base/cpi)) %&gt;% \n  # export to delimited file\n  write.csv(here(\"ahe_real.csv\"))",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Downloading BLS data via blsR"
     ]
   },
   {
-    "objectID": "intro_to_r.html#exporting-your-results",
-    "href": "intro_to_r.html#exporting-your-results",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Exporting your results",
-    "text": "Exporting your results\nOnce you’ve created a cleaned or summarized dataset, you may want to save it to a file. The write.csv() function lets you export your data to a .csv file that you can open in Excel or share with others.\n\n# Writing a csv to a path\nwrite.csv(cleaned_data, \"output/state_incomes.csv\")\n\nThis line:\n\nWrites the cleaned_data dataset to a file called state_incomes.csv\nSaves it in the output/ folder within your project directory\n\nNote: Make sure the \"output\" folder already exists in your project. R will return an error if the folder doesn’t exist.",
+    "objectID": "blsR_example.html#pulling-more-than-50-series",
+    "href": "blsR_example.html#pulling-more-than-50-series",
+    "title": "Downloading BLS data via blsR",
+    "section": "Pulling more than 50 series",
+    "text": "Pulling more than 50 series\nThe BLS API limits each call to 50 series, which can be limiting when you are trying to pull in large datasets. Here is a trick I use in the code that runs our Jobs and Unemployment page to workaround this limitation:\n\n# read in bls series codes\n#note: this is a random selection of codes used in our Jobs and Unemployment figures\nbls_codes &lt;- read.csv(here(\"bls_codes.csv\"))\n# remove any blanks\nbls_codes &lt;- bls_codes$series_id[bls_codes$series_id != \"\"]\n\n\n# use map to iteratively call blsR api at max number of series id\n#note: BLS restricts to max 50 series in a single call\njobs_day_df &lt;- map(split(bls_codes, ceiling(seq_along(bls_codes) / 50)), # split codes into groups of 50\n             # call blsR using series ids sliced into groups of 50\n             ~ get_n_series_table(series_ids = .x, start_year = 1939, end_year = 2023, \n                                  api_key = bls_key, tidy = TRUE)) %&gt;% \n  # map returns list, flatten by joining data\n  reduce(., function(df1, df2) full_join(df1, df2, by = c(\"year\", \"month\"))) %&gt;%\n  # define date\n  mutate(date = as.POSIXct(paste(year,month,1, sep = \"-\")),\n         date = as.Date(date)) %&gt;% \n  write_csv(here(\"jobs_day_example.csv\"))",
     "crumbs": [
-      "Learn R",
-      "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "R Code Repository",
+      "Downloading BLS data via blsR"
     ]
   },
   {
-    "objectID": "intro_to_r.html#additional-resources",
-    "href": "intro_to_r.html#additional-resources",
-    "title": "Installing R & RStudio EARN Talk",
-    "section": "Additional resources",
-    "text": "Additional resources\nAs you embark on your R journey, check out the Other Resources page for additional materials!\nHappy coding!",
+    "objectID": "prev_bootcamps.html",
+    "href": "prev_bootcamps.html",
+    "title": "EARNCon data bootcamp files",
+    "section": "",
+    "text": "EPI Bootcamp Website",
     "crumbs": [
       "Learn R",
       "Tutorials",
-      "Installing R & RStudio EARN Talk"
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#data-analysis-in-r-first-steps",
+    "href": "prev_bootcamps.html#data-analysis-in-r-first-steps",
+    "title": "EARNCon data bootcamp files",
+    "section": "Data analysis in R: First steps",
+    "text": "Data analysis in R: First steps\nFirst steps to data analysis in R slides (pdf)\nEPI national wage percentiles data (csv)\n2022 EPI CPS ORG extracts data (zipped .dta)",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#using-apis-to-access-data-in-r",
+    "href": "prev_bootcamps.html#using-apis-to-access-data-in-r",
+    "title": "EARNCon data bootcamp files",
+    "section": "Using APIs to access data in R",
+    "text": "Using APIs to access data in R\nAccessing BLS and Census data (code)",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#data-analysis-in-r-video",
+    "href": "prev_bootcamps.html#data-analysis-in-r-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "Data analysis in R (Video)",
+    "text": "Data analysis in R (Video)\nData analysis in R slides\nHistorical minimum wage data\nCPI-U-RS data\nEPI CPS ORG data",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#code-library-presentation-video",
+    "href": "prev_bootcamps.html#code-library-presentation-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "Code Library Presentation (Video)",
+    "text": "Code Library Presentation (Video)\nCode library powerpoint",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#data-analysis-in-stata-video",
+    "href": "prev_bootcamps.html#data-analysis-in-stata-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "Data analysis in Stata (Video)",
+    "text": "Data analysis in Stata (Video)\nData analysis in Stata slides\nStata session do file",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#first-steps-in-stata-video",
+    "href": "prev_bootcamps.html#first-steps-in-stata-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "2021 First steps in Stata (Video)",
+    "text": "2021 First steps in Stata (Video)\nStata session 1 slides\nStata session 1 do file\nEPI CPS ORG 2020 stata data file",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#using-stata-effectively-video",
+    "href": "prev_bootcamps.html#using-stata-effectively-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "2021 Using Stata effectively (Video)",
+    "text": "2021 Using Stata effectively (Video)\nStata session 2 slides\nStata session 2 do file\nCPI-U-RS data\nEPI CPS ORG 2020 stata data file\nFull EPI CPS ORG (zipped data files)",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#first-steps-in-r-video",
+    "href": "prev_bootcamps.html#first-steps-in-r-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "2021 First steps in R (Video)",
+    "text": "2021 First steps in R (Video)\nSlides\nacs_2019.dta\nepi_wage_percentiles.csv\nacs_wage_analysis.R",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
+    ]
+  },
+  {
+    "objectID": "prev_bootcamps.html#using-r-effectively-video",
+    "href": "prev_bootcamps.html#using-r-effectively-video",
+    "title": "EARNCon data bootcamp files",
+    "section": "2021 Using R effectively (Video)",
+    "text": "2021 Using R effectively (Video)\nSlides\nacs_2019.dta\ngeocorr2018.csv\nacs_wage_analysis_LAST_TIME.R\nacs_wage_analysis_FINAL.R",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "EARNCon data bootcamp files"
     ]
   },
   {
@@ -1086,88 +1020,203 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "About",
+    "objectID": "viz_workshop.html",
+    "href": "viz_workshop.html",
+    "title": "Visualizing Data",
     "section": "",
-    "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!\nPlease note: code samples on this site are not generally updated once published. As a result, they may not reflect current package versions or newer coding practices. Please reach out to ecohn (at) epi (dot) org if you have any questions or are encountering errors with a published script.",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
     "crumbs": [
-      "About"
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
     ]
   },
   {
-    "objectID": "index.html#about-this-site",
-    "href": "index.html#about-this-site",
-    "title": "About",
+    "objectID": "viz_workshop.html#welcome-to-the-visualizing-data-training",
+    "href": "viz_workshop.html#welcome-to-the-visualizing-data-training",
+    "title": "Visualizing Data",
     "section": "",
-    "text": "Welcome to the EARN code library, a resource dedicated to the pursuit of economic and racial justice.\nThis library is intended to be a hub for generating and sharing research ideas, enhancing data analysis accessibility and transparency, and fostering collaboration.\nOn this site, you will find coding examples, commonly used EPI/EARN methodologies for economic analysis, coding resources, and beyond. Most importantly, user contributions are warmly welcomed!\nPlease note: code samples on this site are not generally updated once published. As a result, they may not reflect current package versions or newer coding practices. Please reach out to ecohn (at) epi (dot) org if you have any questions or are encountering errors with a published script.",
+    "text": "This training was originally presented as a workshop at EARNCon 2023.\nIn this training you will learn how to create data visualizations using free tools like ggplot2 and Tableau.",
     "crumbs": [
-      "About"
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
     ]
   },
   {
-    "objectID": "index.html#user-code-submissions",
-    "href": "index.html#user-code-submissions",
-    "title": "About",
-    "section": "User code submissions",
-    "text": "User code submissions\nHave a coding sample you would like to submit to the EARN code library? Contact ecohn (at) epi (dot) org.\nComponents of a code library submission are:\n\nDescription​\nCode file(s)​\nSupplementary data​\nOutput example\nAuthor contact information",
+    "objectID": "viz_workshop.html#introduction",
+    "href": "viz_workshop.html#introduction",
+    "title": "Visualizing Data",
+    "section": "1. Introduction",
+    "text": "1. Introduction\n\n\n\n1.1 Brief overview of ggplot2\n\n\nggplot2 is a data visualization package for R that allows users to create complex plots in a structured manner. It’s based on the Grammar of Graphics, which provides a coherent system for describing and building graphics.\n\n\n1.2 Philosophy behind ggplot2\n\n\nAt the core of ggplot2 is the idea of layers. This means starting with a blank canvas and then iteratively adding layers to create the desired visualization.",
     "crumbs": [
-      "About"
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
     ]
   },
   {
-    "objectID": "index.html#happy-coding",
-    "href": "index.html#happy-coding",
-    "title": "About",
-    "section": "Happy coding!",
-    "text": "Happy coding!\n\n\n# A heart-shaped scatterplot\n\n# Load highcharter library\nlibrary(highcharter)\n\n# Generate heart-shaped data\nt &lt;- seq(0, 2 * pi, by = 0.01)\nx &lt;- 16 * sin(t)^3\ny &lt;- 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)\n\n# Create our data frame\ndf &lt;- data.frame(x, y)\n\n# Create highcharter plot\nhighchart(type = \"chart\") %&gt;% \n  hc_add_series(data = df, type = \"scatter\", color = \"red\", marker = list(radius = 2)) %&gt;% \n  hc_xAxis(min = -20, max = 20) %&gt;% \n  hc_yAxis(min = -20, max = 15) %&gt;% \n  hc_chart(backgroundColor = \"transparent\") %&gt;% \n  hc_legend(enabled = FALSE)",
+    "objectID": "viz_workshop.html#basic-chart-creation",
+    "href": "viz_workshop.html#basic-chart-creation",
+    "title": "Visualizing Data",
+    "section": "2. Basic chart creation",
+    "text": "2. Basic chart creation\n\n2.1. Basic syntax: The Big Three\n\n\n\nggplot()\naes()\ngeom_point()\n\nThe foundation of any ggplot2 visualization starts with the ggplot() function. Within ggplot(), we call aes() to designate aesthetic mappings, and then append geometries like geom_point() to visually represent data points.\n\n\n2.2. Practical example\n\n\nUsing the mtcars dataset, we’ll illustrate the relationship between a car’s horsepower (hp) and its fuel efficiency (mpg).\n\n#First thing first, install Tidyverse using\n\n# install.packages('tidyverse')\n# install.packages('highcharter')\n\n#Load tidyverse library\nlibrary(tidyverse)\nlibrary(here)\n\nmtcars &lt;- mtcars\n\nA simple scatter plot:\n\n# A simple scatter\nggplot(data = mtcars, aes(x=mpg, y=hp)) +\n  geom_point()\n\n\n\n\n\n\n\n\nA simple histogram using geom_histogram()\n\nggplot(mtcars, aes(x=mpg)) + \n  geom_histogram(binwidth=3)",
     "crumbs": [
-      "About"
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
     ]
   },
   {
-    "objectID": "rtw_definitions.html",
-    "href": "rtw_definitions.html",
-    "title": "Right-to-work status by state, over time",
+    "objectID": "viz_workshop.html#adding-layers-and-customizations",
+    "href": "viz_workshop.html#adding-layers-and-customizations",
+    "title": "Visualizing Data",
+    "section": "3. Adding layers and customizations",
+    "text": "3. Adding layers and customizations\n\n\n\n# Load some data from Github. \n# Major industries, union density, real median wages, and employment. 2000 to 2022\nind_data &lt;- read.csv(url('https://raw.githubusercontent.com/Economic/earn_code_library/main/data/industry_union_wage_emp.csv'))\n\n# ind_data &lt;- read_csv(file = here('data/industry_union_wage_emp.csv'), col_names = TRUE)\n\n#Keep 2022 data\nind_data2022 &lt;- ind_data %&gt;%  \n  filter(year==2022)\n\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\n3.1 Adding geometries\n\n\nAn insightful visualization often arises from combining various layers and customizing aesthetics.\nBuilding on our scatter plot from earlier, let’s include a smoothed line to better discern the relationship between mpg and hp:\n\nggplot(data=ind_data2022, aes(x=union_density, y=real_med_wage)) +\n  geom_point() +\n  # Add a smoothed line with customized aesthetics\n  geom_smooth(method = 'lm', se = FALSE, col = \"red\")\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\nThe geom_smooth() with method=“lm” adds a linear regression line. The se=FALSE ensures the standard error bands are not plotted, and we’ve chosen a distinct red color for the line.\n\n\n3.2 Customizing Aesthetics\n\n\nA major advantage of ggplot2 is its flexibility in customizing visual properties of your plots.\nFor instance, modifying the scatter plot by adjusting point properties:\n\n#Bar chart with colors\nggplot(data=ind_data2022, aes(x=mind16, y=real_med_wage, fill=mind16))+\n  geom_col()\n\n\n\n\n\n\n\n#Bubble scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, size=(total_emp/1000))) +\n  geom_point()\n\n\n\n\n\n\n\n#Bubble color scatter chart\nggplot(ind_data2022, aes(x=union_density, y=real_med_wage, color=mind16, size=(total_emp/1000))) + \n  geom_point()\n\n\n\n\n\n\n\n\nLayering and customization in ggplot2 ensures your visualizations are both visually appealing and insightful.",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#customizing-plots-with-labels-and-themes",
+    "href": "viz_workshop.html#customizing-plots-with-labels-and-themes",
+    "title": "Visualizing Data",
+    "section": "4. Customizing Plots with labels and themes",
+    "text": "4. Customizing Plots with labels and themes\n\n4.1. Labeling and Titling\n\n\nLabeling is an integral part of making your plots interpretable. While some labels are inferred directly from the data, you often need to specify or customize them.\nHere’s how to add a title, x-axis label, and y-axis label to our scatter plot with the labs() function:\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who \\n are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.')\n\n\n\n\n\n\n\n\n\n\n4.2. Adjusting Text Elements\n\n\nText elements such as titles, axis labels, and annotations can be modified to better fit your plot’s aesthetic or to match specific publication requirements.\nHere’s an example of adjusting the legend’s size and position\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  # labs() function to add labels\n\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\n\n\n4.3. Themes in ggplot2\n\n\nggplot2 offers pre-set themes to modify plot aesthetics. Themes are a quick way to change the overall appearance of a plot, ensuring consistency presentations, papers, or reports.\nFor instance, let’s take the line chart we’ve been working with and apply a black and white theme:\n\n#Example of our line plot\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Note: Every subsequent theme() will supersede the previous. So be mindful!\n  theme_bw() +\n  # theme_dark() + \n  # theme_light() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n\n\n\n\n\n\nNow, let’s try using pre-made theme. ThemePark by Matthew B. Jane\n\ninstall.packages(\"remotes\")\n\nInstalling package into '/home/ecohn/R/x86_64-pc-linux-gnu-library/4.4'\n(as 'lib' is unspecified)\n\nremotes::install_github(\"MatthewBJane/ThemePark\")\n\nSkipping install of 'ThemePark' from a github remote, the SHA1 (30989dac) has not changed since last install.\n  Use `force = TRUE` to force installation\n\nlibrary(ThemePark)\n\nthemepark_themes\n\n              theme                     creator\n1            barbie             Matthew B. Jané\n2       oppenheimer Matthew B. Jané & Toki Liam\n3          starwars             Matthew B. Jané\n4             zelda               Alex Slavenko\n5        terminator               Alex Slavenko\n6         spiderman           Velu P.K. Immonen\n7            avatar           Velu P.K. Immonen\n8        gryffindor                Begum Ozemek\n9        hufflepuff                Begum Ozemek\n10        ravenclaw                Begum Ozemek\n11        slytherin                Begum Ozemek\n12         futurama             Tylor J. Harlow\n13         simpsons             Tylor J. Harlow\n14   lordoftherings                 Ethan Milne\n15    gameofthrones              Brennan Antone\n16        godfather      Francisco Garre-Frutos\n17             nemo        Christopher T. Kenny\n18          friends         Alexis van STRAATEN\n19            alien                Luke Pilling\n20   grand_budapest               Katya Kustova\n21    asteroid_city               Katya Kustova\n22  french_dispatch               Katya Kustova\n23 moonrise_kingdom               Katya Kustova\n24              elf        Christopher T. Kenny\n\n\n\nggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  #Theme\n  theme_minimal()+\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))+\n  \n  theme_barbie()\n\n\n\n\n\n\n\n\n[Insert EARN/EPI/CGI example]?\nMastering these customization techniques will make your plots informative, engaging, and tailored for their intended audience!",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#exporting-your-plot",
+    "href": "viz_workshop.html#exporting-your-plot",
+    "title": "Visualizing Data",
+    "section": "5. Exporting your plot",
+    "text": "5. Exporting your plot\n\n\nNow to export your ggplot for the refrigerator\n\nfinal_plot &lt;- ggplot(data=ind_data, aes(x=year, y=union_density, color=mind16)) +\n  geom_line() +\n  \n  theme_minimal() +\n  \n  # labs() function to add labels\n  labs(title = 'The share of workers covered by a union contract has steadily decreased... for now',\n       subtitle = 'Union density by industry, 2000-2022',\n       x = 'Union density',\n       y = 'Real median wage',\n       color= 'Industry',\n       size = 'Total emp (1000s)',\n       caption = 'Note: Data refers to workers 16+. Union workers are those who are members or covered by a union contract.\\nSource: EARN Analysis of CPS ORG data.') +\n  \n   #fix our ugly legend!\n  theme(legend.position = \"bottom\",\n        legend.box = \"vertical\",\n        legend.text = element_text(size = 9),\n        legend.title = element_text(size = 9),\n        # Edit plot caption\n        plot.caption = element_text(hjust = 0, size = 8),\n        plot.title = element_text(size=12, color='maroon4', face='bold'))\n\n\n5.1 Saving your ggplot\n\n# Our chart object\nfinal_plot\n\n\n\n\n\n\n\nggsave(plot = final_plot,\n       #name of our chart\n       filename = 'final_union_industry_scatter.png',\n       # Save location for our chart\n       path = here('output/'), \n       # Dots per inch (300+ is considered high-res)\n       dpi = 300)\n\nSaving 7 x 5 in image",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#advanced-plot-types",
+    "href": "viz_workshop.html#advanced-plot-types",
+    "title": "Visualizing Data",
+    "section": "6. Advanced Plot Types",
+    "text": "6. Advanced Plot Types\n\n6.1. Faceting and Multi-panel Plots\n\n\nFaceting enables the creation of multi-panel plots, helping visualize patterns across different subgroups without generating individual plots for each subgroup.\nLet’s view scatter plots of mpg vs. hp but facet them by the number of cylinders:\n\nggplot(mtcars, aes(y=hp, x=mpg))+\n  geom_point()+\n  facet_wrap(~cyl)\n\n\n\n\n\n\n\nind_data_years &lt;- ind_data %&gt;% \n  filter(year %in% c(2000, 2008, 2022))\n\nggplot(ind_data_years, aes(x=union_density, y=real_med_wage)) + \n  geom_point() + \n  facet_wrap(~year) +\n  theme_bw()\n\n\n\n\n\n\n\n\n\n\n6.3. Interactive charts\n\n#install.packages('highcharter')\nlibrary(highcharter)\n\n\n#Line chart with colors\n\nlinechart &lt;- highchart() %&gt;%\n  \n  hc_add_series(data = ind_data, hcaes(x = year, y = union_density, group = mind16), \n                type = 'line')\n\nlinechart\n\n\n\n\n\nAdvanced plot types and features will elevate your data visualization skills, allowing you to craft detailed and insightful plots tailored to diverse datasets and questions.",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "viz_workshop.html#resources-for-layer-based-chart-visualization",
+    "href": "viz_workshop.html#resources-for-layer-based-chart-visualization",
+    "title": "Visualizing Data",
+    "section": "7.0 Resources for layer-based chart visualization!",
+    "text": "7.0 Resources for layer-based chart visualization!\n\nOfficial Tidyverse page for ggplot2 https://ggplot2.tidyverse.org/index.html\nR Graphics Cookbook\nHighcharter package for interactive charts",
+    "crumbs": [
+      "Learn R",
+      "Tutorials",
+      "Visualizing Data"
+    ]
+  },
+  {
+    "objectID": "median_wages_demos.html",
+    "href": "median_wages_demos.html",
+    "title": "State-level median wages by demographic",
     "section": "",
-    "text": "Some states have adopted or, as in the case of Michigan, repealed right-to-work laws at varying times over the last eighty years. These changes make it difficult to accurately compare economic conditions over time on the basis of a state’s right-to-work status.\nUse this code to define right-to-work versus non-right-to-work status for states by year, factoring in when states became or stopped being RTW. This code is best for running time series comparisons between RTW and non-RTW states. An example at the bottom of this page calculates RTW vs non-RTW prime age EPOPS over time using the EPI CPS microdata extracts.\nNote: This code requires the use of an additional csv file to assign the RTW vs non-RTW labels to each state. Download the file here and save to your project before running code.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(labelled)",
+    "text": "Use this code to find median wages and sample sizes by various demographics (race, gender, race and gender, and educational attainment) using the EPI CPS microdata extracts.\nPlease note: these data are already available on the State of Working American Data Library. However, due to small sample sizes, some cuts of these data are suppressed. You can use this code to generate all data, regardless of sample size, but be careful when making claims about data with small sample sizes.\nThe following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. We’ll also set up a wb value that will allow us to generate an Excel workbook.\n#Load necessary libraries\nlibrary(tidyverse)\nlibrary(epiextractr)\nlibrary(epidatatools)\nlibrary(labelled)\nlibrary(realtalk)\nlibrary(openxlsx2)\n\n#Set up workbook\nwb &lt;- wb_workbook()",
     "crumbs": [
       "R Code Repository",
-      "Right-to-work status by state, over time"
+      "State-level median wages by demographic"
     ]
   },
   {
-    "objectID": "rtw_definitions.html#import-and-clean-data",
-    "href": "rtw_definitions.html#import-and-clean-data",
-    "title": "Right-to-work status by state, over time",
+    "objectID": "median_wages_demos.html#set-up-for-inflation-adjusting",
+    "href": "median_wages_demos.html#set-up-for-inflation-adjusting",
+    "title": "State-level median wages by demographic",
+    "section": "Set up for inflation adjusting",
+    "text": "Set up for inflation adjusting\nEPI uses the chained CPI-U series to inflation adjust wages (use chained extended for analysis pre-2000), so we’ll select that series and assign it to a dataframe.\n\n# pulling in chained CPI-U series\ncpi_data &lt;- realtalk::c_cpi_u_extended_annual\n\n# set base year to 2024\ncpi2024 &lt;- cpi_data$c_cpi_u_extended[cpi_data$year==2024]",
+    "crumbs": [
+      "R Code Repository",
+      "State-level median wages by demographic"
+    ]
+  },
+  {
+    "objectID": "median_wages_demos.html#import-and-clean-data",
+    "href": "median_wages_demos.html#import-and-clean-data",
+    "title": "State-level median wages by demographic",
     "section": "Import and clean data",
-    "text": "Import and clean data\nNote: Don’t forget to update years, file names, and file paths to match your setup before running the script.\nIn this chunk, you’ll reformat the RTW label state_rtw_definitions.csv file into a format that’s easier to process in R.\n\n# read in RTW status by year\nrtw_status_year &lt;- read.csv(\"./input/state_rtw_definitions.csv\") |&gt; \n  pivot_longer(cols = -year, names_to = \"state\", values_to = \"rtw_status\") |&gt; \n  arrange(state, year)\n\nRunning this script chunk will call and clean the BLS Current Population Survey Basic data required to calculate prime age EPOPs. It will also join the rtw_status_years data frame you created to label each state as “RTW” or “Non-RTW” in a given year.\n\n# import CPS Basic data\ncps_basic &lt;- load_basic(2000:2025, \"year\", \"month\", \"selfemp\", \"selfinc\", \"age\", \"statefips\", \"emp\", \"lfstat\",\n              \"cow1\", \"female\", \"wbhao\", \"basicwgt\") |&gt; \n  # Age restrictions\n  filter(age &gt;= 16) |&gt; \n  # identify prime-age (for EPOPs)\n  mutate(prime_age = case_when(between(age, 25, 54) ~ 1, TRUE ~ 0), state=to_factor(statefips)) |&gt; \n  # merge RTW status\n  left_join(rtw_status_year, by = c(\"year\", \"state\")) |&gt; \n  # adjust for missing Oct data\n  mutate(weight = case_match(year, \n                             2025 ~ basicwgt / 11, \n                             .default = basicwgt / 12))",
+    "text": "Import and clean data\nNote: Don’t forget to update years to match your setup before running the script.\nRunning this script chunk will call the BLS Current Population Survey ORG data required to calculate median wages.\nWe’ll set standard labor force restrictions, ensuring that we only keep workers who are not self-employed or self-incorporated and are over the age of 16. We’ll also restrict this data to one state (Wisconsin, in this case), and inflation adjust wages.\n\n#load in CPS ORG data\ncps_org &lt;- load_cps(\"org\", 1979:2024, year, orgwgt, wage, statefips, female, wbho, age, \n                                      selfemp, emp, selfinc, cow1, educ, gradeatn) %&gt;%\n  # Standard labor force and age restrictions, restrict to only Wisconsin (statefips code = 55)\n  filter(age &gt;= 16, emp == 1, statefips == 55,\n         case_when(year &lt; 1989 ~ selfemp == 0,\n                   year &gt;= 1989 & year &lt; 1994 ~ selfemp == 0 | selfinc == 0,\n                   TRUE ~ cow1 &lt;= 5)) %&gt;% \n  # Merge annual CPI data to data frame by year\n  left_join(cpi_data, by='year') %&gt;%\n  # Inflation adjust wages to 2024$\n  mutate(realwage = wage * (cpi2024/c_cpi_u_extended))",
     "crumbs": [
       "R Code Repository",
-      "Right-to-work status by state, over time"
+      "State-level median wages by demographic"
     ]
   },
   {
-    "objectID": "rtw_definitions.html#run-analysis",
-    "href": "rtw_definitions.html#run-analysis",
-    "title": "Right-to-work status by state, over time",
-    "section": "Run analysis",
-    "text": "Run analysis\nHere you’ll run the analysis to calculate prime age EPOPs by RTW vs. non-RTW states over time.\n\nepop_rtw &lt;- cps_basic |&gt; \n  filter(prime_age == 1) |&gt; \n  # EPOP = weighted mean of employment\n  summarise(epop = weighted.mean(emp, w = weight, na.rm = TRUE), .by = c(year, rtw_status)) |&gt; \n  # reshape wide by RTW label\n  pivot_wider(id_cols = year, names_from = rtw_status, values_from = epop) |&gt; \n  rename(RTW = `1`, non_RTW = `0`)\n\nAnd that’s all! You can easily apply the first two code chunks to any CPS (or other survey) analysis you want to do.\nHappy coding!",
+    "objectID": "median_wages_demos.html#sheet-1-wages-by-race-gender-and-race-and-gender.",
+    "href": "median_wages_demos.html#sheet-1-wages-by-race-gender-and-race-and-gender.",
+    "title": "State-level median wages by demographic",
+    "section": "Sheet 1: Wages by race, gender, and race and gender.",
+    "text": "Sheet 1: Wages by race, gender, and race and gender.\nThis section of the script produces median wages by year and by various demographic cuts. Here we use EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per year per demographic cut.\n\nMedian wages by gender\n\nwages_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(female, year)) |&gt;\n  #Relabel for clarity\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = gender, values_from = wage_median)\n\n\n\nMedian wages by race\n\nwages_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, year)) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = wbho, values_from = wage_median)\n\n\n\nMedian wages by race and gender\n\nwages_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  #Relabel for clarity\n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  #Change orientation for Excel layout\n  pivot_wider(id_cols = year, names_from = demographic, values_from = wage_median)\n\n\n\nFormat and save output\nHere we’ll join all three dataframes into one, order our variables, and save the new dataframe to a sheet in our Excel workbook.\n\n#Join the three dataframes by year\nwage_demos &lt;-  left_join(wages_gender, wages_race, by='year') |&gt;\n  left_join(wages_race_gender) |&gt; \n  #Order the columns\n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Create a new sheet and add data to sheet\nwb$add_worksheet(sheet = \"Race and gender_median wages\") $\n  add_data(x = wage_demos)",
     "crumbs": [
       "R Code Repository",
-      "Right-to-work status by state, over time"
+      "State-level median wages by demographic"
     ]
   },
   {
-    "objectID": "epi_microdata.html",
-    "href": "epi_microdata.html",
-    "title": "Load EPI CPS Extracts via epiextractr",
+    "objectID": "median_wages_demos.html#sheet-2-sample-sizes",
+    "href": "median_wages_demos.html#sheet-2-sample-sizes",
+    "title": "State-level median wages by demographic",
+    "section": "Sheet 2: Sample sizes",
+    "text": "Sheet 2: Sample sizes\nThis code chunk follows the exact same steps as the section above, except it generates sample sizes instead of median wages. It is extremely important to reference this sheet when making claims about the data. Avoid relying on data drawn from small sample sizes.\n\n#By gender\nsample_gender &lt;- cps_org |&gt; \n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(female, year)) |&gt;\n  mutate(gender = case_when(female == \"Female\" ~ \"Women\", female == \"Male\" ~ \"Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = gender, values_from = n)\n\n#By race\nsample_race &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  summarize(n=n(),\n            .by = c(wbho, year)) |&gt; \n  pivot_wider(id_cols = year, names_from = wbho, values_from = n)\n\n#By race and gender\nsample_race_gender &lt;- cps_org |&gt; \n  mutate(wbho = to_factor(wbho)) |&gt;\n  mutate(female = to_factor(female)) |&gt;\n  summarise(n=n(),\n        .by=c(wbho, female, year)) |&gt;\n  unite(col = \"demographic\", c(wbho, female), na.rm = TRUE) |&gt; \n  mutate(demographic = case_when(demographic == \"White_Female\" ~ \"White Women\", \n                                demographic == \"White_Male\" ~ \"White Men\",\n                                demographic == \"Black_Female\" ~ \"Black Women\", \n                                demographic == \"Black_Male\" ~ \"Black Men\",\n                                demographic == \"Hispanic_Female\" ~ \"Hispanic Women\", \n                                demographic == \"Hispanic_Male\" ~ \"Hispanic Men\",\n                                demographic == \"Other_Female\" ~ \"Other Women\", \n                                demographic == \"Other_Male\" ~ \"Other Men\")) |&gt;\n  pivot_wider(id_cols = year, names_from = demographic, values_from = n)\n\n#Join dataframes\nsample_sizes &lt;-  left_join(sample_gender, sample_race, by='year') |&gt;\n  left_join(sample_race_gender) |&gt; \n  select(year, starts_with(\"White\"), starts_with(\"Black\"), starts_with(\"Hispanic\"), Women, Men)\n\n#Save to Excel\nwb$add_worksheet(sheet = \"Sample sizes\") $\n  add_data(x = sample_sizes)",
+    "crumbs": [
+      "R Code Repository",
+      "State-level median wages by demographic"
+    ]
+  },
+  {
+    "objectID": "median_wages_demos.html#sheet-3-wages-by-educational-attainment",
+    "href": "median_wages_demos.html#sheet-3-wages-by-educational-attainment",
+    "title": "State-level median wages by demographic",
+    "section": "Sheet 3: Wages by educational attainment",
+    "text": "Sheet 3: Wages by educational attainment\nFinally, this code chunk generates median wages by educational attainment. The code uses the same weighted median wage methodology as above.\nIt also includes two sets of custom educational categories, which you can exclude or modify as needed. See the EPI Microdata variables list to learn how the gradeatn variable is categorized by default.\n\nFilter the data\nThe gradeatn variable is only available from 1992, so first we need to filter the data to exclude irrelevant years.\n\nnew_cps_org &lt;- filter(cps_org, year &gt;= 1992)\n\n\n\nCalculate wages by education level\nNow we’ll run the code. The first part of both sections of code here creates custom educational attainment categories. The second part calulcates wages.\n\n#Single category Associate degree\nwages_sing_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 | gradeatn == 12 ~ \"Associate degree-all\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n#Two category Associate degree\nwages_two_assoc &lt;- new_cps_org |&gt; \n  mutate(educat = case_when(gradeatn %in% c(1,2,3,4,5,6,7,8) ~ \"No HS diploma\",\n                          gradeatn == 9 ~ \"HS graduate\",\n                          gradeatn == 10 ~ \"Some college but no degree\",\n                          gradeatn == 11 ~ \"Associate degree-occupational/vocational\",\n                          gradeatn == 12 ~ \"Associate degree-academic program\",\n                          gradeatn %in% c(13,14,15,16) ~ \"Bachelor's degree or more\")) |&gt; \n  summarise(\n      wage_median = averaged_median(\n        x = realwage, \n        w = orgwgt/12,  \n        quantiles_n = 9L, \n        quantiles_w = c(1:4, 5, 4:1)),\n        n=n(),\n        .by=c(educat, year))\n\n\n\nFormat and save output\nHere we’ll save our two dataframes to a new Excel sheet, formatting the output so both dataframes fit on a single sheet.\n\nwb$add_worksheet(sheet = \"Education median wages\") $\n  add_data(x = wages_sing_assoc, start_col = 1) $\n  add_data(x = wages_two_assoc, start_col = 8)",
+    "crumbs": [
+      "R Code Repository",
+      "State-level median wages by demographic"
+    ]
+  },
+  {
+    "objectID": "median_wages_demos.html#save-your-workbook",
+    "href": "median_wages_demos.html#save-your-workbook",
+    "title": "State-level median wages by demographic",
+    "section": "Save your workbook",
+    "text": "Save your workbook\nNote: Don’t forget to file names and file paths to match your setup before running this code chunk.\n\nwb_save(wb, \"output/wisconsin_wages_2025.xlsx\")\n\nAll done! Happy coding!",
+    "crumbs": [
+      "R Code Repository",
+      "State-level median wages by demographic"
+    ]
+  },
+  {
+    "objectID": "bootcamp_preview.html",
+    "href": "bootcamp_preview.html",
+    "title": "EARNCon 2023 Bootcamp Preview",
     "section": "",
-    "text": "Note: Users will need to install epiextractr for this example. Refer to EPI packages for R for installation instructions.\n\nLoad required libraries\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\n\n\nDownload CPS files\n\n# download CPS ORG files  \ndownload_cps( sample = 'org', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS Basic (4085.3 MB) \ndownload_cps(sample='basic', extracts_dir ='C:/YOUR_PATH/cps', overwrite = TRUE)\n\n# download CPS May (38.8 MB)\ndownload_cps(sample='may', extracts_dir = 'C:/YOUR_PATH/cps', overwrite = TRUE)\n\nThis will download the latest EPI CPS ORG extracts in .feather format from https://microdata.epi.org and place them in the directory C:\\data\\cps.\n\n\nLoad your CPS extracts!\nAfter the data is downloaded, load a selection of CPS data for your analysis:\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho, \n                .extracts_dir = 'C:/YOUR_PATH/cps')\n\n\n\n(Optional) Set and forget CPS data files by creating/editing an .Renviron file\nTo simplify usage, you can omit the .extracts_dir argument by setting the environment variables to your extracts directory. This allows you to call CPS extracts from a single, dedicated folder, eliminating redundant downloads of CPS files.\n\n# Find the .Renviron file\nrenviron_path &lt;- file.path(Sys.getenv(\"HOME\"), \".Renviron\")\n\n# Open the file for editing\nfile.edit(renviron_path)\n\n# Paste the environment variable settings into your .Renviron file,\n# and make sure the paths are set to the location of your CPS files\n\nEPIEXTRACTS_CPSBASIC_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSMAY_DIR=C:/YOUR_PATH/cps\nEPIEXTRACTS_CPSORG_DIR=C:/YOUR_PATH/cps\n\nAfter editing your .Renviron file, save your changes and restart R to apply them.\nIf you’ve set your .Renviron file paths to point to the folder containing your CPS files, you can omit the .extracts_dir() command\n\norg &lt;- load_cps(\"org\", 2010:2022, year, orgwgt, wage, age, statefips, wbho)\n\n\n\n\n\n Back to top",
-    "crumbs": [
-      "R Code Repository",
-      "Load EPI CPS Extracts via epiextractr"
-    ]
+    "text": "Welcome to the EARNCon 2023 data bootcamp preview page!\nThis step-by-step guide will have you fully prepared to participate in the R data bootcamp and data workshops on benchmarking and data visualization."
+  },
+  {
+    "objectID": "bootcamp_preview.html#agenda",
+    "href": "bootcamp_preview.html#agenda",
+    "title": "EARNCon 2023 Bootcamp Preview",
+    "section": "Agenda",
+    "text": "Agenda\nFacilitators: Daniel Perez & Sebastian Hickey\nEARNTalk date: Thursday, September 21st, 2023. 2-3:00 p.m. ET\nProcess:\n\nEARN Code Library preview\nDownloading and installing R and RStudio Desktop\nExploring the RStudio user interface\n\nDemonstrate\n\nSetting a working directory\nCreating a project\nDownloading packages that will be used at EARNCon\nCreating a script\n\n\nRegistering for Tableau Public\n\n\nEARN Code Library preview\nWe’re glad you’re here. the EARN Code Library is still in the early stages of development. As such, we wholeheartedly welcome your input on what content would be most useful.\n\n\nDownloading and installing R and Rstudio desktop\nInstalling R and RStudio on work machines can sometimes be challenging due to a variety of reasons.\n\nSome common issues (and resolutions):\n\nAdministrative Privileges: Many work machines have restricted administrative rights. This can prevent users from installing software, including R and RStudio.\n\nResolution: Request temporary administrative rights from your IT department or ask them to install R and RStudio for you.\n\nFirewall and Network Restrictions: Some corporate networks have strict firewall settings or network restrictions that can block the download of R, RStudio, or packages from CRAN (Comprehensive R Archive Network).\n\nResolution: Contact your IT department to whitelist the necessary domains (like CRAN) or provide a secure network path to download and install the required software.\n\nDependency Issues: R packages often depend on other packages or system libraries. If these are not installed or are incompatible versions, it can lead to errors.\n\nResolution: Ensure that all required dependencies are installed. You can use the install.packages() function with the dependencies=TRUE argument in R to automatically install package dependencies.\n\nOperating System Specific Issues: Depending on whether you’re using Windows, macOS, or Linux, there might be OS-specific issues to consider.\n\nResolution: Refer to the official R and RStudio installation guides for your specific operating system. For Linux, tools like apt-get or yum can be used to install the necessary libraries.\n\nPackage Binary vs. Source Installation: On some systems, users might encounter issues when trying to install package binaries.\n\nResolution: Ensure you have the necessary development tools installed (like gcc on Linux or Xcode on macOS). When installing a package in R, you can use the type=\"source\" argument with install.packages() to install from source.\n\nMismatched Versions: Ensure that the version of RStudio you’re installing is compatible with the version of R you have installed.\n\nResolution: Always check the compatibility of RStudio with your R version before installation. If there’s a mismatch, consider upgrading R or downloading a compatible version of RStudio.\n\nRtools Installation (Windows only): Rtools is essential for building and installing some R packages from source on Windows.\n\nResolution: Download and install Rtools from the CRAN website. Ensure that the Rtools/bin directory is added to your system PATH.\n\n\n\n\nEnough talk, time to download!\n\nNavigate to https://posit.co/downloads/"
   },
   {
     "objectID": "union_density.html",

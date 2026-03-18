@@ -6,9 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Emma Cohn">
+<meta name="author" content="Emma Cohn and Daniel Perez">
+<meta name="dcterms.date" content="2026-01-26">
 
-<title>Union wage premiums by state – Code Library</title>
+<title>(Monthly) rolling averages - ARCHIVED – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,8 +66,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./weighted_percentiles.html" rel="next">
-<link href="./rtw_union.html" rel="prev">
+<link href="./bin_wage_deciles.html" rel="next">
+<link href="./weighted_percentiles.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -147,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./union_premium.html">Union wage premiums by state</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./old_rolling_averages.html">Archive</a></li><li class="breadcrumb-item"><a href="./old_rolling_averages.html">(Monthly) rolling averages - ARCHIVED</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -332,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./union_premium.html" class="sidebar-item-text sidebar-link active">
+  <a href="./union_premium.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Union wage premiums by state</span></a>
   </div>
 </li>
@@ -344,16 +345,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Archive</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./old_rolling_averages.html" class="sidebar-item-text sidebar-link">
+  <a href="./old_rolling_averages.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">(Monthly) rolling averages - ARCHIVED</span></a>
   </div>
 </li>
@@ -388,27 +389,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link active" data-scroll-target="#import-and-clean-data">Import and clean data</a></li>
-  <li><a href="#method-1-point-in-time-comparisons" id="toc-method-1-point-in-time-comparisons" class="nav-link" data-scroll-target="#method-1-point-in-time-comparisons">Method 1: Point-in-time comparisons</a>
+  <li><a href="#load-required-libraries" id="toc-load-required-libraries" class="nav-link active" data-scroll-target="#load-required-libraries">Load required libraries</a></li>
+  <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link" data-scroll-target="#import-and-clean-data">Import and clean data</a></li>
+  <li><a href="#calculate-monthly-rolling-averages-for-epops" id="toc-calculate-monthly-rolling-averages-for-epops" class="nav-link" data-scroll-target="#calculate-monthly-rolling-averages-for-epops">Calculate monthly rolling averages for EPOPs</a>
   <ul class="collapse">
-  <li><a href="#create-wage-data" id="toc-create-wage-data" class="nav-link" data-scroll-target="#create-wage-data">Create wage data</a></li>
-  <li><a href="#calculate-union-wage-premium" id="toc-calculate-union-wage-premium" class="nav-link" data-scroll-target="#calculate-union-wage-premium">Calculate union wage premium</a></li>
+  <li><a href="#calculate-epops-by-raceethnicity-and-format-output" id="toc-calculate-epops-by-raceethnicity-and-format-output" class="nav-link" data-scroll-target="#calculate-epops-by-raceethnicity-and-format-output">Calculate EPOPs by race/ethnicity and format output</a></li>
   </ul></li>
-  <li><a href="#method-2-time-series" id="toc-method-2-time-series" class="nav-link" data-scroll-target="#method-2-time-series">Method 2: Time series</a>
-  <ul class="collapse">
-  <li><a href="#set-up-inflation-adjustment" id="toc-set-up-inflation-adjustment" class="nav-link" data-scroll-target="#set-up-inflation-adjustment">Set up inflation adjustment</a></li>
-  <li><a href="#create-wage-data-1" id="toc-create-wage-data-1" class="nav-link" data-scroll-target="#create-wage-data-1">Create wage data</a></li>
-  <li><a href="#calculate-union-wage-premium-1" id="toc-calculate-union-wage-premium-1" class="nav-link" data-scroll-target="#calculate-union-wage-premium-1">Calculate union wage premium</a></li>
-  </ul></li>
+  <li><a href="#export-your-data-to-a-downloadable-excel" id="toc-export-your-data-to-a-downloadable-excel" class="nav-link" data-scroll-target="#export-your-data-to-a-downloadable-excel">Export your data to a downloadable Excel</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./union_premium.html">Union wage premiums by state</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./blsR_example.html">R Code Repository</a></li><li class="breadcrumb-item"><a href="./old_rolling_averages.html">Archive</a></li><li class="breadcrumb-item"><a href="./old_rolling_averages.html">(Monthly) rolling averages - ARCHIVED</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Union wage premiums by state</h1>
+<h1 class="title">(Monthly) rolling averages - ARCHIVED</h1>
 </div>
 
 
@@ -418,10 +414,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Emma Cohn </p>
+             <p>Emma Cohn and Daniel Perez </p>
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 26, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -431,123 +433,100 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Use this code to calculate a union wage premium (the difference between median union and nonunion median wages) by state using the <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>.</p>
-<p>Some utility notes:</p>
-<ol type="1">
-<li>Unlike the regression-based national union wage premium on the <a href="https://data.epi.org/unions/union_wage_gaps/line/year/national/percent_union_premium/overall?timeStart=2003-01-01&amp;timeEnd=2024-01-01&amp;dateString=2024-01-01&amp;highlightedLines=overall">State of Working America Data Library</a>, this simple code <strong>does not control for confounding variables such as education, job type, or demographic.</strong> That means while it may accurately reflect that union jobs often carry with them a wage premium, it does not take into account the fact that low-wage jobs, for instance, tend to be non-unionized. The actual wage premium across comparable positions may be different. Exercise caution when making specific claims with these data.</li>
-<li><strong>Sample sizes vary widely</strong> over time, state, and union vs nonunion groups. Keep a close eye on this, and remember that some states may not have large enough sample sizes to produce strong data. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data. <strong>It may not be possible to produce usable union wage premium data for your state.</strong></li>
-</ol>
-<p>Please reach out to <a href="mailto:ecohn@epi.org">ecohn@epi.org</a> with any questions. Now let’s get coding!</p>
-<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code.</p>
+<p>Note: this code is outdated and does not account for missing October 2025 CPS data. For the new rolling calculation methodology, see <a href="https://economic.github.io/earn_code_library/rolling_average.html">here</a>.</p>
+<p>This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs).</p>
+<section id="load-required-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="load-required-libraries">Load required libraries</h2>
+<p>The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven’t yet set up your computer to run <a href="https://economic.github.io/earn_code_library/epi_microdata.html">EPI CPS microdata extracts</a>, complete that process before running this code.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epidatatools)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(realtalk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#this package contains most common R functions</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr) <span class="co">#allows you to get CPS (e.g., Basic, ORG) extracts</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled) <span class="co">#allows you to easily clean data; includes functions like 'to_factor'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo) <span class="co">#contains functions like rollmean and rollsum</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2) <span class="co">#allows you to format and export data to an Excel workbook</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 <section id="import-and-clean-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-and-clean-data">Import and clean data</h2>
 <p><strong>Note:</strong> Don’t forget to <strong>update years</strong> to match your setup before running the script.</p>
-<p>Running this script chunk will call the BLS Current Population Survey ORG data required to calculate union wage premiums.</p>
+<p>Running this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs. It will also create a variable that will allow you to calculate prime-age EPOPs and set up some date formatting for the rolling average calculation later.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import CPS ORG data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: load as many years necessary to get sufficient sample sizes or desired time series.</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>cps_org <span class="ot">&lt;-</span> <span class="fu">load_org</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, <span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"statefips"</span>, <span class="st">"wage"</span>, <span class="st">"union"</span>, <span class="st">"orgwgt"</span>, <span class="st">"a_earnhour"</span>, <span class="st">"a_weekpay"</span>, <span class="st">"cow1"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, cow1 <span class="sc">&lt;=</span> <span class="dv">5</span>, a_earnhour <span class="sc">!=</span> <span class="dv">1</span>, a_weekpay <span class="sc">!=</span> <span class="dv">1</span>, <span class="sc">!</span><span class="fu">is.na</span>(wage))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>basic <span class="ot">&lt;-</span> <span class="fu">load_basic</span>(<span class="dv">2018</span><span class="sc">:</span><span class="dv">2024</span>, <span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"basicwgt"</span>, <span class="st">"age"</span>, <span class="st">"wbhao"</span>, <span class="st">"selfinc"</span>, <span class="st">"emp"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Filter to working age population with employment information</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, <span class="sc">!</span><span class="fu">is.na</span>(emp)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create prime-age variable</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prime_age =</span> <span class="fu">case_when</span>(<span class="fu">between</span>(age, <span class="dv">25</span>, <span class="dv">54</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create date in yyyy-mm-dd format</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(<span class="fu">paste0</span>(year,<span class="st">'-'</span>, month,<span class="st">'-1'</span>))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="method-1-point-in-time-comparisons" class="level2">
-<h2 class="anchored" data-anchor-id="method-1-point-in-time-comparisons">Method 1: Point-in-time comparisons</h2>
-<p>This method produces union wage premiums for all fifty states, pooling five years of data to get sufficient sample sizes.</p>
-<p>Note: some of the sample sizes are still quite small, even with five years of data. E.g., South Carolina’s union-represented sample. Consider expanding the number of years pooled, but keep in mind that this will also alter what you can say about the results.</p>
-<section id="create-wage-data" class="level3">
-<h3 class="anchored" data-anchor-id="create-wage-data">Create wage data</h3>
-<p>This code chunk uses EPI methodology to correct for wage clumping by created a weighted average of wages around the median. The result is one median wage per state.</p>
+<section id="calculate-monthly-rolling-averages-for-epops" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-monthly-rolling-averages-for-epops">Calculate monthly rolling averages for EPOPs</h2>
+<p>This code chunk calculates the (prime-age) EPOP by finding a weighted average of the binary variable <code>emp</code> (1 = employed, 0 = unemployed or not in the labor force), sets up the rolling average, and applies an (optional) data suppression threshold. The suppression threshold is likely not necessary for national data, but it can become important at the state level or with narrow demographic cuts. Though there is no hard and fast rule for how large a sample needs to be, smaller samples will produce more noisy, less reliable data.</p>
+<p>In order to <strong>change the rolling length</strong>, change the <code>k</code> value. This code calculates 12-month rolling averages; a smaller number of months will be <em>more susceptible to short-term changes</em> such as business cycles or seasonal employment. On the flip side, a high number of months will <em>smooth out shorter-term or temporary changes</em>, like the effects of recent policy, but will include <em>more robust sample sizes</em>. Consider this when deciding how many months (or other measure) to include.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: divide orgwgt by as many months are in your pool.</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>wage_single <span class="ot">&lt;-</span> cps_org <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union =</span> <span class="fu">to_factor</span>(union)) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">wage_median =</span> <span class="fu">averaged_median</span>(</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> wage, </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">60</span>,  </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">quantiles_n =</span> <span class="dv">9</span>L, </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">quantiles_w =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">1</span>)),</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">n=</span><span class="fu">n</span>(),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">.by=</span><span class="fu">c</span>(union, statefips))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>epop_all <span class="ot">&lt;-</span> basic <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Optional: filter to calculate prime-age EPOPS</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(prime_age <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate EPOP as the weighted mean of 'emp' variable</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">epop =</span> <span class="fu">weighted.mean</span>(emp, <span class="at">w =</span> basicwgt),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span>date) <span class="sc">|&gt;</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate rolling average of previous 12 months for EPOPs; calculate rolling sum of sample size</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">all_epop12 =</span> <span class="fu">rollmean</span>(epop, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">all_sample12 =</span> <span class="fu">rollsum</span>(n, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, all_epop12, all_sample12) <span class="sc">|&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Suppress data with sample size of &lt; 250</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">all_epop12 =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(all_sample12) <span class="sc">|</span> all_sample12 <span class="sc">&lt;</span> <span class="dv">250</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">NA_real_</span>, all_epop12))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="calculate-epops-by-raceethnicity-and-format-output" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-epops-by-raceethnicity-and-format-output">Calculate EPOPs by race/ethnicity and format output</h3>
+<p>This section adds code that breaks out EPOPs by race/ethnicity, using the <code>wbhao</code> variable. It also pivots the data so that each race/ethnicity group is its own column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>epop_race <span class="ot">&lt;-</span> basic <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">epop =</span> <span class="fu">weighted.mean</span>(emp, <span class="at">w =</span> basicwgt),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>(),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by=</span><span class="fu">c</span>(wbhao, date)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">to_factor</span>(wbhao)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure correct order within each racial/ethnic category</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(race, date) <span class="sc">|&gt;</span>  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute rolling mean per 'race' group</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(race) <span class="sc">|&gt;</span>       </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">epop12 =</span> <span class="fu">rollmean</span>(epop, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">sample12 =</span> <span class="fu">rollsum</span>(n, <span class="at">k =</span> <span class="dv">12</span>, <span class="at">align =</span> <span class="st">"right"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, race, epop12, sample12) <span class="sc">|&gt;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pivot the data to display each race/ethnicity as its own column with appropriate label</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> race,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> <span class="fu">c</span>(epop12, sample12),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_glue =</span> <span class="st">"{race}_{.value}"</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="calculate-union-wage-premium" class="level3">
-<h3 class="anchored" data-anchor-id="calculate-union-wage-premium">Calculate union wage premium</h3>
-<p>This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wage_dif_single <span class="ot">&lt;-</span> wage_single <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union_stat =</span> <span class="fu">case_when</span>(union <span class="sc">==</span> <span class="st">"Not union represented"</span> <span class="sc">~</span> <span class="st">"nonunion"</span>, </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                union <span class="sc">==</span> <span class="st">"Union represented"</span> <span class="sc">~</span> <span class="st">"union"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> statefips, <span class="at">names_from =</span> union_stat, <span class="at">values_from =</span> wage_median) <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> ((union<span class="sc">-</span>nonunion)<span class="sc">/</span>nonunion))<span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">to_factor</span>(statefips)) <span class="sc">|&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(statefips, state, <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
-</section>
-<section id="method-2-time-series" class="level2">
-<h2 class="anchored" data-anchor-id="method-2-time-series">Method 2: Time series</h2>
-<p>This method produces inflation-adjusted union wage premiums for one state over time.</p>
-<p>Note: Because you can’t combine years to pool data for this method, check sample sizes before proceeding. Do not use for states that have insufficient sample sizes.</p>
-<p>You can check sample sizes by running the code through the line noted below and checking the <code>n</code> column of <code>wage_series</code>.</p>
-<section id="set-up-inflation-adjustment" class="level3">
-<h3 class="anchored" data-anchor-id="set-up-inflation-adjustment">Set up inflation adjustment</h3>
-<p>For more information on inflation adjusting wages, see <a href="https://economic.github.io/earn_code_library/inflation_adjusting.html">Inflation adjusting with Realtalk</a>.</p>
+<section id="export-your-data-to-a-downloadable-excel" class="level2">
+<h2 class="anchored" data-anchor-id="export-your-data-to-a-downloadable-excel">Export your data to a downloadable Excel</h2>
+<p>Use <code>openxlsx2</code> to create a downloadable Excel. Don’t forget to <strong>edit the file path</strong> to ensure it saves to the right location.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate real wage over time: load CPI data from realtalk</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cpi_data <span class="ot">&lt;-</span> realtalk<span class="sc">::</span>c_cpi_u_annual</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  Export epop tables to one workbook </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">wb_workbook</span>()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set base year to 2024</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>cpi2024 <span class="ot">&lt;-</span> cpi_data<span class="sc">$</span>c_cpi_u[cpi_data<span class="sc">$</span>year<span class="sc">==</span><span class="dv">2024</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>wb<span class="sc">$</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add worksheet</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_worksheet</span>(<span class="at">sheet =</span> <span class="st">"US EPOPs"</span>)<span class="sc">$</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_data</span>(<span class="at">x =</span> epop_all)<span class="sc">$</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_worksheet</span>(<span class="at">sheet =</span> <span class="st">"EPOPs by race"</span>)<span class="sc">$</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_data</span>(<span class="at">x =</span> epop_race)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">wb_save</span>(wb, <span class="at">file =</span> <span class="st">"output/epop_tables.xlsx"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="create-wage-data-1" class="level3">
-<h3 class="anchored" data-anchor-id="create-wage-data-1">Create wage data</h3>
-<p>This code chunk calculates median wages and adjusts them for inflation.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: change statefips to whichever state you prefer.</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>wage_series <span class="ot">&lt;-</span> cps_org <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(statefips <span class="sc">==</span> <span class="dv">36</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union =</span> <span class="fu">to_factor</span>(union)) <span class="sc">|&gt;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">wage_median =</span> <span class="fu">averaged_median</span>(</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">x =</span> wage, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>,  </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">quantiles_n =</span> <span class="dv">9</span>L, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">quantiles_w =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">1</span>)),</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">n=</span><span class="fu">n</span>(),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">.by =</span> <span class="fu">c</span>(year, union)) <span class="sc">|&gt;</span> <span class="co">#if you want to check the sample size, run your code through this line (exclude the |&gt; character)</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge annual CPI data to data frame by year</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cpi_data, <span class="at">by=</span><span class="st">'year'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inflation adjust wages</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">real_wage =</span> wage_median <span class="sc">*</span> (cpi2024<span class="sc">/</span>c_cpi_u)) <span class="sc">|&gt;</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(year, union, real_wage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="calculate-union-wage-premium-1" class="level3">
-<h3 class="anchored" data-anchor-id="calculate-union-wage-premium-1">Calculate union wage premium</h3>
-<p>This code chunk separates out union versus nonunion wages, and then finds the percent difference. It also reorients the data to make them easier to read.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>wage_dif_series <span class="ot">&lt;-</span> wage_series <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">union_stat =</span> <span class="fu">case_when</span>(union <span class="sc">==</span> <span class="st">"Not union represented"</span> <span class="sc">~</span> <span class="st">"nonunion"</span>, </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                union <span class="sc">==</span> <span class="st">"Union represented"</span> <span class="sc">~</span> <span class="st">"union"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> year, <span class="at">names_from =</span> union_stat, <span class="at">values_from =</span> real_wage) <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> ((union<span class="sc">-</span>nonunion)<span class="sc">/</span>nonunion)) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, nonunion, union, diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Happy coding!</p>
+<p>And that’s it! You can benchmark your data to the <a href="https://data.epi.org/labor_force/labor_force_emp/line/month/national/percent_emp_12_month/overall?timeStart=1976-12-01&amp;timeEnd=2025-12-01&amp;dateString=2024-11-01&amp;highlightedLines=overall">State of Working America Data Library</a> before filtering to specific states or demographic cuts to ensure reliability. As always, be sure to keep an eye on those sample sizes!</p>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1117,13 +1096,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./rtw_union.html" class="pagination-link" aria-label="Union density rates in right-to-work (RTW) versus non-RTW states">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Union density rates in right-to-work (RTW) versus non-RTW states</span>
+      <a href="./weighted_percentiles.html" class="pagination-link" aria-label="Weighted percentiles">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Weighted percentiles</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./weighted_percentiles.html" class="pagination-link" aria-label="Weighted percentiles">
-        <span class="nav-page-text">Weighted percentiles</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./bin_wage_deciles.html" class="pagination-link" aria-label="Wage deciles by state">
+        <span class="nav-page-text">Wage deciles by state</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
