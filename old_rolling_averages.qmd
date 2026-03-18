@@ -1,12 +1,14 @@
 ---
-title: "(Monthly) rolling averages"
+title: "(Monthly) rolling averages - ARCHIVED"
 author: "Emma Cohn and Daniel Perez"
 date: "2026-01-26"
 format: html
 editor: visual
 ---
 
-This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs). Note: this code will be updated soon to account for missing October 2025 CPS data.
+Note: this code is outdated and does not account for missing October 2025 CPS data. For the new rolling calculation methodology, see [here](https://economic.github.io/earn_code_library/rolling_average.html).
+
+This script will teach you how to calculate simple monthly rolling averages using employment-to-population ratios (EPOPs).
 
 ## Load required libraries
 

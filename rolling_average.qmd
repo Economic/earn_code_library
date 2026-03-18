@@ -1,0 +1,69 @@
+---
+title: "(Monthly) Rolling averages"
+author: "Zane Mokhiber"
+date: "2026-03-18"
+format: html
+editor: visual
+---
+
+This script will teach you how to calculate simple monthly rolling averages using CPS data and employment-to-population ratios (EPOPs). It accounts for missing months of data, such as the October 2025 gap due to the government shutdown and resulting lapse in Bureau of Labor Statistics appropriations.
+
+## Load required libraries
+
+The following chunk of code loads the R libraries necessary for this exercise. You may need to install them to run this code. If you haven't yet set up your computer to run [EPI CPS microdata extracts](https://economic.github.io/earn_code_library/epi_microdata.html), complete that process before running this code.
+
+```{r, Libraries, message=FALSE}
+
+#Load necessary libraries
+library(tidyverse) #this package contains most common R functions
+library(epiextractr) #allows you to get CPS (e.g., Basic, ORG) extracts
+library(slider) #contains the sliding mean function
+```
+
+## Import and clean data
+
+**Note:** Don't forget to **update years** to match your setup before running the script.
+
+Running this script chunk will call the BLS Current Population Survey Basic data required to calculate rolling average EPOPs.
+
+```{r, Download and clean data, message=FALSE}
+# Step 1: Import CPS Basic data
+cps_data <- load_basic(2023:2026, year, month, basicwgt, emp, age, cow1) |>  
+    mutate(weight = basicwgt) 
+```
+
+## Calculate EPOPs
+
+This code chunk creates a universe variable that restrictions the data to observations with employment data (i.e., excludes NA responses). The the code divides the total weighted number of employed people (`count`) by the total universe count. The output lists EPOPs, total counts, and sample sizes by month and year.
+
+```{r, overall EPOP, message=FALSE}
+# Step 2: calculate monthly weighted counts, universe, and sample size 
+monthly_data <- cps_data |> 
+    mutate(universe = if_else(!is.na(emp), 1, 0)) |> 
+        #swap out emp here for another variable to calculate a different statistic
+        summarize(count = sum(emp * weight, na.rm = TRUE), 
+                  universe_total = sum(universe * weight, na.rm = TRUE), 
+                  sample_size = sum(universe, na.rm = TRUE), .by = c(year, month)) |> 
+    mutate(percent = count / universe_total) 
+```
+
+### Calculate rolling average
+
+This section smooths the data over a calendar year. The `slide_index` function takes a certain number of **calendar months** as an input, rather than a fixed number of rows (in this case, months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. Alternative methods often only accept a constant number of rows, and so will look back farther (i.e., at extra months) if any are missing.  
+
+In other words, a 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This method will adapt to any gaps in the data and maintain a consistent average.  
+
+In order to **change the rolling length**, change the `months(x)` value. This code calculates 12-month rolling averages; a smaller number of months will be *more susceptible to short-term changes* such as business cycles or seasonal employment. On the flip side, a high number of months will *smooth out shorter-term or temporary changes*, like the effects of recent policy, but will include *more robust sample sizes*. Consider this when deciding how many months (or other measure) to include.
+
+```{r, rolling avg, message=FALSE}
+smoothed_monthly_data <- monthly_data |> 
+    mutate(date = as.Date(paste(year, month, "01", sep = "-"))) |>  #format date label               
+    arrange(date) |> 
+    mutate(percent = slide_index_dbl(percent, date, mean, .before = months(11), .complete = TRUE), 
+          count = slide_index_dbl(count, date, mean, .before = months(11), .complete = TRUE), 
+          sample_size = slide_index_dbl(sample_size, date, sum, .before = months(11), .complete = TRUE))  
+```
+
+And that's it! You can alter this code to look at specific demographic cuts, such as filtering to specific racial/ethnic groups or to prime-age (24-54 year old) workers. You can also use this code to look at other variables--the rolling average section is written ambigously enough to allow for many different variables. 
+
+I'd also recommend benchmarking your data to the [State of Working America Data Library](https://data.epi.org/labor_force/labor_force_emp/line/month/national/percent_emp_12_month/overall?timeStart=1976-12-01&timeEnd=2025-12-01&dateString=2024-11-01&highlightedLines=overall) to ensure reliability. As always, be sure to keep an eye on those sample sizes!

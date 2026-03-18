@@ -61,12 +61,17 @@ website:
       - union_density.qmd
       - foreign_born_stats_ipumsr.qmd
       - tidycensus_example.qmd
-      - rolling_averages.qmd
       - rtw_definitions.qmd
+      - rolling_average.qmd
       - median_wages_demos.qmd
       - rtw_union.qmd
       - union_premium.qmd
       - weighted_percentiles.qmd
+
+      - section: "Archive"
+        contents:
+        - old_rolling_averages.qmd
+
 
     - section: "Stata code"
       contents:
