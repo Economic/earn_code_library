@@ -47,7 +47,7 @@ website:
         
     - section: "Code Packages"
       contents:
-      - text: "R Packages"
+      - text: "R packages"
         href: epi_libraries.qmd      
       - text: "Stata packages"
         href: stata_binipolate.qmd

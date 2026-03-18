@@ -1,0 +1,15 @@
+{
+  "hash": "4a9e6410466e15c292d24850293f0b70",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"EPI packages for R\"\n---\n\n\n\n\n[epiverse](https://economic.github.io/epiverse/)\n\n-   now you can load all of EPI's R packages in one go! `epiverse` includes the libraries you know and love (realtalk, epidatatools, and epiextractr), as well as two hot new packages!\n    -   [prefab](https://economic.github.io/prefab/) is an opinionated theme system for R project scaffolding\n\n    -   [swadlr](https://economic.github.io/swadlr/) allows users to pull and manipulate data from the [State of Working America Data Library](https://data.epi.org/)\n\n[realtalk](https://economic.github.io/realtalk/)\n\n-   realtalk makes it easy to load and use common US price indexes in R.\n\n[epidatatools](https://economic.github.io/epidatatools/)\n\n-   epidatatools contains functions we find useful at [EPI](https://epi.org/) that don't have exact analogues elsewhere in the R package ecosystem.\n\n[epiextractr](https://economic.github.io/epiextractr)\n\n-   use epiextractr to download CPS data from the [EPI microdata site](https://microdata.epi.org/).\n\n### To install:\n\nYou can install any of these packages from the EPI R-universe [repository](https://economic.r-universe.dev/). For example, the `epiverse` package can be installed with:\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\ninstall.packages(\"epiverse\", repos = c(\"https://economic.r-universe.dev\",) getOption(\"repos\")))\n```\n:::\n\n\n\n\nSimilar code is available on each package's GitHub page.\n\nHowever, for easier syntax and updates, consider adding the repository to the \"repos\" option in your `.Rprofile` file:\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Example .Rprofile  \noptions(repos = c(\n    epi = \"https://economic.r-universe.dev\",\n    getOption(\"repos\")\n))\n```\n:::\n\n\n\n\nAfter making those edits and restarting R, you can just use `install.packages(\"epiverse\")` to update packages to the latest version, or install new EPI packages.\n\nTo find and edit your `.Rprofile`, use `usethis::edit_r_profile()`.",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
