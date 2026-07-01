@@ -35,13 +35,12 @@ Running this script chunk will call the BLS Current Population Survey ORG data r
 # Import CPS ORG data
 # Note: load as many years necessary to get sufficient sample sizes or desired time series.
 cps_org <- load_org(2020:2024, "year", "age", "statefips", "wage", "union", 
-                    "orgwgt", "a_earnhour", "a_weekpay", "cow1") %>%
+                    "orgwgt", "a_earnhour", "a_weekpay", "cow1", "paidhre") |>
   # Age and labor force restrictions (exclude self-employed and self-incorporated), non-imputed wages.
   filter(age >= 16, 
          cow1 <= 5, 
-         !is.na(wage), 
-         (a_weekpay != 1 | is.na(a_weekpay)),  
-         (a_earnhour != 1 | is.na(a_earnhour)))
+         !is.na(wage))|>
+  filter_out(a_earnhour == 1 & paidhre == 1 | a_weekpay == 1 & paidhre == 0)
 ```
 
 ## Method 1: Point-in-time comparisons
