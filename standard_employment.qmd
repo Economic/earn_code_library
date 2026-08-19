@@ -1,0 +1,58 @@
+---
+title: "Coding employment outcomes"
+author: "EPI data team"
+---
+
+**Note:** Users will need to install `epiextractr` for this example. Refer to [EPI packages for R](epi_libraries.qmd) for installation instructions.
+
+```{r Internal load libraries, include=FALSE, message=FALSE}
+library(tidyverse)
+library(epiextractr)
+```
+
+## Employment-to-population ratios (EPOPs)
+
+This code will allow the user to reproduce [employment-to-population ratios](https://data.epi.org/labor_force/labor_force_emp/line/year/national/percent_emp/overall?timeStart=1976-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall). Please note that data with missing observations will return missing, therefore we must handle missing data directly. It is common practice to use \`filter()’ to remove missing data directly with the most control. 
+
+```{r calculate epop, eval=FALSE, include=FALSE, message=FALSE}
+load_basic(2020:2024, year, age, emp, basicwgt) |>  
+  filter(age >= 16, !is.na(emp))  |>  
+  #note: the denominator is based on number of months that are included in the sample
+  #note: since we are getting annual estimates, divide the weight by 12
+  mutate(adj_wgt = basicwgt/12) |>  
+  summarise( 
+    epop = weighted.mean(emp, w = adj_wgt), 
+    .by = year) 
+```
+
+## Labor force participation rates
+
+This code will allow the user to reproduce the [labor force participation rates](https://data.epi.org/labor_force/labor_force_lf/line/year/national/percent_lf/overall?timeStart=1976-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall). Similar to EPOPs, we must be careful how we handle missing data, however unlike EPOPs this code uses the `na.rm = TRUE` argument inside the operation. Removing missing data this way gives the user less control over which observations are dropped.
+
+```{r calculate lfpr, eval=FALSE, include=FALSE, message=FALSE}
+load_basic(2020:2024, year, age, lfstat, basicwgt) |>  
+  filter(age >= 16)  |>  
+  mutate( 
+    #note: the denominator is based on number of months that are included in the sample
+    #note: since we are getting annual estimates, divide the weight by 12
+    adj_wgt = basicwgt/12, 
+    lfp = if_else(lfstat == 1 | lfstat == 2, 1, 0)) |>  
+  summarise( 
+    lfpr = weighted.mean(lfp, w = adj_wgt, na.rm = TRUE), 
+    .by = year) 
+```
+
+## Unemployment rate
+
+This code will the user to reproduce the [unemployment rates](https://data.epi.org/labor_force/labor_force_unemp/line/year/national/percent_unemp/overall?timeStart=1976-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall). 
+
+```{r calculate urate, eval=FALSE, include=FALSE, message=FALSE}
+load_basic(2020:2024, year, age, unemp, lfstat, basicwgt) |>  
+  filter(age >= 16, lfstat != 3)  |>  
+  #note: the denominator is based on number of months that are included in the sample
+  #note: since we are getting annual estimates, divide the weight by 12
+  mutate(adj_wgt = basicwgt/12) |>  
+  summarise( 
+    urate = weighted.mean(unemp, w = adj_wgt), 
+    .by = year) 
+```

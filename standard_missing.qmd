@@ -1,0 +1,103 @@
+---
+title: Dealing with missing data 
+author: EPI data team
+---
+
+## Accounting for differing weights in specific years 
+
+Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. 
+
+1.  You must use the May CPS **when calculating union numbers** before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. 
+
+<!-- -->
+
+2.  October 2023 needs to be adjusted for all surveys due to missing data. 
+
+The following script accounts for the fact that: 
+
+-   May 1981 only asked 1/4 sample  
+
+<!-- -->
+
+-   May 1973-1980 asked full sample 
+
+<!-- -->
+
+-   ORG 1983-present asked full ORG sample  
+
+<!-- -->
+
+-   ORG 2025 only has 11 months of data due to 2025 gov shutdown 
+
+```{r, loading missing data, eval=FALSE, include=FALSE, message=FALSE}
+library(tidyverse)
+library(epiextractr)
+
+may_data = load_may(may_years, all_of(cps_vars)) |>  
+    rename(weight = finalwgt) |>  
+    mutate(month = NA) 
+
+
+output = load_org(org_years, all_of(cps_vars)) |>  
+   rename(weight = orgwgt) |>  
+   bind_rows(may_data) |>  
+   filter(age >= 16, weight > 0, selfemp == 0) |>  
+   mutate(weight = case_match( 
+     year, 
+     1973:1980 ~ weight, 
+     1981 ~ weight * 4, 
+     2025 ~ weight / 11, 
+     .default = weight / 12 
+   )) 
+```
+
+## Rolling “12 month” averages with missing month
+
+This section smooths the data over a calendar year. The slide_index function takes a certain number of calendar months as an input, rather than a fixed number of rows (months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. The previous method only accepted a constant number of months, and so would look back farther (i.e., at extra months) if any were missing.  
+
+In other words, a new-method 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This new method will adapt to any gaps in the data and maintain a consistent average.  
+
+This matches the SWADL methodology. 
+
+Example code for calculating EPOPs: 
+
+```{r, example rolling epops,  eval=FALSE, include=FALSE, message=FALSE}
+#libraries 
+library(tidyverse) 
+library(epiextractr) 
+library(slider) 
+
+# Step 1: load cps data 
+cps_data <- load_basic(2023:2026, year, month, basicwgt, emp) |>  
+  mutate(weight = basicwgt) 
+
+# Step 2: calculate monthly weighted counts, universe, and sample size 
+monthly_data = cps_data |> 
+  #get universe  
+  mutate(universe = if_else(!is.na(emp), 1, 0)) |>  
+  # by month 
+  summarize( 
+    # count of population 
+    count = sum(emp * weight, na.rm = TRUE), 
+    # count of universe 
+    universe_total = sum(universe * weight, na.rm = TRUE), 
+    # sample size of universe 
+    sample_size = sum(universe, na.rm = TRUE), .by = c(year, month) 
+  ) |> 
+  # calculate rate 
+  mutate(percent = count / universe_total) 
+```
+
+Here’s the code for the actual 12-month rolling window: 
+
+```{r, actual 12month rolling,  eval=FALSE, include=FALSE, message=FALSE}
+# ambiguous names used so any var could be put in there (eg unemp, lf status, etc)  
+smoothed_monthly_data = monthly_data |> 
+ mutate(date = as.Date(paste(year, month, "01", sep = "-"))) |>                  
+    arrange(date) |> 
+    mutate( 
+      percent = slide_index_dbl(percent, date, mean, .before = months(11), .complete = TRUE), 
+      count = slide_index_dbl(count, date, mean, .before = months(11), .complete = TRUE), 
+      sample_size = slide_index_dbl(sample_size, date, sum, .before = months(11), .complete = TRUE) 
+    )  
+```

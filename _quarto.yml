@@ -51,6 +51,21 @@ website:
         href: epi_libraries.qmd      
       - text: "Stata packages"
         href: stata_binipolate.qmd
+
+    - section: "EPI Data Standards (R)"
+      contents:
+      - text: "Employment"
+        href: standard_employment.qmd
+      - text: "Wages"
+        href: standard_wages.qmd
+      - text: "Race and ethnicity code"
+        href: standard_wbhao.qmd
+      - text: "Uncategorized code snippets"
+        href: standard_misc.qmd
+      - text: "Dealing with missing data"
+        href: standard_missing.qmd
+      - text: "AI best practices"
+        href: standard_AIClaude.qmd
       
     - section: "R Code Repository"
       contents: 
