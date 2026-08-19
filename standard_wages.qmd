@@ -1,0 +1,99 @@
+---
+title: "Calculating wages"
+author: "EPI data team"
+---
+
+### Prep
+
+Since we'll be working with EPI data extracts, we'll need to make sure we have the `epiextractr` package loaded.
+
+```{r, load libraries, eval=FALSE, include=FALSE, message=FALSE}
+library(tidyverse)
+library(epiextractr)
+```
+
+## Defining the universe for employment or wage analysis
+
+For standard definition (i.e., no special exclusions or inclusions), filter to `age >= 16`, `emp == 1`, and `cow1 <= 5`. This is non-self-employed, non-self-incorporated, employed workers at or over 16 years old. 
+
+-   Note: self-employed and self-incorporated workers do not have wages in the CPS ORG, so this filter is somewhat duplicative when analyzing wage data. It’s necessary for Basic data.
+
+-   Note: this is not, of course, always the target universe (e.g., EPOPs). Use discretion when defining the sample.
+
+```{r, cps download and filter, eval=FALSE, include=FALSE, message=FALSE}
+cps_org <- load_org(2020:2024, "year", "age", "statefips", "wage", "emp", "union", "orgwgt", "cow1") |> 
+    filter(age >= 16, emp == 1, cow1 <= 5) 
+```
+
+## Inflation adjusting
+
+Use **chained** CPI `c_cpi_u` for analysis; and **chained extended** `c_cpi_u_extended` for analysis pre-2000 (package: `realtalk`). 
+
+## Median wages
+
+Use `averaged_median` in the `epidatatools` package, rather than `binipolate`. Note, `quantiles_n` and `quantiles_w` default to the following so are not strictly necessary to include in the code (although may help others understand the process). 
+
+```{r, Median wages, eval=FALSE, include=FALSE, message=FALSE}
+wages_gender <- cps_org |>  
+    summarise(  
+        wage_median = averaged_median(  
+            x = realwage,  
+            w = orgwgt/12,  
+            quantiles_n = 9L,  
+            quantiles_w = c(1:4, 5, 4:1)),  
+        n=n(),  
+        .by=c(female, year)
+    ) 
+```
+
+## Wage premiums & regressions 
+
+See GitHub repo here: <https://github.com/Economic/equal_pay_day>  
+
+EPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (`wbho`), gender (`female`), education (`educ`), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (`married`) and state (`statefips`).  If you are using multi-year data you must use year fixed effects as well. Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the `feols` function from the **`fixest`** package. See the EPI data library code [for an example](https://github.com/Economic/swa_data_library/blob/main/R/wage_reg.R). 
+
+**Note:** Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a \[(exp(β) − 1) × 100%\]  change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately \[(exp(−0.203424) − 1) × 100 ≈ −18.4%\] different from men’s wages, after controlling for race, education, age, marital status, and state. 
+
+```{r, wage premiums and regressions, eval=FALSE, include=FALSE, message=FALSE}
+library(fixest) 
+
+wage_reg <- cps_org |>  
+ mutate(  
+ 	log_realwage = log(realwage),   
+ 	age_2 = age^2 
+) |>  
+feols(  
+ 	log_realwage ~   
+ 	i(female, ref = "0") +  
+    age + age_2 |  
+    educ + wbho + 
+    married + statefips, 
+    weights = ~orgwgt  
+)  
+```
+
+## Imputed wage filtering 
+
+There may be instances where you want to remove imputed wages allocated by the BLS. This is especially common when **dealing with union vs non-union wage comparisons**, as the BLS does not account for union status when calculating imputed wages. Because of 1) the way that the `a_earnhour` and `a_weeklypay` variables are coded and 2) that `filter()` default drops N/A values, simply coding for `filter(a_earnhour != 1)` (i.e., dropping imputed wages) will also remove all non-hourly workers. You do not want this. Use this code to preserve salaried workers with self-reported wages: 
+
+*If you want to keep imputed wages in the sample for analysis:* 
+
+```{r, imputed wages, eval=FALSE, include=FALSE, message=FALSE}
+mutate(
+    wage_imputed = case_when( 
+    paidhre == 1 & a_earnhour == 1 ~ 1, 
+    paidhre == 0 & a_weekpay == 1 ~ 1, 
+    .default = 0 
+    )
+) 
+```
+
+You can always filter to `wage_imputed = 0` if you want to remove the imputed wages. 
+
+*If you want to filter out imputed wages from the start:*  
+
+```{r, filter out imputed wages, eval=FALSE, include=FALSE, message=FALSE}
+filter_out(a_earnhour == 1 & paidhre == 1 | a_weekpay == 1 & paidhre == 0) 
+```
+
+These should result in the same samples for non-imputed wages. You can check this by running `crosstab(data, paidhre, wage_imputed)` and `crosstab(data, paidhre, a_earnhour)`.

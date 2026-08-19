@@ -1,0 +1,9 @@
+## AI Best Practices 
+
+Claude skills 
+
+-   Use this Github repo to train Claude with some EPI basic skills: <https://github.com/Economic/epi-skills/>  
+
+<!-- -->
+
+-   More information on Claude skills here: <https://code.claude.com/docs/en/best-practices#create-skills>

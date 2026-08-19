@@ -1,0 +1,43 @@
+---
+title: Uncategorized code snippets
+author: EPI data team
+---
+
+## Uncategorized code snippets
+
+### Union density vs union coverage
+
+Universe definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated. 
+
+This code will allow the user to reproduce the year-over-year [share represented by a union](https://data.epi.org/unions/union_members/line/year/national/percent_union_covered/overall?timeStart=1977-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall): 
+
+```{r, share rep by a union, eval=FALSE, include=FALSE, message=FALSE}
+library(tidyverse)
+library(epiextractr)
+
+load_org(2020:2024, year, age, cow1, emp, union, orgwgt) |> 
+  filter(age >= 16, cow1 < 6, emp == 1) |> 
+  summarize(union_coverage = weighted.mean(union, w = orgwgt/12), .by = year) 
+```
+
+This code will allow the user to reproduce the year-over-year [share in a union](https://data.epi.org/unions/union_members/line/year/national/percent_union_members/overall?timeStart=1973-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall): 
+
+```{r, share in a union, eval=FALSE, include=FALSE, message=FALSE}
+load_org(2020:2024, year, age, cow1, emp, unmem, orgwgt) |> 
+  filter(age >= 16, cow1 < 6, emp == 1) |> 
+  summarize(union_coverage = weighted.mean(unmem, w = orgwgt/12), .by = year) 
+```
+
+## Universe definitions for specific policy areas 
+
+### Right to work 
+
+Refer to [this Github repo](https://github.com/Economic/right_to_work/tree/main) for code that assigns RTW status by year by state to CPS microdata, as well as an example snippet on how to use it (see example on [EARN Code Library](https://economic.github.io/earn_code_library/rtw_definitions.html)).  
+
+### What’s the right sample size? (in development)
+
+-   There’s no perfect answer to this, but it would be helpful to list some guidelines or questions to ask yourself when evaluating the reliability of a given dataset.  
+
+<!-- -->
+
+-   E.g., timeseries to check volatility
