@@ -1,0 +1,15 @@
+{
+  "hash": "96cc945218c763cc36a3474e938e4523",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: Uncategorized code snippets\nauthor: EPI data team\n---\n\n\n\n\n## Uncategorized code snippets\n\n### Union density vs union coverage\n\nUniverse definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated. \n\nThis code will allow the user to reproduce the year-over-year [share represented by a union](https://data.epi.org/unions/union_members/line/year/national/percent_union_covered/overall?timeStart=1977-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall): \n\n\n\n\n\n\n\n\n\nThis code will allow the user to reproduce the year-over-year [share in a union](https://data.epi.org/unions/union_members/line/year/national/percent_union_members/overall?timeStart=1973-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall): \n\n\n\n\n\n\n\n\n\n## Universe definitions for specific policy areas \n\n### Right to work \n\nRefer to [this Github repo](https://github.com/Economic/right_to_work/tree/main) for code that assigns RTW status by year by state to CPS microdata, as well as an example snippet on how to use it (see example on [EARN Code Library](https://economic.github.io/earn_code_library/rtw_definitions.html)).  \n\n### What’s the right sample size? (in development)\n\n-   There’s no perfect answer to this, but it would be helpful to list some guidelines or questions to ask yourself when evaluating the reliability of a given dataset.  \n\n<!-- -->\n\n-   E.g., timeseries to check volatility",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

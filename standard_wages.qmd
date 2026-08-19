@@ -7,7 +7,7 @@ author: "EPI data team"
 
 Since we'll be working with EPI data extracts, we'll need to make sure we have the `epiextractr` package loaded.
 
-```{r, load libraries, eval=FALSE, include=FALSE, message=FALSE}
+```{r, load libraries, eval=FALSE, include=TRUE, message=FALSE}
 library(tidyverse)
 library(epiextractr)
 ```
@@ -20,7 +20,7 @@ For standard definition (i.e., no special exclusions or inclusions), filter to `
 
 -   Note: this is not, of course, always the target universe (e.g., EPOPs). Use discretion when defining the sample.
 
-```{r, cps download and filter, eval=FALSE, include=FALSE, message=FALSE}
+```{r, cps download and filter, eval=FALSE, include=TRUE, message=FALSE}
 cps_org <- load_org(2020:2024, "year", "age", "statefips", "wage", "emp", "union", "orgwgt", "cow1") |> 
     filter(age >= 16, emp == 1, cow1 <= 5) 
 ```
@@ -33,7 +33,7 @@ Use **chained** CPI `c_cpi_u` for analysis; and **chained extended** `c_cpi_u_ex
 
 Use `averaged_median` in the `epidatatools` package, rather than `binipolate`. Note, `quantiles_n` and `quantiles_w` default to the following so are not strictly necessary to include in the code (although may help others understand the process). 
 
-```{r, Median wages, eval=FALSE, include=FALSE, message=FALSE}
+```{r, Median wages, eval=FALSE, include=TRUE, message=FALSE}
 wages_gender <- cps_org |>  
     summarise(  
         wage_median = averaged_median(  
@@ -54,7 +54,7 @@ EPI’s standard wage regression uses the logarithm of real wages as the depende
 
 **Note:** Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a \[(exp(β) − 1) × 100%\]  change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately \[(exp(−0.203424) − 1) × 100 ≈ −18.4%\] different from men’s wages, after controlling for race, education, age, marital status, and state. 
 
-```{r, wage premiums and regressions, eval=FALSE, include=FALSE, message=FALSE}
+```{r, wage premiums and regressions, eval=FALSE, include=TRUE, message=FALSE}
 library(fixest) 
 
 wage_reg <- cps_org |>  
@@ -78,7 +78,7 @@ There may be instances where you want to remove imputed wages allocated by the B
 
 *If you want to keep imputed wages in the sample for analysis:* 
 
-```{r, imputed wages, eval=FALSE, include=FALSE, message=FALSE}
+```{r, imputed wages, eval=FALSE, include=TRUE, message=FALSE}
 mutate(
     wage_imputed = case_when( 
     paidhre == 1 & a_earnhour == 1 ~ 1, 
@@ -92,7 +92,7 @@ You can always filter to `wage_imputed = 0` if you want to remove the imputed wa
 
 *If you want to filter out imputed wages from the start:*  
 
-```{r, filter out imputed wages, eval=FALSE, include=FALSE, message=FALSE}
+```{r, filter out imputed wages, eval=FALSE, include=TRUE, message=FALSE}
 filter_out(a_earnhour == 1 & paidhre == 1 | a_weekpay == 1 & paidhre == 0) 
 ```
 

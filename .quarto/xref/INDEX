@@ -133,5 +133,23 @@
   },
   "old_rolling_averages.qmd": {
     "old_rolling_averages.html": "da57e930"
+  },
+  "standard_wbhao.qmd": {
+    "standard_wbhao.html": "0d182cb5"
+  },
+  "standard_wages.qmd": {
+    "standard_wages.html": "d2032c35"
+  },
+  "standard_employment.qmd": {
+    "standard_employment.html": "ed9ca701"
+  },
+  "standard_missing.qmd": {
+    "standard_missing.html": "6f7eee85"
+  },
+  "standard_misc.qmd": {
+    "standard_misc.html": "41dd1de5"
+  },
+  "standard_AIClaude.qmd": {
+    "standard_AIClaude.html": "4e97ab86"
   }
 }

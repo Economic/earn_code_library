@@ -3,13 +3,13 @@ title: "Coding race and ethnicity variables"
 author: "EPI data team"
 ---
 
-```{r, load library, eval=FALSE, include=FALSE, message=FALSE}
+```{r, load library, eval=FALSE, include=TRUE, message=FALSE}
 library(tidyverse)
 ```
 
 ## Recoding for ASEC
 
-```{r, asec race coding, eval=FALSE, include=FALSE, message=FALSE}
+```{r, asec race coding, eval=FALSE, include=TRUE, message=FALSE}
 mutate(
     wbhao = case_when(
         hispan >= 100 & hispan <= 612 ~ 3, # Hispanic or latino
@@ -34,7 +34,7 @@ There are two ways to recode ACS race categories, the first is using the `race` 
 
 Using `race` and `raced`:
 
-```{r, acs race coding 1, eval=FALSE, include=FALSE, message=FALSE}
+```{r, acs race coding 1, eval=FALSE, include=TRUE, message=FALSE}
 mutate(
     wbhao = case_when(
         hispan %in% c(1,2,3,4) ~ 3, 
@@ -70,7 +70,7 @@ mutate(
 
 Using `race` and the 'rac' variable series
 
-```{r, acs race coding 2, eval=FALSE, include=FALSE, message=FALSE}
+```{r, acs race coding 2, eval=FALSE, include=TRUE, message=FALSE}
 mutate(
     wbhao = case_when(
         hispan %in% c(1,2,3,4) ~ 3, 

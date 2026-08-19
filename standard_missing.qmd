@@ -29,7 +29,7 @@ The following script accounts for the fact that: 
 
 -   ORG 2025 only has 11 months of data due to 2025 gov shutdown 
 
-```{r, loading missing data, eval=FALSE, include=FALSE, message=FALSE}
+```{r, loading missing data, eval=FALSE, include=TRUE, message=FALSE}
 library(tidyverse)
 library(epiextractr)
 
@@ -61,7 +61,7 @@ This matches the SWADL methodology. 
 
 Example code for calculating EPOPs: 
 
-```{r, example rolling epops,  eval=FALSE, include=FALSE, message=FALSE}
+```{r, example rolling epops,  eval=FALSE, include=TRUE, message=FALSE}
 #libraries 
 library(tidyverse) 
 library(epiextractr) 
@@ -90,7 +90,7 @@ monthly_data = cps_data |>
 
 Here’s the code for the actual 12-month rolling window: 
 
-```{r, actual 12month rolling,  eval=FALSE, include=FALSE, message=FALSE}
+```{r, actual 12month rolling,  eval=FALSE, include=TRUE, message=FALSE}
 # ambiguous names used so any var could be put in there (eg unemp, lf status, etc)  
 smoothed_monthly_data = monthly_data |> 
  mutate(date = as.Date(paste(year, month, "01", sep = "-"))) |>                  

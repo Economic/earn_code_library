@@ -11,7 +11,7 @@ Universe definitions for union density and union coverage include paid employed 
 
 This code will allow the user to reproduce the year-over-year [share represented by a union](https://data.epi.org/unions/union_members/line/year/national/percent_union_covered/overall?timeStart=1977-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall): 
 
-```{r, share rep by a union, eval=FALSE, include=FALSE, message=FALSE}
+```{r, share rep by a union, eval=FALSE, include=TRUE, message=FALSE}
 library(tidyverse)
 library(epiextractr)
 
@@ -22,7 +22,7 @@ load_org(2020:2024, year, age, cow1, emp, union, orgwgt) |>
 
 This code will allow the user to reproduce the year-over-year [share in a union](https://data.epi.org/unions/union_members/line/year/national/percent_union_members/overall?timeStart=1973-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall): 
 
-```{r, share in a union, eval=FALSE, include=FALSE, message=FALSE}
+```{r, share in a union, eval=FALSE, include=TRUE, message=FALSE}
 load_org(2020:2024, year, age, cow1, emp, unmem, orgwgt) |> 
   filter(age >= 16, cow1 < 6, emp == 1) |> 
   summarize(union_coverage = weighted.mean(unmem, w = orgwgt/12), .by = year) 

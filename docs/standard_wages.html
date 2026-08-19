@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Ben Zipperer">
+<meta name="author" content="EPI data team">
 
-<title>Using EPI’s CPS Extracts in R – Code Library</title>
+<title>Calculating wages – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,8 +31,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./foraging_for_data.html" rel="next">
-<link href="./intro_to_r.html" rel="prev">
+<link href="./standard_wbhao.html" rel="next">
+<link href="./standard_employment.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -147,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./epi_extracts_webinar.html">Using EPI’s CPS Extracts in R</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_wages.html">Wages</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -175,22 +141,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Learn R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./intro_to_r.html" class="sidebar-item-text sidebar-link">
@@ -199,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./epi_extracts_webinar.html" class="sidebar-item-text sidebar-link active">
+  <a href="./epi_extracts_webinar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Using EPI’s CPS Extracts in R</span></a>
   </div>
 </li>
@@ -262,13 +228,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">EPI Data Standards (R)</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./standard_employment.html" class="sidebar-item-text sidebar-link">
@@ -277,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./standard_wages.html" class="sidebar-item-text sidebar-link">
+  <a href="./standard_wages.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Wages</span></a>
   </div>
 </li>
@@ -435,17 +401,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page" id="toc-welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page" class="nav-link active" data-scroll-target="#welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page">Welcome to the Using the EPI CPS Microdata Extracts in R landing page!</a></li>
-  <li><a href="#final-cps-script" id="toc-final-cps-script" class="nav-link" data-scroll-target="#final-cps-script">Final CPS script</a></li>
+  <li><a href="#prep" id="toc-prep" class="nav-link active" data-scroll-target="#prep">Prep</a></li>
+  <li><a href="#defining-the-universe-for-employment-or-wage-analysis" id="toc-defining-the-universe-for-employment-or-wage-analysis" class="nav-link" data-scroll-target="#defining-the-universe-for-employment-or-wage-analysis">Defining the universe for employment or wage analysis</a></li>
+  <li><a href="#inflation-adjusting" id="toc-inflation-adjusting" class="nav-link" data-scroll-target="#inflation-adjusting">Inflation adjusting</a></li>
+  <li><a href="#median-wages" id="toc-median-wages" class="nav-link" data-scroll-target="#median-wages">Median wages</a></li>
+  <li><a href="#wage-premiums-regressions" id="toc-wage-premiums-regressions" class="nav-link" data-scroll-target="#wage-premiums-regressions">Wage premiums &amp; regressions&nbsp;</a></li>
+  <li><a href="#imputed-wage-filtering" id="toc-imputed-wage-filtering" class="nav-link" data-scroll-target="#imputed-wage-filtering">Imputed wage filtering&nbsp;</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Learn R</li><li class="breadcrumb-item"><a href="./intro_to_r.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./epi_extracts_webinar.html">Using EPI’s CPS Extracts in R</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_wages.html">Wages</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Using EPI’s CPS Extracts in R</h1>
+<h1 class="title">Calculating wages</h1>
 </div>
 
 
@@ -455,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Ben Zipperer </p>
+             <p>EPI data team </p>
           </div>
   </div>
     
@@ -468,93 +438,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page" class="level2">
-<h2 class="anchored" data-anchor-id="welcome-to-the-using-the-epi-cps-microdata-extracts-in-r-landing-page">Welcome to the Using the EPI CPS Microdata Extracts in R landing page!</h2>
-<p>This training and code workflow was originally delivered as an EARN Talk on September 16th, 2025.</p>
-<p>Missed this talk? See the recording here: <a href="https://us06web.zoom.us/rec/share/LUmvO1f2UQY0vqu-NgLkVfKWQyP3pXax_HyLfTBlxWNleY9qXTF83VT6B1JZLSly.bqKANOKojiehqhai"><strong>Using EPI’s CPS Microdata Extracts in R</strong></a>. Passcode: 3xtracts2025!</p>
-<p><u>Additional links:</u></p>
+<section id="prep" class="level3">
+<h3 class="anchored" data-anchor-id="prep">Prep</h3>
+<p>Since we’ll be working with EPI data extracts, we’ll need to make sure we have the <code>epiextractr</code> package loaded.</p>
+</section>
+<section id="defining-the-universe-for-employment-or-wage-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="defining-the-universe-for-employment-or-wage-analysis">Defining the universe for employment or wage analysis</h2>
+<p>For standard definition (i.e., no special exclusions or inclusions), filter to <code>age &gt;= 16</code>, <code>emp == 1</code>, and <code>cow1 &lt;= 5</code>. This is non-self-employed, non-self-incorporated, employed workers at or over 16 years old.&nbsp;</p>
 <ul>
-<li><p>Presentation slides: <a href="https://economic.github.io/zipperer_2025_webinar_epiextracts" class="uri">https://economic.github.io/zipperer_2025_webinar_epiextracts</a></p></li>
-<li><p>EPI CPS extracts documentation <a href="https://microdata.epi.org/" class="uri">https://microdata.epi.org/</a></p></li>
-<li><p>epiextractr package <a href="https://economic.github.io/epiextractr/" class="uri">https://economic.github.io/epiextractr/</a></p></li>
-<li><p>EARN Code Library <a href="./epi_microdata.html">Load EPI CPS Extracts via epiextractr</a> page</p></li>
+<li><p>Note: self-employed and self-incorporated workers do not have wages in the CPS ORG, so this filter is somewhat duplicative when analyzing wage data. It’s necessary for Basic data.</p></li>
+<li><p>Note: this is not, of course, always the target universe (e.g., EPOPs). Use discretion when defining the sample.</p></li>
 </ul>
 </section>
-<section id="final-cps-script" class="level2">
-<h2 class="anchored" data-anchor-id="final-cps-script">Final CPS script</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># low wage threshold</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>low_wage_threshold <span class="ot">=</span> <span class="dv">20</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># use the CPS ORG</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>org_data <span class="ot">=</span> <span class="fu">load_org</span>(<span class="dv">2024</span>, year, orgwgt, wage, wageotc, statefips, female, wbhao)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Using EPI CPS ORG Extracts, Version 2025.9.11</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ga_data <span class="ot">=</span> org_data <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># wage earners only</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(wageotc <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># in Georgia</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(statefips <span class="sc">==</span> <span class="dv">13</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2024 only</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># low wage indicator</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_wage =</span> <span class="fu">if_else</span>(wageotc <span class="sc">&lt;</span> low_wage_threshold, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># number low-wage in Georgia</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(low_wage, <span class="at">wt =</span> orgwgt <span class="sc">/</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  low_wage        n
-     &lt;dbl&gt;    &lt;dbl&gt;
-1        0 2904705.
-2        1 1668287.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># share low-wage</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">weighted.mean</span>(low_wage, <span class="at">w =</span> orgwgt),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> wbhao</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 2
-  wbhao        `weighted.mean(low_wage, w = orgwgt)`
-  &lt;int+lbl&gt;                                    &lt;dbl&gt;
-1 1 [White]                                    0.305
-2 2 [Black]                                    0.384
-3 3 [Hispanic]                                 0.557
-4 4 [Asian]                                    0.299
-5 5 [Other]                                    0.494</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># analysis by gender</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(female, <span class="at">wt =</span> orgwgt <span class="sc">/</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  female            n
-  &lt;int+lbl&gt;     &lt;dbl&gt;
-1 0 [Male]   2309205.
-2 1 [Female] 2263787.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># analysis by race</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ga_data <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(wbhao, <span class="at">wt =</span> orgwgt <span class="sc">/</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 2
-  wbhao               n
-  &lt;int+lbl&gt;       &lt;dbl&gt;
-1 1 [White]    2197534.
-2 2 [Black]    1486286.
-3 3 [Hispanic]  612498.
-4 4 [Asian]     258840.
-5 5 [Other]      17833.</code></pre>
-</div>
-</div>
+<section id="inflation-adjusting" class="level2">
+<h2 class="anchored" data-anchor-id="inflation-adjusting">Inflation adjusting</h2>
+<p>Use <strong>chained</strong> CPI <code>c_cpi_u</code> for analysis; and <strong>chained extended</strong> <code>c_cpi_u_extended</code> for analysis pre-2000 (package: <code>realtalk</code>).&nbsp;</p>
+</section>
+<section id="median-wages" class="level2">
+<h2 class="anchored" data-anchor-id="median-wages">Median wages</h2>
+<p>Use <code>averaged_median</code> in the <code>epidatatools</code> package, rather than <code>binipolate</code>. Note, <code>quantiles_n</code> and <code>quantiles_w</code> default to the following so are not strictly necessary to include in the code (although may help others understand the process).&nbsp;</p>
+</section>
+<section id="wage-premiums-regressions" class="level2">
+<h2 class="anchored" data-anchor-id="wage-premiums-regressions">Wage premiums &amp; regressions&nbsp;</h2>
+<p>See GitHub repo here: <a href="https://github.com/Economic/equal_pay_day" class="uri">https://github.com/Economic/equal_pay_day</a>&nbsp;&nbsp;</p>
+<p>EPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (<code>wbho</code>), gender (<code>female</code>), education (<code>educ</code>), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (<code>married</code>) and state (<code>statefips</code>).&nbsp; If you are using multi-year data you must use year fixed effects as well.&nbsp;Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the <code>feols</code> function from the <strong><code>fixest</code></strong> package. See the EPI data library code <a href="https://github.com/Economic/swa_data_library/blob/main/R/wage_reg.R">for an example</a>.&nbsp;</p>
+<p><strong>Note:</strong> Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a [(exp(β) − 1) × 100%]&nbsp; change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately [(exp(−0.203424) − 1) × 100 ≈ −18.4%] different from men’s wages, after controlling for race, education, age, marital status, and state.&nbsp;</p>
+</section>
+<section id="imputed-wage-filtering" class="level2">
+<h2 class="anchored" data-anchor-id="imputed-wage-filtering">Imputed wage filtering&nbsp;</h2>
+<p>There may be instances where you want to remove imputed wages allocated by the BLS. This is especially common when <strong>dealing with union vs non-union wage comparisons</strong>, as the BLS does not account for union status when calculating imputed wages. Because of 1) the way that the <code>a_earnhour</code> and <code>a_weeklypay</code> variables are coded and 2) that <code>filter()</code> default drops N/A values, simply coding for <code>filter(a_earnhour != 1)</code> (i.e., dropping imputed wages) will also remove all non-hourly workers. You do not want this. Use this code to preserve salaried workers with self-reported wages:&nbsp;</p>
+<p><em>If you want to keep imputed wages in the sample for analysis:</em>&nbsp;</p>
+<p>You can always filter to <code>wage_imputed = 0</code> if you want to remove the imputed wages.&nbsp;</p>
+<p><em>If you want to filter out imputed wages from the start:</em>&nbsp;&nbsp;</p>
+<p>These should result in the same samples for non-imputed wages. You can check this by running <code>crosstab(data, paidhre, wage_imputed)</code> and <code>crosstab(data, paidhre, a_earnhour)</code>.</p>
 
 
 </section>
@@ -1126,13 +1042,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro_to_r.html" class="pagination-link" aria-label="Installing R &amp; RStudio EARN Talk">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Installing R &amp; RStudio EARN Talk</span>
+      <a href="./standard_employment.html" class="pagination-link" aria-label="Employment">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Employment</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./foraging_for_data.html" class="pagination-link" aria-label="Foraging for Data in the Wild 2025">
-        <span class="nav-page-text">Foraging for Data in the Wild 2025</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./standard_wbhao.html" class="pagination-link" aria-label="Race and ethnicity code">
+        <span class="nav-page-text">Race and ethnicity code</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

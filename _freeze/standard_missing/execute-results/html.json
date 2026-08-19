@@ -1,0 +1,15 @@
+{
+  "hash": "d34d540fbb7e6cc9fc1a6e97a123e2b4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: Dealing with missing data \nauthor: EPI data team\n---\n\n\n\n\n## Accounting for differing weights in specific years \n\nDue to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. \n\n1.  You must use the May CPS **when calculating union numbers** before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. \n\n<!-- -->\n\n2.  October 2023 needs to be adjusted for all surveys due to missing data. \n\nThe following script accounts for the fact that: \n\n-   May 1981 only asked 1/4 sample  \n\n<!-- -->\n\n-   May 1973-1980 asked full sample \n\n<!-- -->\n\n-   ORG 1983-present asked full ORG sample  \n\n<!-- -->\n\n-   ORG 2025 only has 11 months of data due to 2025 gov shutdown \n\n\n\n\n\n\n\n\n\n## Rolling “12 month” averages with missing month\n\nThis section smooths the data over a calendar year. The slide_index function takes a certain number of calendar months as an input, rather than a fixed number of rows (months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. The previous method only accepted a constant number of months, and so would look back farther (i.e., at extra months) if any were missing.  \n\nIn other words, a new-method 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This new method will adapt to any gaps in the data and maintain a consistent average.  \n\nThis matches the SWADL methodology. \n\nExample code for calculating EPOPs: \n\n\n\n\n\n\n\n\n\nHere’s the code for the actual 12-month rolling window: \n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "hash": "dc0f1ee383d88363a51bdc469f00513a",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Coding race and ethnicity variables\"\nauthor: \"EPI data team\"\n---\n\n\n\n\n\n\n## Recoding for ASEC\n\n\n\n\n\n\n\n\n\n## Recoding for ACS (via IPUMS)\n\nThere are two ways to recode ACS race categories, the first is using the `race` and `raced` variables (`raced` gets automatically downloaded when you include the race variable in your sample), and the second is using `race` and the 'rac' variable series (i.e. `racblk`, `racasian`, `racpacis`, `racamind`).\n\nUsing `race` and `raced`:\n\n\n\n\n\n\n\n\n\nUsing `race` and the 'rac' variable series\n\n\n\n\n",
+    "supporting": [
+      "standard_wbhao_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "hash": "6ed744f68dff70433b7547e60871c2ed",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Coding employment outcomes\"\nauthor: \"EPI data team\"\n---\n\n\n\n\n**Note:** Users will need to install `epiextractr` for this example. Refer to [EPI packages for R](epi_libraries.qmd) for installation instructions.\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\nlibrary(epiextractr)\n```\n:::\n\n\n\n\n## Employment-to-population ratios (EPOPs)\n\nThis code will allow the user to reproduce [employment-to-population ratios](https://data.epi.org/labor_force/labor_force_emp/line/year/national/percent_emp/overall?timeStart=1976-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall). Please note that data with missing observations will return missing, therefore we must handle missing data directly. It is common practice to use \\`filter()’ to remove missing data directly with the most control. \n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nload_basic(2020:2024, year, age, emp, basicwgt) |>  \n  filter(age >= 16, !is.na(emp))  |>  \n  #note: the denominator is based on number of months that are included in the sample\n  #note: since we are getting annual estimates, divide the weight by 12\n  mutate(adj_wgt = basicwgt/12) |>  \n  summarise( \n    epop = weighted.mean(emp, w = adj_wgt), \n    .by = year) \n```\n:::\n\n\n\n\n## Labor force participation rates\n\nThis code will allow the user to reproduce the [labor force participation rates](https://data.epi.org/labor_force/labor_force_lf/line/year/national/percent_lf/overall?timeStart=1976-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall). Similar to EPOPs, we must be careful how we handle missing data, however unlike EPOPs this code uses the `na.rm = TRUE` argument inside the operation. Removing missing data this way gives the user less control over which observations are dropped.\n\n\n\n\n\n\n\n\n\n## Unemployment rate\n\nThis code will the user to reproduce the [unemployment rates](https://data.epi.org/labor_force/labor_force_unemp/line/year/national/percent_unemp/overall?timeStart=1976-01-01&timeEnd=2025-01-01&dateString=2025-01-01&highlightedLines=overall). \n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
