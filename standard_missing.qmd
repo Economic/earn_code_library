@@ -8,25 +8,13 @@ author: EPI data team
 Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. 
 
 1.  You must use the May CPS **when calculating union numbers** before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. 
-
-<!-- -->
-
 2.  October 2023 needs to be adjusted for all surveys due to missing data. 
 
 The following script accounts for the fact that: 
 
 -   May 1981 only asked 1/4 sample  
-
-<!-- -->
-
 -   May 1973-1980 asked full sample 
-
-<!-- -->
-
 -   ORG 1983-present asked full ORG sample  
-
-<!-- -->
-
 -   ORG 2025 only has 11 months of data due to 2025 gov shutdown 
 
 ```{r, loading missing data, eval=FALSE, include=TRUE, message=FALSE}

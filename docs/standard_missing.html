@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -439,27 +473,36 @@ ul.task-list li input[type="checkbox"] {
 <p>Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right.&nbsp;</p>
 <ol type="1">
 <li>You must use the May CPS <strong>when calculating union numbers</strong> before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt.&nbsp;</li>
-</ol>
-<!-- -->
-<ol start="2" type="1">
 <li>October 2023 needs to be adjusted for all surveys due to missing data.&nbsp;</li>
 </ol>
 <p>The following script accounts for the fact that:&nbsp;</p>
 <ul>
 <li>May 1981 only asked 1/4 sample&nbsp;&nbsp;</li>
-</ul>
-<!-- -->
-<ul>
 <li>May 1973-1980 asked full sample&nbsp;</li>
-</ul>
-<!-- -->
-<ul>
 <li>ORG 1983-present asked full ORG sample&nbsp;&nbsp;</li>
-</ul>
-<!-- -->
-<ul>
 <li>ORG 2025 only has 11 months of data due to 2025 gov shutdown&nbsp;</li>
 </ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>may_data <span class="ot">=</span> <span class="fu">load_may</span>(may_years, <span class="fu">all_of</span>(cps_vars)) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">weight =</span> finalwgt) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="cn">NA</span>) </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>output <span class="ot">=</span> <span class="fu">load_org</span>(org_years, <span class="fu">all_of</span>(cps_vars)) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">rename</span>(<span class="at">weight =</span> orgwgt) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">bind_rows</span>(may_data) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, weight <span class="sc">&gt;</span> <span class="dv">0</span>, selfemp <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">weight =</span> <span class="fu">case_match</span>( </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>     year, </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>     <span class="dv">1973</span><span class="sc">:</span><span class="dv">1980</span> <span class="sc">~</span> weight, </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>     <span class="dv">1981</span> <span class="sc">~</span> weight <span class="sc">*</span> <span class="dv">4</span>, </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>     <span class="dv">2025</span> <span class="sc">~</span> weight <span class="sc">/</span> <span class="dv">11</span>, </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">.default =</span> weight <span class="sc">/</span> <span class="dv">12</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>   )) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="rolling-12-month-averages-with-missing-month" class="level2">
 <h2 class="anchored" data-anchor-id="rolling-12-month-averages-with-missing-month">Rolling “12 month” averages with missing month</h2>
@@ -467,7 +510,44 @@ ul.task-list li input[type="checkbox"] {
 <p>In other words, a new-method 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This new method will adapt to any gaps in the data and maintain a consistent average.&nbsp;&nbsp;</p>
 <p>This matches the SWADL methodology.&nbsp;</p>
 <p>Example code for calculating EPOPs:&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#libraries </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr) </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(slider) </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: load cps data </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>cps_data <span class="ot">&lt;-</span> <span class="fu">load_basic</span>(<span class="dv">2023</span><span class="sc">:</span><span class="dv">2026</span>, year, month, basicwgt, emp) <span class="sc">|&gt;</span>  </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight =</span> basicwgt) </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: calculate monthly weighted counts, universe, and sample size </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>monthly_data <span class="ot">=</span> cps_data <span class="sc">|&gt;</span> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#get universe  </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">universe =</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(emp), <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span>  </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># by month </span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>( </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># count of population </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">sum</span>(emp <span class="sc">*</span> weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># count of universe </span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">universe_total =</span> <span class="fu">sum</span>(universe <span class="sc">*</span> weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sample size of universe </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_size =</span> <span class="fu">sum</span>(universe, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> <span class="fu">c</span>(year, month) </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate rate </span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> count <span class="sc">/</span> universe_total) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Here’s the code for the actual 12-month rolling window:&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ambiguous names used so any var could be put in there (eg unemp, lf status, etc)  </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>smoothed_monthly_data <span class="ot">=</span> monthly_data <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(year, month, <span class="st">"01"</span>, <span class="at">sep =</span> <span class="st">"-"</span>))) <span class="sc">|&gt;</span>                  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(date) <span class="sc">|&gt;</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent =</span> <span class="fu">slide_index_dbl</span>(percent, date, mean, <span class="at">.before =</span> <span class="fu">months</span>(<span class="dv">11</span>), <span class="at">.complete =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">count =</span> <span class="fu">slide_index_dbl</span>(count, date, mean, <span class="at">.before =</span> <span class="fu">months</span>(<span class="dv">11</span>), <span class="at">.complete =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">sample_size =</span> <span class="fu">slide_index_dbl</span>(sample_size, date, sum, <span class="at">.before =</span> <span class="fu">months</span>(<span class="dv">11</span>), <span class="at">.complete =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -441,6 +475,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="prep" class="level3">
 <h3 class="anchored" data-anchor-id="prep">Prep</h3>
 <p>Since we’ll be working with EPI data extracts, we’ll need to make sure we have the <code>epiextractr</code> package loaded.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="defining-the-universe-for-employment-or-wage-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="defining-the-universe-for-employment-or-wage-analysis">Defining the universe for employment or wage analysis</h2>
@@ -449,6 +487,10 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Note: self-employed and self-incorporated workers do not have wages in the CPS ORG, so this filter is somewhat duplicative when analyzing wage data. It’s necessary for Basic data.</p></li>
 <li><p>Note: this is not, of course, always the target universe (e.g., EPOPs). Use discretion when defining the sample.</p></li>
 </ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cps_org <span class="ot">&lt;-</span> <span class="fu">load_org</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, <span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"statefips"</span>, <span class="st">"wage"</span>, <span class="st">"emp"</span>, <span class="st">"union"</span>, <span class="st">"orgwgt"</span>, <span class="st">"cow1"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, emp <span class="sc">==</span> <span class="dv">1</span>, cow1 <span class="sc">&lt;=</span> <span class="dv">5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="inflation-adjusting" class="level2">
 <h2 class="anchored" data-anchor-id="inflation-adjusting">Inflation adjusting</h2>
@@ -457,19 +499,60 @@ ul.task-list li input[type="checkbox"] {
 <section id="median-wages" class="level2">
 <h2 class="anchored" data-anchor-id="median-wages">Median wages</h2>
 <p>Use <code>averaged_median</code> in the <code>epidatatools</code> package, rather than <code>binipolate</code>. Note, <code>quantiles_n</code> and <code>quantiles_w</code> default to the following so are not strictly necessary to include in the code (although may help others understand the process).&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>wages_gender <span class="ot">&lt;-</span> cps_org <span class="sc">|&gt;</span>  </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(  </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">wage_median =</span> <span class="fu">averaged_median</span>(  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> realwage,  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>,  </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">quantiles_n =</span> <span class="dv">9</span>L,  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">quantiles_w =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span><span class="sc">:</span><span class="dv">1</span>)),  </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">n=</span><span class="fu">n</span>(),  </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">.by=</span><span class="fu">c</span>(female, year)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="wage-premiums-regressions" class="level2">
 <h2 class="anchored" data-anchor-id="wage-premiums-regressions">Wage premiums &amp; regressions&nbsp;</h2>
 <p>See GitHub repo here: <a href="https://github.com/Economic/equal_pay_day" class="uri">https://github.com/Economic/equal_pay_day</a>&nbsp;&nbsp;</p>
 <p>EPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (<code>wbho</code>), gender (<code>female</code>), education (<code>educ</code>), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (<code>married</code>) and state (<code>statefips</code>).&nbsp; If you are using multi-year data you must use year fixed effects as well.&nbsp;Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the <code>feols</code> function from the <strong><code>fixest</code></strong> package. See the EPI data library code <a href="https://github.com/Economic/swa_data_library/blob/main/R/wage_reg.R">for an example</a>.&nbsp;</p>
 <p><strong>Note:</strong> Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a [(exp(β) − 1) × 100%]&nbsp; change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately [(exp(−0.203424) − 1) × 100 ≈ −18.4%] different from men’s wages, after controlling for race, education, age, marital status, and state.&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fixest) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>wage_reg <span class="ot">&lt;-</span> cps_org <span class="sc">|&gt;</span>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_realwage =</span> <span class="fu">log</span>(realwage),   </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_2 =</span> age<span class="sc">^</span><span class="dv">2</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span>  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(  </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    log_realwage <span class="sc">~</span>   </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">i</span>(female, <span class="at">ref =</span> <span class="st">"0"</span>) <span class="sc">+</span>  </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    age <span class="sc">+</span> age_2 <span class="sc">|</span>  </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    educ <span class="sc">+</span> wbho <span class="sc">+</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    married <span class="sc">+</span> statefips, </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> <span class="sc">~</span>orgwgt  </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="imputed-wage-filtering" class="level2">
 <h2 class="anchored" data-anchor-id="imputed-wage-filtering">Imputed wage filtering&nbsp;</h2>
 <p>There may be instances where you want to remove imputed wages allocated by the BLS. This is especially common when <strong>dealing with union vs non-union wage comparisons</strong>, as the BLS does not account for union status when calculating imputed wages. Because of 1) the way that the <code>a_earnhour</code> and <code>a_weeklypay</code> variables are coded and 2) that <code>filter()</code> default drops N/A values, simply coding for <code>filter(a_earnhour != 1)</code> (i.e., dropping imputed wages) will also remove all non-hourly workers. You do not want this. Use this code to preserve salaried workers with self-reported wages:&nbsp;</p>
 <p><em>If you want to keep imputed wages in the sample for analysis:</em>&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">wage_imputed =</span> <span class="fu">case_when</span>( </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    paidhre <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> a_earnhour <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    paidhre <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> a_weekpay <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.default =</span> <span class="dv">0</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>You can always filter to <code>wage_imputed = 0</code> if you want to remove the imputed wages.&nbsp;</p>
 <p><em>If you want to filter out imputed wages from the start:</em>&nbsp;&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter_out</span>(a_earnhour <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> paidhre <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> a_weekpay <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> paidhre <span class="sc">==</span> <span class="dv">0</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>These should result in the same samples for non-imputed wages. You can check this by running <code>crosstab(data, paidhre, wage_imputed)</code> and <code>crosstab(data, paidhre, a_earnhour)</code>.</p>
 
 

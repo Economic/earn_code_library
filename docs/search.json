@@ -739,7 +739,7 @@
     "href": "standard_missing.html",
     "title": "Dealing with missing data",
     "section": "",
-    "text": "Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. \n\nYou must use the May CPS when calculating union numbers before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. \n\n\n\nOctober 2023 needs to be adjusted for all surveys due to missing data. \n\nThe following script accounts for the fact that: \n\nMay 1981 only asked 1/4 sample  \n\n\n\nMay 1973-1980 asked full sample \n\n\n\nORG 1983-present asked full ORG sample  \n\n\n\nORG 2025 only has 11 months of data due to 2025 gov shutdown",
+    "text": "Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. \n\nYou must use the May CPS when calculating union numbers before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. \nOctober 2023 needs to be adjusted for all surveys due to missing data. \n\nThe following script accounts for the fact that: \n\nMay 1981 only asked 1/4 sample  \nMay 1973-1980 asked full sample \nORG 1983-present asked full ORG sample  \nORG 2025 only has 11 months of data due to 2025 gov shutdown \n\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\nmay_data = load_may(may_years, all_of(cps_vars)) |&gt;  \n    rename(weight = finalwgt) |&gt;  \n    mutate(month = NA) \n\n\noutput = load_org(org_years, all_of(cps_vars)) |&gt;  \n   rename(weight = orgwgt) |&gt;  \n   bind_rows(may_data) |&gt;  \n   filter(age &gt;= 16, weight &gt; 0, selfemp == 0) |&gt;  \n   mutate(weight = case_match( \n     year, \n     1973:1980 ~ weight, \n     1981 ~ weight * 4, \n     2025 ~ weight / 11, \n     .default = weight / 12 \n   ))",
     "crumbs": [
       "EPI Data Standards (R)",
       "Dealing with missing data"
@@ -750,7 +750,7 @@
     "href": "standard_missing.html#accounting-for-differing-weights-in-specific-years",
     "title": "Dealing with missing data",
     "section": "",
-    "text": "Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. \n\nYou must use the May CPS when calculating union numbers before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. \n\n\n\nOctober 2023 needs to be adjusted for all surveys due to missing data. \n\nThe following script accounts for the fact that: \n\nMay 1981 only asked 1/4 sample  \n\n\n\nMay 1973-1980 asked full sample \n\n\n\nORG 1983-present asked full ORG sample  \n\n\n\nORG 2025 only has 11 months of data due to 2025 gov shutdown",
+    "text": "Due to some discrepancies in specific years’ sample sizes and data collection, you must adjust specific weights to get overall counts right. \n\nYou must use the May CPS when calculating union numbers before 1983, asunion-related questions were not asked in ORG until 1983. May weights must be adjusted for 1981. For other calculations, such as wage, you can use ORG data back to 1979 using the unadjusted orgwgt. \nOctober 2023 needs to be adjusted for all surveys due to missing data. \n\nThe following script accounts for the fact that: \n\nMay 1981 only asked 1/4 sample  \nMay 1973-1980 asked full sample \nORG 1983-present asked full ORG sample  \nORG 2025 only has 11 months of data due to 2025 gov shutdown \n\n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\nmay_data = load_may(may_years, all_of(cps_vars)) |&gt;  \n    rename(weight = finalwgt) |&gt;  \n    mutate(month = NA) \n\n\noutput = load_org(org_years, all_of(cps_vars)) |&gt;  \n   rename(weight = orgwgt) |&gt;  \n   bind_rows(may_data) |&gt;  \n   filter(age &gt;= 16, weight &gt; 0, selfemp == 0) |&gt;  \n   mutate(weight = case_match( \n     year, \n     1973:1980 ~ weight, \n     1981 ~ weight * 4, \n     2025 ~ weight / 11, \n     .default = weight / 12 \n   ))",
     "crumbs": [
       "EPI Data Standards (R)",
       "Dealing with missing data"
@@ -761,7 +761,7 @@
     "href": "standard_missing.html#rolling-12-month-averages-with-missing-month",
     "title": "Dealing with missing data",
     "section": "Rolling “12 month” averages with missing month",
-    "text": "Rolling “12 month” averages with missing month\nThis section smooths the data over a calendar year. The slide_index function takes a certain number of calendar months as an input, rather than a fixed number of rows (months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. The previous method only accepted a constant number of months, and so would look back farther (i.e., at extra months) if any were missing.  \nIn other words, a new-method 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This new method will adapt to any gaps in the data and maintain a consistent average.  \nThis matches the SWADL methodology. \nExample code for calculating EPOPs: \nHere’s the code for the actual 12-month rolling window:",
+    "text": "Rolling “12 month” averages with missing month\nThis section smooths the data over a calendar year. The slide_index function takes a certain number of calendar months as an input, rather than a fixed number of rows (months). This means that it consistently calculates the mean over a set time period and adjusts the denominator based on whether months during that window are missing. The previous method only accepted a constant number of months, and so would look back farther (i.e., at extra months) if any were missing.  \nIn other words, a new-method 12-month rolling average for November 2025 goes back to October 2024 and ‘counts’ the blank data in October 2025 as a month (while still averaging over 11 months’ worth of data). This new method will adapt to any gaps in the data and maintain a consistent average.  \nThis matches the SWADL methodology. \nExample code for calculating EPOPs: \n\n#libraries \nlibrary(tidyverse) \nlibrary(epiextractr) \nlibrary(slider) \n\n# Step 1: load cps data \ncps_data &lt;- load_basic(2023:2026, year, month, basicwgt, emp) |&gt;  \n  mutate(weight = basicwgt) \n\n# Step 2: calculate monthly weighted counts, universe, and sample size \nmonthly_data = cps_data |&gt; \n  #get universe  \n  mutate(universe = if_else(!is.na(emp), 1, 0)) |&gt;  \n  # by month \n  summarize( \n    # count of population \n    count = sum(emp * weight, na.rm = TRUE), \n    # count of universe \n    universe_total = sum(universe * weight, na.rm = TRUE), \n    # sample size of universe \n    sample_size = sum(universe, na.rm = TRUE), .by = c(year, month) \n  ) |&gt; \n  # calculate rate \n  mutate(percent = count / universe_total) \n\nHere’s the code for the actual 12-month rolling window: \n\n# ambiguous names used so any var could be put in there (eg unemp, lf status, etc)  \nsmoothed_monthly_data = monthly_data |&gt; \n mutate(date = as.Date(paste(year, month, \"01\", sep = \"-\"))) |&gt;                  \n    arrange(date) |&gt; \n    mutate( \n      percent = slide_index_dbl(percent, date, mean, .before = months(11), .complete = TRUE), \n      count = slide_index_dbl(count, date, mean, .before = months(11), .complete = TRUE), \n      sample_size = slide_index_dbl(sample_size, date, sum, .before = months(11), .complete = TRUE) \n    )",
     "crumbs": [
       "EPI Data Standards (R)",
       "Dealing with missing data"
@@ -951,7 +951,7 @@
     "href": "standard_misc.html",
     "title": "Uncategorized code snippets",
     "section": "",
-    "text": "Universe definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated. \nThis code will allow the user to reproduce the year-over-year share represented by a union: \nThis code will allow the user to reproduce the year-over-year share in a union:",
+    "text": "Universe definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated. \nThis code will allow the user to reproduce the year-over-year share represented by a union: \n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\nload_org(2020:2024, year, age, cow1, emp, union, orgwgt) |&gt; \n  filter(age &gt;= 16, cow1 &lt; 6, emp == 1) |&gt; \n  summarize(union_coverage = weighted.mean(union, w = orgwgt/12), .by = year) \n\nThis code will allow the user to reproduce the year-over-year share in a union: \n\nload_org(2020:2024, year, age, cow1, emp, unmem, orgwgt) |&gt; \n  filter(age &gt;= 16, cow1 &lt; 6, emp == 1) |&gt; \n  summarize(union_coverage = weighted.mean(unmem, w = orgwgt/12), .by = year)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Uncategorized code snippets"
@@ -962,7 +962,7 @@
     "href": "standard_misc.html#uncategorized-code-snippets",
     "title": "Uncategorized code snippets",
     "section": "",
-    "text": "Universe definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated. \nThis code will allow the user to reproduce the year-over-year share represented by a union: \nThis code will allow the user to reproduce the year-over-year share in a union:",
+    "text": "Universe definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated. \nThis code will allow the user to reproduce the year-over-year share represented by a union: \n\nlibrary(tidyverse)\nlibrary(epiextractr)\n\nload_org(2020:2024, year, age, cow1, emp, union, orgwgt) |&gt; \n  filter(age &gt;= 16, cow1 &lt; 6, emp == 1) |&gt; \n  summarize(union_coverage = weighted.mean(union, w = orgwgt/12), .by = year) \n\nThis code will allow the user to reproduce the year-over-year share in a union: \n\nload_org(2020:2024, year, age, cow1, emp, unmem, orgwgt) |&gt; \n  filter(age &gt;= 16, cow1 &lt; 6, emp == 1) |&gt; \n  summarize(union_coverage = weighted.mean(unmem, w = orgwgt/12), .by = year)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Uncategorized code snippets"
@@ -980,11 +980,33 @@
     ]
   },
   {
+    "objectID": "standard_wbhao.html",
+    "href": "standard_wbhao.html",
+    "title": "Coding race and ethnicity variables",
+    "section": "",
+    "text": "library(tidyverse)",
+    "crumbs": [
+      "EPI Data Standards (R)",
+      "Race and ethnicity code"
+    ]
+  },
+  {
+    "objectID": "standard_wbhao.html#recoding-for-asec",
+    "href": "standard_wbhao.html#recoding-for-asec",
+    "title": "Coding race and ethnicity variables",
+    "section": "Recoding for ASEC",
+    "text": "Recoding for ASEC\n\nmutate(\n    wbhao = case_when(\n        hispan &gt;= 100 & hispan &lt;= 612 ~ 3, # Hispanic or latino\n        race == 100 ~ 1, # White\n        race %in% c(200, 801, 805, 806, 807, 810, 811, 814, 816, 818) ~ 2, # Black\n        race %in% c(650, 651, 652, 803, 804, 808, 809, 812, 813, 817, 819) ~ 4, # AAPI\n        TRUE ~ 5\n    ),\n    wbhao = haven::labelled(wbhao, c(\n        \"White\" = 1, \n        \"Black\" = 2, \n        \"Hispanic\" = 3, \n        \"AAPI\" = 4, \n        \"Other\" = 5\n    ))\n)",
+    "crumbs": [
+      "EPI Data Standards (R)",
+      "Race and ethnicity code"
+    ]
+  },
+  {
     "objectID": "standard_wbhao.html#recoding-for-acs-via-ipums",
     "href": "standard_wbhao.html#recoding-for-acs-via-ipums",
     "title": "Coding race and ethnicity variables",
     "section": "Recoding for ACS (via IPUMS)",
-    "text": "Recoding for ACS (via IPUMS)\nThere are two ways to recode ACS race categories, the first is using the race and raced variables (raced gets automatically downloaded when you include the race variable in your sample), and the second is using race and the ‘rac’ variable series (i.e. racblk, racasian, racpacis, racamind).\nUsing race and raced:\nUsing race and the ‘rac’ variable series",
+    "text": "Recoding for ACS (via IPUMS)\nThere are two ways to recode ACS race categories, the first is using the race and raced variables (raced gets automatically downloaded when you include the race variable in your sample), and the second is using race and the ‘rac’ variable series (i.e. racblk, racasian, racpacis, racamind).\nUsing race and raced:\n\nmutate(\n    wbhao = case_when(\n        hispan %in% c(1,2,3,4) ~ 3, \n        race == 1 ~ 1, \n        race == 2 ~ 2,\n        raced &gt;= 830 & raced &lt;= 845 ~ 2,\n        raced &gt;= 901 & raced &lt;= 904 ~ 2,\n        raced &gt;= 930 & raced &lt;= 936 ~ 2,\n        raced &gt;= 950 & raced &lt;= 955 ~ 2,\n        raced &gt;= 970 & raced &lt;= 973 ~ 2,\n        raced &gt;= 980 & raced &lt;= 983 ~ 2,\n        raced %in% c(917, 985, 986, 990, 991) ~ 2,\n        race %in% c(4,5,6) ~ 4,\n        raced &gt;= 810 & raced &lt;= 825 ~ 4,\n        raced &gt;= 850 & raced &lt;= 855 ~ 4,\n        raced &gt;= 860 & raced &lt;= 899 ~ 4,\n        raced &gt;= 910 & raced &lt;= 915 ~ 4,\n        raced &gt;= 920 & raced &lt;= 927 ~ 4,\n        raced &gt;= 940 & raced &lt;= 944 ~ 4,\n        raced &gt;= 960 & raced &lt;= 964 ~ 4, \n        raced %in% c(905, 974, 975, 976, 984) ~ 4,\n        TRUE ~ 5\n    ),\n    wbhao = labelled(wbhao, c(\n        \"White\" = 1, \n        \"Black\" = 2, \n        \"Hispanic\" = 3, \n        \"AAPI\" = 4, \n        \"Other\" = 5\n    ))\n)\n\nUsing race and the ‘rac’ variable series\n\nmutate(\n    wbhao = case_when(\n        hispan %in% c(1,2,3,4) ~ 3, \n        race == 1 ~ 1, \n        racblk == 2 ~ 2,\n        racasian == 2 ~ 4,\n        racpacis == 2 ~ 4,\n        TRUE ~ 5\n    ),\n    wbhao = labelled(wbhao, c(\n        \"White\" = 1, \n        \"Black\" = 2, \n        \"Hispanic\" = 3, \n        \"AAPI\" = 4, \n        \"Other\" = 5\n    ))\n)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Race and ethnicity code"
@@ -1039,7 +1061,7 @@
     "href": "standard_wages.html",
     "title": "Calculating wages",
     "section": "",
-    "text": "Since we’ll be working with EPI data extracts, we’ll need to make sure we have the epiextractr package loaded.",
+    "text": "Since we’ll be working with EPI data extracts, we’ll need to make sure we have the epiextractr package loaded.\n\nlibrary(tidyverse)\nlibrary(epiextractr)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Wages"
@@ -1050,7 +1072,7 @@
     "href": "standard_wages.html#defining-the-universe-for-employment-or-wage-analysis",
     "title": "Calculating wages",
     "section": "Defining the universe for employment or wage analysis",
-    "text": "Defining the universe for employment or wage analysis\nFor standard definition (i.e., no special exclusions or inclusions), filter to age &gt;= 16, emp == 1, and cow1 &lt;= 5. This is non-self-employed, non-self-incorporated, employed workers at or over 16 years old. \n\nNote: self-employed and self-incorporated workers do not have wages in the CPS ORG, so this filter is somewhat duplicative when analyzing wage data. It’s necessary for Basic data.\nNote: this is not, of course, always the target universe (e.g., EPOPs). Use discretion when defining the sample.",
+    "text": "Defining the universe for employment or wage analysis\nFor standard definition (i.e., no special exclusions or inclusions), filter to age &gt;= 16, emp == 1, and cow1 &lt;= 5. This is non-self-employed, non-self-incorporated, employed workers at or over 16 years old. \n\nNote: self-employed and self-incorporated workers do not have wages in the CPS ORG, so this filter is somewhat duplicative when analyzing wage data. It’s necessary for Basic data.\nNote: this is not, of course, always the target universe (e.g., EPOPs). Use discretion when defining the sample.\n\n\ncps_org &lt;- load_org(2020:2024, \"year\", \"age\", \"statefips\", \"wage\", \"emp\", \"union\", \"orgwgt\", \"cow1\") |&gt; \n    filter(age &gt;= 16, emp == 1, cow1 &lt;= 5)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Wages"
@@ -1072,7 +1094,7 @@
     "href": "standard_wages.html#median-wages",
     "title": "Calculating wages",
     "section": "Median wages",
-    "text": "Median wages\nUse averaged_median in the epidatatools package, rather than binipolate. Note, quantiles_n and quantiles_w default to the following so are not strictly necessary to include in the code (although may help others understand the process).",
+    "text": "Median wages\nUse averaged_median in the epidatatools package, rather than binipolate. Note, quantiles_n and quantiles_w default to the following so are not strictly necessary to include in the code (although may help others understand the process). \n\nwages_gender &lt;- cps_org |&gt;  \n    summarise(  \n        wage_median = averaged_median(  \n            x = realwage,  \n            w = orgwgt/12,  \n            quantiles_n = 9L,  \n            quantiles_w = c(1:4, 5, 4:1)),  \n        n=n(),  \n        .by=c(female, year)\n    )",
     "crumbs": [
       "EPI Data Standards (R)",
       "Wages"
@@ -1083,7 +1105,7 @@
     "href": "standard_wages.html#wage-premiums-regressions",
     "title": "Calculating wages",
     "section": "Wage premiums & regressions ",
-    "text": "Wage premiums & regressions \nSee GitHub repo here: https://github.com/Economic/equal_pay_day  \nEPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (wbho), gender (female), education (educ), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (married) and state (statefips).  If you are using multi-year data you must use year fixed effects as well. Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the feols function from the fixest package. See the EPI data library code for an example. \nNote: Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a [(exp(β) − 1) × 100%]  change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately [(exp(−0.203424) − 1) × 100 ≈ −18.4%] different from men’s wages, after controlling for race, education, age, marital status, and state.",
+    "text": "Wage premiums & regressions \nSee GitHub repo here: https://github.com/Economic/equal_pay_day  \nEPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (wbho), gender (female), education (educ), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (married) and state (statefips).  If you are using multi-year data you must use year fixed effects as well. Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the feols function from the fixest package. See the EPI data library code for an example. \nNote: Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a [(exp(β) − 1) × 100%]  change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately [(exp(−0.203424) − 1) × 100 ≈ −18.4%] different from men’s wages, after controlling for race, education, age, marital status, and state. \n\nlibrary(fixest) \n\nwage_reg &lt;- cps_org |&gt;  \n mutate(  \n    log_realwage = log(realwage),   \n    age_2 = age^2 \n) |&gt;  \nfeols(  \n    log_realwage ~   \n    i(female, ref = \"0\") +  \n    age + age_2 |  \n    educ + wbho + \n    married + statefips, \n    weights = ~orgwgt  \n)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Wages"
@@ -1094,7 +1116,7 @@
     "href": "standard_wages.html#imputed-wage-filtering",
     "title": "Calculating wages",
     "section": "Imputed wage filtering ",
-    "text": "Imputed wage filtering \nThere may be instances where you want to remove imputed wages allocated by the BLS. This is especially common when dealing with union vs non-union wage comparisons, as the BLS does not account for union status when calculating imputed wages. Because of 1) the way that the a_earnhour and a_weeklypay variables are coded and 2) that filter() default drops N/A values, simply coding for filter(a_earnhour != 1) (i.e., dropping imputed wages) will also remove all non-hourly workers. You do not want this. Use this code to preserve salaried workers with self-reported wages: \nIf you want to keep imputed wages in the sample for analysis: \nYou can always filter to wage_imputed = 0 if you want to remove the imputed wages. \nIf you want to filter out imputed wages from the start:  \nThese should result in the same samples for non-imputed wages. You can check this by running crosstab(data, paidhre, wage_imputed) and crosstab(data, paidhre, a_earnhour).",
+    "text": "Imputed wage filtering \nThere may be instances where you want to remove imputed wages allocated by the BLS. This is especially common when dealing with union vs non-union wage comparisons, as the BLS does not account for union status when calculating imputed wages. Because of 1) the way that the a_earnhour and a_weeklypay variables are coded and 2) that filter() default drops N/A values, simply coding for filter(a_earnhour != 1) (i.e., dropping imputed wages) will also remove all non-hourly workers. You do not want this. Use this code to preserve salaried workers with self-reported wages: \nIf you want to keep imputed wages in the sample for analysis: \n\nmutate(\n    wage_imputed = case_when( \n    paidhre == 1 & a_earnhour == 1 ~ 1, \n    paidhre == 0 & a_weekpay == 1 ~ 1, \n    .default = 0 \n    )\n) \n\nYou can always filter to wage_imputed = 0 if you want to remove the imputed wages. \nIf you want to filter out imputed wages from the start:  \n\nfilter_out(a_earnhour == 1 & paidhre == 1 | a_weekpay == 1 & paidhre == 0) \n\nThese should result in the same samples for non-imputed wages. You can check this by running crosstab(data, paidhre, wage_imputed) and crosstab(data, paidhre, a_earnhour).",
     "crumbs": [
       "EPI Data Standards (R)",
       "Wages"
@@ -1171,7 +1193,7 @@
     "href": "standard_employment.html#labor-force-participation-rates",
     "title": "Coding employment outcomes",
     "section": "Labor force participation rates",
-    "text": "Labor force participation rates\nThis code will allow the user to reproduce the labor force participation rates. Similar to EPOPs, we must be careful how we handle missing data, however unlike EPOPs this code uses the na.rm = TRUE argument inside the operation. Removing missing data this way gives the user less control over which observations are dropped.",
+    "text": "Labor force participation rates\nThis code will allow the user to reproduce the labor force participation rates. Similar to EPOPs, we must be careful how we handle missing data, however unlike EPOPs this code uses the na.rm = TRUE argument inside the operation. Removing missing data this way gives the user less control over which observations are dropped.\n\nload_basic(2020:2024, year, age, lfstat, basicwgt) |&gt;  \n  filter(age &gt;= 16)  |&gt;  \n  mutate( \n    #note: the denominator is based on number of months that are included in the sample\n    #note: since we are getting annual estimates, divide the weight by 12\n    adj_wgt = basicwgt/12, \n    lfp = if_else(lfstat == 1 | lfstat == 2, 1, 0)) |&gt;  \n  summarise( \n    lfpr = weighted.mean(lfp, w = adj_wgt, na.rm = TRUE), \n    .by = year)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Employment"
@@ -1182,7 +1204,7 @@
     "href": "standard_employment.html#unemployment-rate",
     "title": "Coding employment outcomes",
     "section": "Unemployment rate",
-    "text": "Unemployment rate\nThis code will the user to reproduce the unemployment rates.",
+    "text": "Unemployment rate\nThis code will the user to reproduce the unemployment rates. \n\nload_basic(2020:2024, year, age, unemp, lfstat, basicwgt) |&gt;  \n  filter(age &gt;= 16, lfstat != 3)  |&gt;  \n  #note: the denominator is based on number of months that are included in the sample\n  #note: since we are getting annual estimates, divide the weight by 12\n  mutate(adj_wgt = basicwgt/12) |&gt;  \n  summarise( \n    urate = weighted.mean(unemp, w = adj_wgt), \n    .by = year)",
     "crumbs": [
       "EPI Data Standards (R)",
       "Employment"

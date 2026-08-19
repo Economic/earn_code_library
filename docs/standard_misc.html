@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -447,7 +481,20 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="union-density-vs-union-coverage">Union density vs union coverage</h3>
 <p>Universe definitions for union density and union coverage include paid employed workers 16 and older, not self-employed or self-incorporated.&nbsp;</p>
 <p>This code will allow the user to reproduce the year-over-year <a href="https://data.epi.org/unions/union_members/line/year/national/percent_union_covered/overall?timeStart=1977-01-01&amp;timeEnd=2025-01-01&amp;dateString=2025-01-01&amp;highlightedLines=overall">share represented by a union</a>:&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load_org</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, year, age, cow1, emp, union, orgwgt) <span class="sc">|&gt;</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, cow1 <span class="sc">&lt;</span> <span class="dv">6</span>, emp <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">union_coverage =</span> <span class="fu">weighted.mean</span>(union, <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>), <span class="at">.by =</span> year) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>This code will allow the user to reproduce the year-over-year <a href="https://data.epi.org/unions/union_members/line/year/national/percent_union_members/overall?timeStart=1973-01-01&amp;timeEnd=2025-01-01&amp;dateString=2025-01-01&amp;highlightedLines=overall">share in a union</a>:&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_org</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, year, age, cow1, emp, unmem, orgwgt) <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, cow1 <span class="sc">&lt;</span> <span class="dv">6</span>, emp <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">union_coverage =</span> <span class="fu">weighted.mean</span>(unmem, <span class="at">w =</span> orgwgt<span class="sc">/</span><span class="dv">12</span>), <span class="at">.by =</span> year) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="universe-definitions-for-specific-policy-areas" class="level2">

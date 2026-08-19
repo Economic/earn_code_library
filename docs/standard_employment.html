@@ -491,10 +491,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="labor-force-participation-rates" class="level2">
 <h2 class="anchored" data-anchor-id="labor-force-participation-rates">Labor force participation rates</h2>
 <p>This code will allow the user to reproduce the <a href="https://data.epi.org/labor_force/labor_force_lf/line/year/national/percent_lf/overall?timeStart=1976-01-01&amp;timeEnd=2025-01-01&amp;dateString=2025-01-01&amp;highlightedLines=overall">labor force participation rates</a>. Similar to EPOPs, we must be careful how we handle missing data, however unlike EPOPs this code uses the <code>na.rm = TRUE</code> argument inside the operation. Removing missing data this way gives the user less control over which observations are dropped.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_basic</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, year, age, lfstat, basicwgt) <span class="sc">|&gt;</span>  </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#note: the denominator is based on number of months that are included in the sample</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#note: since we are getting annual estimates, divide the weight by 12</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">adj_wgt =</span> basicwgt<span class="sc">/</span><span class="dv">12</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">lfp =</span> <span class="fu">if_else</span>(lfstat <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> lfstat <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span>  </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>( </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lfpr =</span> <span class="fu">weighted.mean</span>(lfp, <span class="at">w =</span> adj_wgt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="unemployment-rate" class="level2">
 <h2 class="anchored" data-anchor-id="unemployment-rate">Unemployment rate</h2>
 <p>This code will the user to reproduce the <a href="https://data.epi.org/labor_force/labor_force_unemp/line/year/national/percent_unemp/overall?timeStart=1976-01-01&amp;timeEnd=2025-01-01&amp;dateString=2025-01-01&amp;highlightedLines=overall">unemployment rates</a>.&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_basic</span>(<span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>, year, age, unemp, lfstat, basicwgt) <span class="sc">|&gt;</span>  </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">16</span>, lfstat <span class="sc">!=</span> <span class="dv">3</span>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#note: the denominator is based on number of months that are included in the sample</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#note: since we are getting annual estimates, divide the weight by 12</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_wgt =</span> basicwgt<span class="sc">/</span><span class="dv">12</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>( </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">urate =</span> <span class="fu">weighted.mean</span>(unemp, <span class="at">w =</span> adj_wgt), </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> year) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
