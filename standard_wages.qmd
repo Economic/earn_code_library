@@ -1,18 +1,16 @@
 ---
-title: "Calculating wages"
+title: "Wage analysis"
 author: "EPI data team"
 ---
 
-### Prep
+**Note:** Users will need to install `epiextractr` for this example. Refer to [EPI packages for R](epi_libraries.qmd) for installation instructions.
 
-Since we'll be working with EPI data extracts, we'll need to make sure we have the `epiextractr` package loaded.
-
-```{r, load libraries, eval=FALSE, include=TRUE, message=FALSE}
+```{r Internal load libraries, include=TRUE, message=FALSE}
 library(tidyverse)
 library(epiextractr)
 ```
 
-## Defining the universe for employment or wage analysis
+## Defining the universe for wage analysis
 
 For standard definition (i.e., no special exclusions or inclusions), filter to `age >= 16`, `emp == 1`, and `cow1 <= 5`. This is non-self-employed, non-self-incorporated, employed workers at or over 16 years old. 
 

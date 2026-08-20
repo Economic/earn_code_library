@@ -3,10 +3,6 @@ title: "Coding race and ethnicity variables"
 author: "EPI data team"
 ---
 
-```{r, load library, eval=FALSE, include=TRUE, message=FALSE}
-library(tidyverse)
-```
-
 ## Recoding for ASEC
 
 ```{r, asec race coding, eval=FALSE, include=TRUE, message=FALSE}

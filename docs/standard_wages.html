@@ -8,7 +8,7 @@
 
 <meta name="author" content="EPI data team">
 
-<title>Calculating wages – Code Library</title>
+<title>Wage analysis – Code Library</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -289,14 +289,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./standard_misc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Uncategorized code snippets</span></a>
+  <a href="./standard_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dealing with missing data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./standard_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dealing with missing data</span></a>
+  <a href="./standard_misc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Miscellaneous code</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -435,8 +435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#prep" id="toc-prep" class="nav-link active" data-scroll-target="#prep">Prep</a></li>
-  <li><a href="#defining-the-universe-for-employment-or-wage-analysis" id="toc-defining-the-universe-for-employment-or-wage-analysis" class="nav-link" data-scroll-target="#defining-the-universe-for-employment-or-wage-analysis">Defining the universe for employment or wage analysis</a></li>
+  <li><a href="#defining-the-universe-for-wage-analysis" id="toc-defining-the-universe-for-wage-analysis" class="nav-link active" data-scroll-target="#defining-the-universe-for-wage-analysis">Defining the universe for wage analysis</a></li>
   <li><a href="#inflation-adjusting" id="toc-inflation-adjusting" class="nav-link" data-scroll-target="#inflation-adjusting">Inflation adjusting</a></li>
   <li><a href="#median-wages" id="toc-median-wages" class="nav-link" data-scroll-target="#median-wages">Median wages</a></li>
   <li><a href="#wage-premiums-regressions" id="toc-wage-premiums-regressions" class="nav-link" data-scroll-target="#wage-premiums-regressions">Wage premiums &amp; regressions&nbsp;</a></li>
@@ -449,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_wages.html">Wages</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Calculating wages</h1>
+<h1 class="title">Wage analysis</h1>
 </div>
 
 
@@ -472,16 +471,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="prep" class="level3">
-<h3 class="anchored" data-anchor-id="prep">Prep</h3>
-<p>Since we’ll be working with EPI data extracts, we’ll need to make sure we have the <code>epiextractr</code> package loaded.</p>
+<p><strong>Note:</strong> Users will need to install <code>epiextractr</code> for this example. Refer to <a href="./epi_libraries.html">EPI packages for R</a> for installation instructions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiextractr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="defining-the-universe-for-employment-or-wage-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="defining-the-universe-for-employment-or-wage-analysis">Defining the universe for employment or wage analysis</h2>
+<section id="defining-the-universe-for-wage-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="defining-the-universe-for-wage-analysis">Defining the universe for wage analysis</h2>
 <p>For standard definition (i.e., no special exclusions or inclusions), filter to <code>age &gt;= 16</code>, <code>emp == 1</code>, and <code>cow1 &lt;= 5</code>. This is non-self-employed, non-self-incorporated, employed workers at or over 16 years old.&nbsp;</p>
 <ul>
 <li><p>Note: self-employed and self-incorporated workers do not have wages in the CPS ORG, so this filter is somewhat duplicative when analyzing wage data. It’s necessary for Basic data.</p></li>

@@ -60,10 +60,10 @@ website:
         href: standard_wages.qmd
       - text: "Race and ethnicity code"
         href: standard_wbhao.qmd
-      - text: "Uncategorized code snippets"
-        href: standard_misc.qmd
       - text: "Dealing with missing data"
         href: standard_missing.qmd
+      - text: "Miscellaneous code"
+        href: standard_misc.qmd
       - text: "AI best practices"
         href: standard_AIClaude.qmd
       

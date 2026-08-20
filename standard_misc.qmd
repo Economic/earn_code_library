@@ -34,10 +34,4 @@ load_org(2020:2024, year, age, cow1, emp, unmem, orgwgt) |>
 
 Refer to [this Github repo](https://github.com/Economic/right_to_work/tree/main) for code that assigns RTW status by year by state to CPS microdata, as well as an example snippet on how to use it (see example on [EARN Code Library](https://economic.github.io/earn_code_library/rtw_definitions.html)).  
 
-### What’s the right sample size? (in development)
-
--   There’s no perfect answer to this, but it would be helpful to list some guidelines or questions to ask yourself when evaluating the reliability of a given dataset.  
-
-<!-- -->
-
--   E.g., timeseries to check volatility
+-   RTW [regression repo ](https://github.com/Economic/rtw_regression)for Gould and Cohn (2026).

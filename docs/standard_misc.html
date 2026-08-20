@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./standard_missing.html" rel="next">
-<link href="./standard_wbhao.html" rel="prev">
+<link href="./standard_AIClaude.html" rel="next">
+<link href="./standard_missing.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_misc.html">Uncategorized code snippets</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_misc.html">Miscellaneous code</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -289,14 +289,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./standard_misc.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Uncategorized code snippets</span></a>
+  <a href="./standard_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dealing with missing data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./standard_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dealing with missing data</span></a>
+  <a href="./standard_misc.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Miscellaneous code</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -442,7 +442,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#universe-definitions-for-specific-policy-areas" id="toc-universe-definitions-for-specific-policy-areas" class="nav-link" data-scroll-target="#universe-definitions-for-specific-policy-areas">Universe definitions for specific policy areas&nbsp;</a>
   <ul class="collapse">
   <li><a href="#right-to-work" id="toc-right-to-work" class="nav-link" data-scroll-target="#right-to-work">Right to work&nbsp;</a></li>
-  <li><a href="#whats-the-right-sample-size-in-development" id="toc-whats-the-right-sample-size-in-development" class="nav-link" data-scroll-target="#whats-the-right-sample-size-in-development">What’s the right sample size?&nbsp;(in development)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -450,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_misc.html">Uncategorized code snippets</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./standard_employment.html">EPI Data Standards (R)</a></li><li class="breadcrumb-item"><a href="./standard_misc.html">Miscellaneous code</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Uncategorized code snippets</h1>
 </div>
@@ -502,15 +501,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="right-to-work" class="level3">
 <h3 class="anchored" data-anchor-id="right-to-work">Right to work&nbsp;</h3>
 <p>Refer to <a href="https://github.com/Economic/right_to_work/tree/main">this Github repo</a> for code that assigns RTW status by year by state to CPS microdata, as well as an example snippet on how to use it (see example on <a href="https://economic.github.io/earn_code_library/rtw_definitions.html">EARN Code Library</a>).&nbsp;&nbsp;</p>
-</section>
-<section id="whats-the-right-sample-size-in-development" class="level3">
-<h3 class="anchored" data-anchor-id="whats-the-right-sample-size-in-development">What’s the right sample size?&nbsp;(in development)</h3>
 <ul>
-<li>There’s no perfect answer to this, but it would be helpful to list some guidelines or questions to ask yourself when evaluating the reliability of a given dataset.&nbsp;&nbsp;</li>
-</ul>
-<!-- -->
-<ul>
-<li>E.g., timeseries to check volatility</li>
+<li>RTW <a href="https://github.com/Economic/rtw_regression">regression repo</a>for Gould and Cohn (2026).</li>
 </ul>
 
 
@@ -1084,13 +1076,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./standard_wbhao.html" class="pagination-link" aria-label="Race and ethnicity code">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Race and ethnicity code</span>
+      <a href="./standard_missing.html" class="pagination-link" aria-label="Dealing with missing data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Dealing with missing data</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./standard_missing.html" class="pagination-link" aria-label="Dealing with missing data">
-        <span class="nav-page-text">Dealing with missing data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./standard_AIClaude.html" class="pagination-link" aria-label="AI best practices">
+        <span class="nav-page-text">AI best practices</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
