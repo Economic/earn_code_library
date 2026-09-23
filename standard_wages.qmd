@@ -46,9 +46,9 @@ wages_gender <- cps_org |>
 
 ## Wage premiums & regressions 
 
-See GitHub repo here: <https://github.com/Economic/equal_pay_day>  
+See GitHub repo example here: <https://github.com/Economic/rtw_regression>
 
-EPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (`wbho`), gender (`female`), education (`educ`), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (`married`) and state (`statefips`).  If you are using multi-year data you must use year fixed effects as well. Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the `feols` function from the **`fixest`** package. See the EPI data library code [for an example](https://github.com/Economic/swa_data_library/blob/main/R/wage_reg.R). 
+EPI’s standard wage regression uses the logarithm of real wages as the dependent variable and includes race (`wbho`), gender (`female`), education (`educ`), age, and age squared as the regressors (right-hand side variables). We also include fixed effects for marital status (`married`) and state (`statefips`).  If you are using multi-year data you must use year fixed effects as well. Note that using log nominal or log real wages will make no difference to the results if you use year fixed effects. In R, these models are commonly estimated using the `feols` function from the **`fixest`** package.
 
 **Note:** Because the dependent variable is in logs, the coefficients need to be converted from natural log changes to percentage changes. Specifically, a one-unit change in a regressor is associated with a \[(exp(β) − 1) × 100%\]  change in wages, holding other factors constant. For example, in 2025 the coefficient on female in the conventional EPI wage regression is −0.203424. This implies that women’s wages are approximately \[(exp(−0.203424) − 1) × 100 ≈ −18.4%\] different from men’s wages, after controlling for race, education, age, marital status, and state. 
 
